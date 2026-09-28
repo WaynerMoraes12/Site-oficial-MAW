@@ -1,0 +1,22 @@
+{
+  "installerCommit": "5433daadac1d063a335a72fa01a7b0d504a6145d",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "mawCommit": "5433daadac1d063a335a72fa01a7b0d504a6145d",
+      "builtAt": "2026-09-28T11:21:55.339Z"
+    }
+  ],
+  "stops": [
+    {
+      "id": "version:1.0.0",
+      "status": "live",
+      "date": "2026-09-28",
+      "text": {
+        "en": "Version 1.0 — debut",
+        "pt": "Versão 1.0 — estreia",
+        "es": "Versión 1.0 — estreno"
+      }
+    }
+  ]
+}

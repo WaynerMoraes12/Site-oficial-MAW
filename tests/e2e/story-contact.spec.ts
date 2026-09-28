@@ -1,10 +1,25 @@
 import { expect, test } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+
+type Stop = { status: 'live' | 'reh' | 'next'; text: Record<'en' | 'pt' | 'es', string> };
+const tour: { stops: Stop[] } = JSON.parse(readFileSync('src/data/tour.json', 'utf8'));
 
 test.beforeEach(async ({ page }) => page.goto('/'));
 
-test('world tour stamps every stop with a status', async ({ page }) => {
-  await expect(page.locator('#tour .date')).toHaveCount(9);
-  await expect(page.locator('#tour .stamp.live')).toHaveText(['On the road']);
+test('the world tour shows every synced stop, in each language, with its stamp and date', async ({ page }) => {
+  const stamps = {
+    en: { live: 'On the road', reh: 'Rehearsing', next: 'Announced' },
+    pt: { live: 'Na estrada', reh: 'Ensaiando', next: 'Anunciado' },
+    es: { live: 'De gira', reh: 'Ensayando', next: 'Anunciado' },
+  };
+  const months = { en: 'Sep', pt: 'Set', es: 'Sep' };
+  for (const [locale, path] of [['en', '/'], ['pt', '/pt/'], ['es', '/es/']] as const) {
+    await page.goto(path);
+    await expect(page.locator('#tour .date .what')).toHaveText(tour.stops.map((s) => s.text[locale]));
+    await expect(page.locator('#tour .date .stamp')).toHaveText(tour.stops.map((s) => stamps[locale][s.status]));
+    // a versão de setembro de 2026 aparece com o mês na língua da página
+    await expect(page.locator('#tour .date').first().locator('.when')).toHaveText(`${months[locale]} 2026`);
+  }
 });
 
 test('liner notes tell the story and credit JUCE and Spleeter', async ({ page }) => {

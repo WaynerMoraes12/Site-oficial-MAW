@@ -127,6 +127,24 @@ test('coming back with the Back button returns to where the reader was, not to t
   await page.goto('/pt/');
   await page.goBack();
   await page.waitForLoadState('load');
+  // o navegador pode ficar parado um instante antes de restaurar: espera chegar, com prazo
+  await expect.poll(async () => Math.abs((await page.evaluate(() => window.scrollY)) - y), { timeout: 5_000 }).toBeLessThan(400);
   await settle(page);
   expect(Math.abs((await page.evaluate(() => window.scrollY)) - y)).toBeLessThan(400);
+  await expect(page).toHaveURL(/#tour$/);
+});
+
+test('reloading the page keeps the reader where they were, with the #section still in the address', async ({ page }) => {
+  await page.goto('/#tour');
+  await settle(page);
+  await page.mouse.move(200, 400);
+  await page.mouse.wheel(0, 1500);
+  await settle(page);
+  const y = await page.evaluate(() => window.scrollY);
+  await page.reload();
+  await page.waitForLoadState('load');
+  await expect.poll(async () => Math.abs((await page.evaluate(() => window.scrollY)) - y), { timeout: 5_000 }).toBeLessThan(400);
+  await settle(page);
+  expect(Math.abs((await page.evaluate(() => window.scrollY)) - y)).toBeLessThan(400);
+  await expect(page).toHaveURL(/#tour$/);
 });

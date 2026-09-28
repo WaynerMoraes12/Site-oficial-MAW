@@ -60,7 +60,7 @@ const SAME_AS_ENGLISH = new Set([
   'es:liner.credits[3].note', 'es:liner.credits[4].name', 'es:liner.credits[4].note', 'es:liner.credits[5].name',
   'es:liner.credits[5].note', 'es:liner.credits[6].name', 'es:liner.credits[6].note', 'es:liner.credits[7].name',
   'es:liner.credits[8].name', 'es:ai.cards.keys.keyLabels[1]', 'es:ai.cards.keys.keyLabels[2]',
-  'es:rider.rows[1].item', 'es:tour.stops[0].when', 'es:liner.timeline[3].when', 'es:liner.timeline[7].when',
+  'es:rider.rows[1].item', 'es:liner.timeline[3].when', 'es:liner.timeline[7].when',
   'pt:nav.tour', 'pt:nav.menu', 'pt:hero.ledeBefore', 'pt:ticker.items[5]', 'pt:ticker.items[6]',
   'pt:stage.shots.mixer.label', 'pt:stage.shots.piano-roll.label', 'pt:tracklist.sides[0].tracks[5].title',
   'pt:ai.cards.smart-mix.title', 'pt:ai.cards.whisper.hud', 'pt:rider.rev', 'pt:rider.headers[0]',
@@ -70,6 +70,9 @@ const SAME_AS_ENGLISH = new Set([
   'pt:liner.credits[2].note', 'pt:liner.credits[3].name', 'pt:liner.credits[3].note', 'pt:liner.credits[4].name',
   'pt:liner.credits[4].note', 'pt:liner.credits[5].name', 'pt:liner.credits[5].note', 'pt:liner.credits[6].name',
   'pt:liner.credits[6].note', 'pt:liner.credits[7].name', 'pt:liner.credits[8].name',
+  // abreviações de mês iguais ao inglês
+  'pt:tour.months[0]', 'pt:tour.months[2]', 'pt:tour.months[5]', 'pt:tour.months[6]', 'pt:tour.months[10]',
+  'es:tour.months[1]', 'es:tour.months[2]', 'es:tour.months[4]', 'es:tour.months[5]', 'es:tour.months[6]', 'es:tour.months[8]', 'es:tour.months[9]', 'es:tour.months[10]',
 ]);
 
 const untranslated = (locale: 'pt' | 'es', dict: unknown): string[] => {

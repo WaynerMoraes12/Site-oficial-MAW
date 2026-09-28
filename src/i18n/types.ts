@@ -50,7 +50,7 @@ export interface Dictionary {
   };
   tour: {
     eyebrow: string; title: string; years: string; stamps: { live: string; reh: string; next: string };
-    stops: { when: string; what: string }[];
+    months: string[]; whenReh: string; whenNext: string;
   };
   liner: {
     eyebrow: string; titleBefore: string; titleRed: string; titleAfter: string; titleLine2: string;

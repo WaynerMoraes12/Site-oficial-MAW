@@ -206,17 +206,10 @@ export const pt: Dictionary = {
     title: 'MAW World Tour',
     years: '2026 — 2027',
     stamps: { live: 'Na estrada', reh: 'Ensaiando', next: 'Anunciado' },
-    stops: [
-      { when: 'Set 2026', what: 'Versão 1.0 — estreia' },
-      { when: 'Em ensaio', what: 'Automação de qualquer parâmetro' },
-      { when: 'Em ensaio', what: 'Sends, barramentos e sidechain' },
-      { when: 'Em ensaio', what: 'Gravação em loop, punch-in e histórico de takes' },
-      { when: 'Em ensaio', what: 'Time-stretch e congelar trilha' },
-      { when: 'Em ensaio', what: 'Sampler, sequenciador, MIDI learn e faixas de CC' },
-      { when: 'Em ensaio', what: 'Afinador de cordas para guitarra' },
-      { when: 'Próxima turnê', what: 'A MAW como plugin VST3' },
-      { when: 'Próxima turnê', what: 'Mapa de andamento e comping de takes' },
-    ],
+    // datas das paradas "na estrada" (mês e ano); as paradas vêm de src/data/tour.json (npm run tour)
+    months: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+    whenReh: 'Em ensaio',
+    whenNext: 'Próxima turnê',
   },
   liner: {
     eyebrow: 'Encarte',
