@@ -59,11 +59,9 @@ O `npm run installer` daqui (Inno Setup com o `MAW_APP.exe` local) é o jeito an
 
 ## Publicar
 
-Nada é publicado automaticamente. O workflow `.github/workflows/deploy.yml` só roda manualmente e usa `BASE_PATH=/Site-oficial-MAW`. O GitHub Pages grátis exige repo público. O release do instalador depende da decisão sobre o código-fonte (GPL).
+O site está no GitHub Pages: https://waynermoraes12.github.io/Site-oficial-MAW/ (este repositório é público; o da MAW continua privado). O workflow `.github/workflows/deploy.yml` publica a cada push na `main` — inclusive os da tarefa diária, que sobe o World Tour e o último release da MAW — e também pode ser disparado à mão (Actions → Deploy site to GitHub Pages → Run workflow). Usa `BASE_PATH=/Site-oficial-MAW`.
 
-Com `src/data/release.json` presente, o botão aponta para `.../releases/download/v<versão>/MAW-Setup-<versão>.exe`. Por isso o site só deve ir ao ar **junto** com a publicação desse release, senão o link dá 404. O workflow garante isso: `tools/check-release.mjs` baixa o arquivo publicado, confere o SHA-256 e para o deploy se não bater.
-
-Ordem para publicar: (1) criar o release `v<versão>` neste repo com o `installer/output/MAW-Setup-<versão>.exe`; (2) Actions → Deploy site to GitHub Pages → Run workflow.
+O botão de download só aparece se o instalador do `release.json` estiver publicado e igual: `tools/check-release.mjs` baixa o arquivo, confere o SHA-256 e, se não der (hoje, porque os releases da MAW são privados), o deploy tira o `release.json` e o site vai ao ar com "Installer coming soon". Quando a MAW for pública (a decisão da GPL), o download aparece sozinho no deploy seguinte.
 
 ## Logo
 
