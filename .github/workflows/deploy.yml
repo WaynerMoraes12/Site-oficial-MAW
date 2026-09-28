@@ -1,8 +1,10 @@
-# Só roda quando alguém dispara manualmente (Actions → Deploy → Run workflow).
-# Não é ativado até o usuário decidir a questão da GPL e tornar o repo público.
+# Publica o site no GitHub Pages a cada push na main (a tarefa diária sobe o World Tour e o último
+# release da MAW, então o site se atualiza sozinho) e quando alguém dispara à mão.
 name: Deploy site to GitHub Pages
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 # só leitura por padrão; publicar no Pages fica restrito ao job de deploy
@@ -27,10 +29,13 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      # o botão de download só vai ao ar se o instalador do release.json já estiver publicado (e igual);
+      # enquanto não for público (a MAW ainda é privada), o site vai ao ar com "Installer coming soon"
+      - name: Download público ou "coming soon"
+        run: |
+          node tools/check-release.mjs || (echo "instalador ainda nao e publico, o site sai com Installer coming soon" && rm -f src/data/release.json)
       - run: npm run build
       - run: npm run check:dist
-      # com release.json, o botão de download só pode ir ao ar se o instalador já estiver publicado (e igual)
-      - run: node tools/check-release.mjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: dist
