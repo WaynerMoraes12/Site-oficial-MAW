@@ -48,19 +48,32 @@ const leaves = (v: unknown, path = ''): [string, string][] => {
   return [];
 };
 
-// Termos que não se traduzem: nomes próprios, marcas, siglas e rótulos idênticos nas três línguas.
-const UNIVERSAL = new Set([
-  'MAW', 'FAQ', 'AI', 'Smart Mix', 'MIDI', 'Roadmap', 'Download', 'Tracklist', 'Menu', 'Spleeter', 'Flask', 'JUCE 8',
-  'GNU GPL v3', 'Wayner Pires de Moraes', 'ASIO SDK · VST3 SDK', 'Google Gemini API', 'faster-whisper · Whisper large-v3',
-  'Deezer · MIT', 'SYSTRAN · OpenAI · MIT', 'Pallets · BSD-3', 'Steinberg Media Technologies', 'Raw Material Software · AGPLv3',
-  '// SMART MIX · EQ CLASHES', '// WHISPER · PT · EN', 'MAW World Tour', '2026 — 2027', 'ALL ACCESS', 'Windows 10/11 · x64',
-  'VST3 + ASIO', 'WAV · FLAC · OGG · MP3', 'CH', 'MIDI', '1329 × 620', '—', 'Piano Roll', 'Mixer', 'MIDI + Audio', 'Tech rider',
-  'Delay', 'Reverb', 'Pluck', 'Pad', 'Lead', 'MIXER', 'KEYBOARD', 'Sep 2026', '04 APR', '14 APR', '16 JUL', 'JUL', 'AUG', 'SEP',
-  'Intelligence', 'Backstage', 'Story', 'Download for Windows', 'en', 'es',
-  // iguais em pt/es: placeholder, rótulo do app, empréstimos e datas com o mesmo mês
-  'MAW — ', '{file}', 'MENU → ASIO Audio Setup', 'Piano roll', 'Internet', 'Audio', 'tempo', 'audio → MIDI',
-  'ITEM', 'REV. 09/2026', '31 MAR 2026', '03 MAY',
+// Caminhos que podem ficar iguais ao inglês: nomes próprios, marcas, siglas, rótulos do app e datas com o mesmo mês.
+// Chave por caminho, não por texto: um "Download for Windows" esquecido em outro lugar continua sendo pego.
+const SAME_AS_ENGLISH = new Set([
+  'nav.tour', 'nav.menu', 'hero.ledeBefore', 'ticker.items[5]', 'ticker.items[6]', 'stage.shots.mixer.label',
+  'stage.shots.piano-roll.label', 'tracklist.sides[0].tracks[5].title', 'ai.cards.smart-mix.title',
+  'ai.cards.whisper.hud', 'rider.rev', 'rider.headers[0]', 'rider.headers[1]', 'rider.rows[3].item',
+  'rider.rows[7].item', 'download.steps[0].bold', 'download.steps[3].bold', 'tour.eyebrow', 'tour.title',
+  'liner.timeline[0].when', 'liner.timeline[4].when', 'liner.timeline[5].when', 'liner.credits[0].name',
+  'liner.credits[2].name', 'liner.credits[2].note', 'liner.credits[3].name', 'liner.credits[3].note',
+  'liner.credits[4].name', 'liner.credits[4].note', 'liner.credits[5].name', 'liner.credits[5].note',
+  'liner.credits[6].name', 'liner.credits[6].note', 'liner.credits[7].name', 'liner.credits[8].name',
+  'ai.cards.keys.keyLabels[1]', 'ai.cards.keys.keyLabels[2]', 'rider.rows[1].item', 'tour.stops[0].when',
+  'liner.timeline[3].when', 'liner.timeline[7].when',
 ]);
+
+const untranslated = (dict: unknown): string[] => {
+  const en = new Map(leaves(dictionaries.en));
+  return leaves(dict)
+    .filter(([path, text]) => /\p{L}/u.test(text) && en.get(path) === text && !SAME_AS_ENGLISH.has(path))
+    .map(([path, text]) => `${path}: ${text}`);
+};
+
+const untranslatedPaths = (dict: unknown): string[] => {
+  const en = new Map(leaves(dictionaries.en));
+  return leaves(dict).filter(([path, text]) => /\p{L}/u.test(text) && en.get(path) === text).map(([path]) => path);
+};
 
 describe('dictionaries', () => {
   it('exist for every locale', () => {
@@ -71,13 +84,19 @@ describe('dictionaries', () => {
       expect(shape(dictionaries[locale])).toEqual(shape(dictionaries.en));
     });
     it(`${locale} leaves no English sentence untranslated`, () => {
-      const en = new Map(leaves(dictionaries.en));
-      const same = leaves(dictionaries[locale])
-        .filter(([path, text]) => /\p{L}/u.test(text) && en.get(path) === text && !UNIVERSAL.has(text))
-        .map(([path, text]) => `${path}: ${text}`);
-      expect(same).toEqual([]);
+      expect(untranslated(dictionaries[locale])).toEqual([]);
     });
   }
+  it('allows only paths that really stay the same in some language', () => {
+    const same = new Set(untranslatedPaths(dictionaries.pt).concat(untranslatedPaths(dictionaries.es)));
+    expect([...SAME_AS_ENGLISH].filter((path) => !same.has(path))).toEqual([]);
+  });
+  it('catches English left behind even when the same words are fine elsewhere', () => {
+    const pt = structuredClone(dictionaries.pt);
+    pt.hero.ctaDownload = dictionaries.en.hero.ctaDownload;
+    pt.nav.story = dictionaries.en.nav.story;
+    expect(untranslated(pt)).toEqual(['nav.story: Story', 'hero.ctaDownload: Download for Windows']);
+  });
   it('declares the page language for each locale', () => {
     expect(dictionaries.en.meta.htmlLang).toBe('en');
     expect(dictionaries.pt.meta.htmlLang).toBe('pt-BR');
