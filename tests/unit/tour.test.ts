@@ -82,12 +82,51 @@ describe('classifyStops', () => {
     const stops = classifyStops({ ...base, prs: [pr(58, { mergedAt: '2026-09-23T17:17:48Z' })] });
     expect(stops.map((s: { date: string }) => s.date)).toEqual(['2026-09-28', '2026-09-23']);
   });
-  it('orders versions from the oldest', () => {
+  it('shows only the newest version, not one stop per release', () => {
     const versions = [
-      { version: '1.1.0', mawCommit: 'b'.repeat(40), builtAt: '2026-11-01T10:00:00Z' },
       { version: '1.0.0', mawCommit: 'a'.repeat(40), builtAt: '2026-09-28T02:27:10.476Z' },
+      { version: '1.0.2', mawCommit: 'c'.repeat(40), builtAt: '2026-10-02T10:00:00Z' },
+      { version: '1.0.1', mawCommit: 'b'.repeat(40), builtAt: '2026-10-01T10:00:00Z' },
     ];
-    expect(ids(classifyStops({ ...base, versions }))).toEqual(['live:version:1.0.0', 'live:version:1.1.0']);
+    expect(ids(classifyStops({ ...base, versions }))).toEqual(['live:version:1.0.2']);
+  });
+});
+
+describe('classifyStops with an installer per merged PR', () => {
+  // estreia (1.0.0) em 23/09 14:45; último release (1.0.2) feito do commit de 02/10 09:00
+  const releases = {
+    ...base,
+    versions: [
+      { version: '1.0.0', mawCommit: 'a'.repeat(40), builtAt: '2026-09-28T02:27:10.476Z' },
+      { version: '1.0.2', mawCommit: 'c'.repeat(40), builtAt: '2026-10-02T10:00:00Z' },
+    ],
+    debutUntil: '2026-09-23T14:45:54Z',
+    installedUntil: '2026-10-02T09:00:00Z',
+  };
+  it('puts on the road what a release already delivered after the debut, newest first', () => {
+    const prs = [
+      pr(50, { mergedAt: '2026-09-20T10:00:00Z' }),
+      pr(60, { mergedAt: '2026-09-24T10:00:00Z' }),
+      pr(61, { mergedAt: '2026-10-01T10:00:00Z' }),
+      pr(62, { mergedAt: '2026-10-02T11:00:00Z' }),
+    ];
+    expect(ids(classifyStops({ ...releases, prs }))).toEqual(['live:version:1.0.2', 'live:pr:61', 'live:pr:60', 'reh:pr:62']);
+  });
+  it('keeps rehearsals and announcements when the tour is full, trimming the oldest deliveries', () => {
+    const prs = [
+      ...Array.from({ length: 15 }, (_, i) => pr(100 + i, { mergedAt: `2026-09-${String(24 + (i % 7)).padStart(2, '0')}T${String(10 + i).padStart(2, '0')}:00:00Z` })),
+      pr(200, { state: 'OPEN', mergedAt: null, updatedAt: '2026-10-03T10:00:00Z' }),
+    ];
+    const issues = [{ number: 73, title: 'VST3', body: '', createdAt: '2026-09-28T10:00:00Z', labels: ['roadmap'] }];
+    const stops = classifyStops({ ...releases, prs, issues });
+    expect(stops).toHaveLength(MAX_STOPS);
+    expect(stops[0].id).toBe('version:1.0.2');
+    expect(ids(stops).filter((s) => s.startsWith('reh') || s.startsWith('next'))).toEqual(['reh:pr:200', 'next:issue:73']);
+    expect(stops.filter((s: { status: string }) => s.status === 'live')).toHaveLength(MAX_STOPS - 2);
+  });
+  it('dates a delivered feature by its merge', () => {
+    const stops = classifyStops({ ...releases, prs: [pr(61, { mergedAt: '2026-10-01T10:00:00Z' })] });
+    expect(stops.map((s: { date: string }) => s.date)).toEqual(['2026-10-02', '2026-10-01']);
   });
 });
 

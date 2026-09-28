@@ -1,9 +1,12 @@
-// Paradas do World Tour a partir do estado da MAW no GitHub (spec §11).
-//   Na estrada: cada versão publicada no instalador do site.
-//   Ensaiando: trabalho que ainda não chegou ao instalador — recurso mergeado na main depois dele, recurso
-//     mergeado num branch que a main ainda não tem, PR aberto, branch com trabalho e sem PR — e o que pegou
-//     uma issue do roadmap (PR que cita #N, branch criado pela issue "N-…").
+// Paradas do World Tour a partir do estado da MAW no GitHub (spec §11; com um instalador por PR,
+// spec da esteira §6).
+//   Na estrada: a versão mais nova e os recursos que um release já entregou depois da estreia
+//     (mergeados na main entre o commit da estreia, debutUntil, e o do último release, installedUntil).
+//   Ensaiando: trabalho que ainda não chegou a um instalador — recurso mergeado na main depois do último
+//     release, recurso mergeado num branch que a main ainda não tem, PR aberto, branch com trabalho e sem
+//     PR — e o que pegou uma issue do roadmap (PR que cita #N, branch criado pela issue "N-…").
 //   Anunciado: issue aberta com a etiqueta roadmap que nada pegou ainda.
+// Cheio (MAX_STOPS): a versão, o que ensaia e o que foi anunciado ficam; os recursos entregues mais antigos saem.
 export const MAX_STOPS = 14;
 export const STATUSES = ['live', 'reh', 'next'];
 const LOCALES = ['en', 'pt', 'es'];
@@ -12,10 +15,11 @@ const LOCALES = ['en', 'pt', 'es'];
 const mentions = (text, n) => new RegExp(`(^|[^\\w&])#${n}(?!\\d)`).test(text ?? '');
 const time = (iso) => (iso ? Date.parse(iso) : Number.NEGATIVE_INFINITY);
 
-export function classifyStops({ versions, prs, branches, issues, installedUntil }) {
-  const live = [...versions]
-    .sort((a, b) => time(a.builtAt) - time(b.builtAt))
-    .map((v) => ({ id: `version:${v.version}`, status: 'live', date: v.builtAt.slice(0, 10), source: { kind: 'version', ...v } }));
+export function classifyStops({ versions, prs, branches, issues, installedUntil, debutUntil = installedUntil }) {
+  const newest = [...versions].sort((a, b) => time(a.builtAt) - time(b.builtAt)).at(-1);
+  const version = newest
+    ? [{ id: `version:${newest.version}`, status: 'live', date: newest.builtAt.slice(0, 10), source: { kind: 'version', ...newest } }]
+    : [];
 
   const roadmap = issues.filter((i) => i.labels.includes('roadmap')).map((i) => i.number);
   const picksUp = (p, n) => mentions(p.title, n) || mentions(p.body, n) || (p.headRefName ?? '').startsWith(`${n}-`);
@@ -24,8 +28,10 @@ export function classifyStops({ versions, prs, branches, issues, installedUntil 
   const branchByName = new Map(branches.map((b) => [b.name, b]));
   const aheadOfMain = (name) => (branchByName.get(name)?.ahead ?? 0) > 0;
   const installed = time(installedUntil);
+  const debut = time(debutUntil);
 
   const reh = [];
+  const delivered = [];
   for (const p of prs) {
     if (!isStop(p)) continue;
     const source = { kind: 'pr', number: p.number, title: p.title, body: p.body };
@@ -33,8 +39,11 @@ export function classifyStops({ versions, prs, branches, issues, installedUntil 
     // o commit do instalador está na main: PR mergeado na main até esse instante já está nele;
     // PR mergeado num branch que ainda tem trabalho fora da main também não chegou ao instalador
     const pending = merged && (p.baseRefName === 'main' ? time(p.mergedAt) > installed : aheadOfMain(p.baseRefName));
+    const shipped = merged && p.baseRefName === 'main' && time(p.mergedAt) > debut && time(p.mergedAt) <= installed;
     if (pending) {
       reh.push({ id: `pr:${p.number}`, status: 'reh', date: p.mergedAt.slice(0, 10), sortAt: time(p.mergedAt), source });
+    } else if (shipped) {
+      delivered.push({ id: `pr:${p.number}`, status: 'live', date: p.mergedAt.slice(0, 10), sortAt: time(p.mergedAt), source });
     } else if (p.state === 'OPEN') {
       const at = p.updatedAt ?? p.createdAt;
       reh.push({ id: `pr:${p.number}`, status: 'reh', date: p.createdAt.slice(0, 10), sortAt: time(at), source });
@@ -75,8 +84,12 @@ export function classifyStops({ versions, prs, branches, issues, installedUntil 
       source: { kind: 'issue', number: i.number, title: i.title, body: i.body },
     }));
 
-  const room = Math.max(0, MAX_STOPS - live.length - next.length);
-  return [...live, ...reh.slice(0, room), ...next].map(({ sortAt, ...stop }) => stop);
+  // a versão, o que foi anunciado e o que ensaia vêm antes; os recursos entregues preenchem o resto
+  const rehRoom = Math.max(0, MAX_STOPS - version.length - next.length);
+  const rehearsing = reh.slice(0, rehRoom);
+  delivered.sort((a, b) => b.sortAt - a.sortAt);
+  const deliveredRoom = Math.max(0, MAX_STOPS - version.length - next.length - rehearsing.length);
+  return [...version, ...delivered.slice(0, deliveredRoom), ...rehearsing, ...next].map(({ sortAt, ...stop }) => stop);
 }
 
 // Histórico de versões: a do instalador entra uma vez; reconstruir a mesma versão só troca o commit (a data fica).

@@ -1,10 +1,13 @@
 ﻿# Tarefa diária do Agendador do Windows (registrada por scripts/register-tour-task.ps1):
-# sincroniza o World Tour com o GitHub da MAW e, se mudou, commita só o src/data/tour.json e sobe.
+# sincroniza o World Tour e o último release da MAW e, se mudou, commita só os dados do site que a sincronização gera (tour.json, release.json, site.json) e sobe.
 # Log em %LOCALAPPDATA%\MAW-site\tour-sync.log.
 $repo = Split-Path -Parent $PSScriptRoot
 $logDir = Join-Path $env:LOCALAPPDATA 'MAW-site'
 $log = Join-Path $logDir 'tour-sync.log'
 $subject = 'chore: World Tour sincronizado com a MAW'
+# o que a sincronização gera; release.json e site.json mudam quando a esteira da MAW publica versão nova
+$synced = @('src/data/release.json', 'src/data/site.json')
+$all = @('src/data/tour.json') + $synced
 New-Item -ItemType Directory -Force $logDir | Out-Null
 
 function Log([string]$message) {
@@ -28,20 +31,20 @@ foreach ($state in 'MERGE_HEAD', 'CHERRY_PICK_HEAD', 'REVERT_HEAD', 'rebase-merg
 # mudança à mão ainda não commitada no snapshot: não mexe, para não misturar nem perder
 if (git status --porcelain -- src/data/tour.json) { Log 'src/data/tour.json tem mudanças não commitadas; pulei'; exit 0 }
 # instalador novo ainda não commitado: o tour seria de um instalador que o GitHub não tem
-if (git status --porcelain -- src/data/release.json) { Log 'src/data/release.json tem mudanças não commitadas; pulei até ele ser commitado'; exit 0 }
+if (git status --porcelain -- $synced) { Log 'dados do site (release.json ou site.json) com mudanças não commitadas; pulei até serem commitados'; exit 0 }
 
 if ((Run 'npm run tour') -ne 0) {
   # snapshot incompleto (ex.: o Claude não respondeu): desfaz, amanhã tenta de novo
-  Run 'git checkout -- src/data/tour.json' | Out-Null
+  Run "git checkout -- $($all -join ' ')" | Out-Null
   Log 'npm run tour falhou; nada commitado'
   exit 1
 }
 
-if (git status --porcelain -- src/data/tour.json) {
+if (git status --porcelain -- $all) {
   $message = "-m `"$subject`" -m `"Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`""
-  if ((Run "git commit $message -- src/data/tour.json") -ne 0) {
-    Run 'git checkout -- src/data/tour.json' | Out-Null
-    Log 'commit falhou; tour.json desfeito, amanhã tenta de novo'
+  if ((Run "git commit $message -- $($all -join ' ')") -ne 0) {
+    Run "git checkout -- $($all -join ' ')" | Out-Null
+    Log 'commit falhou; dados desfeitos, amanhã tenta de novo'
     exit 1
   }
   Log "commit feito ($branch)"

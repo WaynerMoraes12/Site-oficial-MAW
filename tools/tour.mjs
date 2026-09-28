@@ -3,6 +3,7 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
+import { pageShowsDownload } from './lib/release-check.mjs';
 import { classifyStops, mergeTexts, rememberTexts, snapshotProblems, updateVersions } from './lib/tour.mjs';
 import { buildPrompt, parseTexts, versionText } from './lib/tour-texts.mjs';
 
@@ -53,12 +54,42 @@ function writeTexts(source) {
   throw lastError;
 }
 
-const release = readJson('src/data/release.json');
+// Último release da esteira da MAW (windows-release.yml): o release.json dele vira o do site e a versão do
+// site acompanha. Sem release ainda (ou sem acesso), fica o release.json que já está aqui.
+function latestMawRelease() {
+  try {
+    const quiet = { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 16 * 1024 * 1024 };
+    const tag = execFileSync('gh', ['release', 'view', '-R', REPO, '--json', 'tagName', '--jq', '.tagName'], quiet).trim();
+    if (!tag) return null;
+    const json = JSON.parse(execFileSync('gh', ['release', 'download', tag, '-R', REPO, '-p', 'release.json', '-O', '-'], quiet));
+    return pageShowsDownload(json, { version: json.version }) ? json : null;
+  } catch {
+    return null;
+  }
+}
+
+const writeJsonIfChanged = (path, value) => {
+  const text = `${JSON.stringify(value, null, 2)}\n`;
+  if (!existsSync(path) || readFileSync(path, 'utf8').replace(/\r\n/g, '\n') !== text) writeFileSync(path, text);
+};
+
+let release = readJson('src/data/release.json');
+const mawRelease = latestMawRelease();
+if (mawRelease) {
+  release = mawRelease;
+  writeJsonIfChanged('src/data/release.json', mawRelease);
+  const site = readJson('src/data/site.json');
+  if (site.version !== mawRelease.version) writeJsonIfChanged('src/data/site.json', { ...site, version: mawRelease.version });
+  console.log(`release da MAW: ${mawRelease.version}`);
+}
 const previous = readJson(OUT);
 
 const versions = updateVersions(previous?.versions, release);
+const commitDate = (sha) => (sha ? gh('api', `repos/${REPO}/commits/${sha}`, '--jq', '.commit.committer.date').trim() : '');
 const installerCommit = release?.mawCommit ?? previous?.installerCommit ?? null;
-const installedUntil = installerCommit ? gh('api', `repos/${REPO}/commits/${installerCommit}`, '--jq', '.commit.committer.date').trim() : '';
+// o que entrou na main até o commit do último release já está num instalador; antes da estreia, é da 1.0
+const installedUntil = commitDate(installerCommit);
+const debutUntil = versions.length ? commitDate(versions[0].mawCommit) : installedUntil;
 
 const prs = ghJson(
   'pr', 'list', '-R', REPO, '--state', 'all', '--limit', '1000',
@@ -76,7 +107,7 @@ const branches = gh('api', '--paginate', `repos/${REPO}/branches?per_page=100`, 
     return { name, ahead: c.ahead ?? 0, lastCommitAt: c.at ?? '', lastMessage: (c.message ?? '').split('\n')[0] };
   });
 
-const stops = mergeTexts(classifyStops({ versions, prs, branches, issues, installedUntil }), previous);
+const stops = mergeTexts(classifyStops({ versions, prs, branches, issues, installedUntil, debutUntil }), previous);
 const fresh = stops.filter((s) => !s.text);
 for (const stop of fresh) {
   try {

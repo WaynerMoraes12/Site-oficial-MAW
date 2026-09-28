@@ -13,7 +13,7 @@ export function readReleaseJson(text) {
 // O site só pode ir ao ar mostrando "Download" se o arquivo do release.json já estiver publicado
 // no GitHub Releases, com o mesmo SHA-256. Sem release.json o site mostra "coming soon": nada a checar.
 // Mesma regra da página (src/lib/release.ts: isReleaseInfo + releaseView). Um teste confere que as duas concordam.
-function pageShowsDownload(release, site) {
+export function pageShowsDownload(release, site) {
   const r = release;
   return (
     typeof r === 'object' && r !== null &&

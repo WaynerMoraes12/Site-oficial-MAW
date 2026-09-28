@@ -53,7 +53,9 @@ Uma tarefa do Agendador do Windows (**MAW Site - World Tour**) roda `scripts/tou
 
 ## Instalador
 
-`npm run installer` compila `installer/MAW.iss` (Inno Setup 6) a partir do `MAW_APP.exe` de Release e grava `src/data/release.json`. Variáveis: `MAW_REPO`, `MAW_EXE` e `ISCC`. Sem `release.json`, o botão de download mostra "Installer coming soon".
+O instalador agora é feito pela esteira do repositório da MAW (`.github/workflows/windows-release.yml` e `installer/` de lá): cada PR mergeado na `main` da MAW vira um release `vX.Y.Z` com o instalador completo (com a IA) e um `release.json`. O `npm run tour` (e a tarefa diária) baixa o `release.json` do último release para `src/data/release.json` e acompanha a versão em `src/data/site.json`; o botão de download aponta para os releases da MAW (`releaseBaseUrl`). Enquanto a MAW for privada, esse link não é público e o deploy continua travado pelo `check-release`, como deve. Spec: `docs/superpowers/specs/2026-09-28-esteira-e-atualizacao-design.md`.
+
+O `npm run installer` daqui (Inno Setup com o `MAW_APP.exe` local) é o jeito antigo e sai quando a esteira da MAW publicar o primeiro release. Sem `release.json`, o botão de download mostra "Installer coming soon".
 
 ## Publicar
 

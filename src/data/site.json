@@ -7,5 +7,5 @@
   "description": "MAW (Musical Artificial Workspace) is a multitrack music production workstation for Windows with AI built into the timeline: stem separation, transcription, chord detection and a mix advisor.",
   "neuralServerBundled": false,
   "sourceCodeUrl": "",
-  "releaseBaseUrl": "https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download"
+  "releaseBaseUrl": "https://github.com/WaynerMoraes12/MAW/releases/download"
 }
