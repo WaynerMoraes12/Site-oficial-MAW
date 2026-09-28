@@ -350,3 +350,4 @@ footer .legal { max-width: 900px; line-height: 1.6; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .vinyl { transform: translateX(44%); }
 }
+ul.board { list-style: none; }

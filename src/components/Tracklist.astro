@@ -1,0 +1,40 @@
+---
+import { sides } from '../data/tracklist';
+import { barcodeBars } from '../lib/barcode';
+import site from '../data/site.json';
+
+const bars = barcodeBars(7, 186);
+---
+<section class="sec tracklist" id="tracklist">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Tracklist</div>
+      <h2 class="chrome h-rock">Record <span class="bolt" aria-hidden="true"></span> Edit <span class="bolt" aria-hidden="true"></span> Mix <span class="bolt" aria-hidden="true"></span> Deliver</h2>
+    </div>
+    <div class="tl-grid">
+      {sides.map((side) => (
+        <div class="side">
+          <h3>{side.name} <small>{side.subtitle}</small></h3>
+          <ol class="tracks">
+            {side.tracks.map((t) => (
+              <li class="trk">
+                <span class="n">{t.n}</span>
+                <span class="t">{t.title}<em>{t.detail}</em></span>
+                <span class="kbd">{t.key}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))}
+    </div>
+    <div class="backcover-foot">
+      <div>MAW-001 · ℗ &amp; © {site.year} {site.author} · Your music is yours.<br />Recorded, mixed and compiled in Araras, Brazil.</div>
+      <div class="barcode" aria-hidden="true">
+        <svg width="190" height="52" viewBox="0 0 190 52">
+          {bars.map((b) => <rect x={b.x} y="0" width={b.width} height="52" fill="#000" />)}
+        </svg>
+        <div>7 891000 202601</div>
+      </div>
+    </div>
+  </div>
+</section>
