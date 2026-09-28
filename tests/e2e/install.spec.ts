@@ -41,3 +41,11 @@ test('source code link only appears when configured', async ({ page }) => {
   await expect(page.locator('#download')).toHaveCount(1);
   await expect(page.locator('#download .source-link')).toHaveCount(site.sourceCodeUrl ? 1 : 0);
 });
+
+test('the rider keeps explicit table roles, which Safari needs when the phone layout turns rows into cards', async ({ page }) => {
+  const table = page.locator('#rider table');
+  await expect(table).toHaveAttribute('role', 'table');
+  await expect(table.locator('tbody tr[role="row"]')).toHaveCount(8);
+  await expect(table.locator('tbody td[role="cell"]')).toHaveCount(32);
+  await expect(table.locator('thead th[role="columnheader"]')).toHaveCount(4);
+});

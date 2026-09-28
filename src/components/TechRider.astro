@@ -20,17 +20,18 @@ const disk = diskLabel(releaseData, site) ?? '10 MB';
     </div>
     <div class="sheet">
       <div class="sheet-top"><span>MAW {site.version} — {r.sheet}</span><span>{r.rev}</span></div>
-      <table class="input">
-        <thead>
-          <tr>{r.headers.map((h) => <th scope="col">{h}</th>)}</tr>
+      <!-- papéis explícitos: no celular as linhas viram cartões (display:block) e o Safari perderia a tabela -->
+      <table class="input" role="table">
+        <thead role="rowgroup">
+          <tr role="row">{r.headers.map((h) => <th scope="col" role="columnheader">{h}</th>)}</tr>
         </thead>
-        <tbody>
+        <tbody role="rowgroup">
           {r.rows.map((row, i) => (
-            <tr>
-              <td data-label={r.headers[0]}>{String(i + 1).padStart(2, '0')}</td>
-              <td data-label={r.headers[1]}>{row.item}</td>
-              <td data-label={r.headers[2]}>{fill(row.min, { disk })}</td>
-              <td data-label={r.headers[3]}>{fill(row.rec, { disk })}</td>
+            <tr role="row">
+              <td role="cell" data-label={r.headers[0]}>{String(i + 1).padStart(2, '0')}</td>
+              <td role="cell" data-label={r.headers[1]}>{row.item}</td>
+              <td role="cell" data-label={r.headers[2]}>{fill(row.min, { disk })}</td>
+              <td role="cell" data-label={r.headers[3]}>{fill(row.rec, { disk })}</td>
             </tr>
           ))}
         </tbody>
