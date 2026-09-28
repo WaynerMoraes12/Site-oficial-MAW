@@ -65,7 +65,8 @@ const langScript = `(function(){var c=null,s=null,ok=true;try{var q=new URLSearc
     <link rel="preload" as="font" type="font/woff2" href={antonLatin} crossorigin />
     <link rel="preload" as="font" type="font/woff2" href={barlowLatin} crossorigin />
     <link rel="preload" as="font" type="font/woff2" href={barlowBold} crossorigin />
-    <link rel="icon" type="image/png" href={withBase('favicon.png')} />
+    <!-- ícone oficial do app da MAW (o mesmo do .exe), gerado por tools/make_icons.py -->
+    <link rel="icon" href={withBase('favicon.ico')} sizes="16x16 32x32 48x48" />
     <link rel="apple-touch-icon" href={withBase('apple-touch-icon.png')} />
     <link rel="sitemap" href={withBase('sitemap-index.xml')} />
     <link rel="canonical" href={new URL(localeUrl(locale), Astro.site).href} />

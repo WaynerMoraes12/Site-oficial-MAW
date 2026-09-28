@@ -1,4 +1,5 @@
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -8,7 +9,7 @@ from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from logo_web import BOX, THRESHOLD, drawing_pixels_identical, make_web_logo  # noqa: E402
-from make_icons import square_icon  # noqa: E402
+from make_icons import write_icons  # noqa: E402
 
 SOURCE = Path(r"C:\Users\User\MAW\Source\logo_MAW.png")
 
@@ -82,11 +83,38 @@ class WebLogoTests(unittest.TestCase):
         self.assertTrue(drawing_pixels_identical(original, make_web_logo(original)))
 
 
+def synthetic_app_icon(tmp: Path) -> tuple[Path, Path]:
+    # ícone do app: quadrado arredondado preto com um traço roxo, em PNG 1024 e em .ico com vários tamanhos
+    a = np.zeros((1024, 1024, 4), dtype=np.uint8)
+    a[64:960, 64:960] = (3, 3, 3, 255)
+    a[400:600, 150:870] = (157, 0, 255, 255)
+    png = tmp / "icon_MAW.png"
+    ico = tmp / "icon.ico"
+    Image.fromarray(a, "RGBA").save(png)
+    Image.fromarray(a, "RGBA").save(ico, sizes=[(16, 16), (24, 24), (32, 32), (48, 48), (256, 256)])
+    return png, ico
+
+
 class IconTests(unittest.TestCase):
-    def test_square_icon_is_square_crop(self):
-        icon = square_icon(synthetic_logo())
-        self.assertEqual(icon.size[0], icon.size[1])
-        self.assertEqual(icon.size, (800, 800))
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self.png, self.ico = synthetic_app_icon(self.tmp)
+
+    def test_installer_uses_the_official_app_icon_unchanged(self):
+        out = write_icons(self.png, self.ico, self.tmp / "site")
+        self.assertEqual(out["installer"].read_bytes(), self.ico.read_bytes())
+
+    def test_tab_icon_frames_are_the_official_ones(self):
+        out = write_icons(self.png, self.ico, self.tmp / "site")
+        with Image.open(self.ico) as official, Image.open(out["favicon"]) as web:
+            self.assertEqual(sorted(web.info["sizes"]), [(16, 16), (32, 32), (48, 48)])
+            for size in [(16, 16), (32, 32), (48, 48)]:
+                self.assertTrue(np.array_equal(np.asarray(web.ico.getimage(size)), np.asarray(official.ico.getimage(size))), size)
+
+    def test_apple_touch_icon_is_the_official_png_at_180(self):
+        out = write_icons(self.png, self.ico, self.tmp / "site")
+        with Image.open(out["apple"]) as apple:
+            self.assertEqual(apple.size, (180, 180))
 
 
 if __name__ == "__main__":

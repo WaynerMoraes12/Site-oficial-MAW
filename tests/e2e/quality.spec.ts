@@ -108,3 +108,16 @@ test('robots, sitemap and OG image are served', async ({ request }) => {
   const buf = await og.body();
   expect([buf.readUInt32BE(16), buf.readUInt32BE(20)]).toEqual([1200, 630]);
 });
+
+test('the browser tab shows the official MAW app icon', async ({ page, request }) => {
+  await page.goto('/');
+  const href = await page.locator('link[rel="icon"]').getAttribute('href');
+  expect(href).toMatch(/favicon\.ico$/);
+  const ico = await request.get(href!);
+  expect(ico.status()).toBe(200);
+  const buf = await ico.body();
+  // cabeçalho ICO: reservado 0, tipo 1, e 3 imagens (16, 32 e 48 px)
+  expect([buf.readUInt16LE(0), buf.readUInt16LE(2), buf.readUInt16LE(4)]).toEqual([0, 1, 3]);
+  expect([buf[6], buf[22], buf[38]].sort((a, b) => a - b)).toEqual([16, 32, 48]);
+  expect((await request.get('/apple-touch-icon.png')).status()).toBe(200);
+});
