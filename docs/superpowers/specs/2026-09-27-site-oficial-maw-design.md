@@ -399,3 +399,50 @@ Mudança pedida pelo usuário depois da implementação: o site nasce em inglês
   - e2e: redirecionamento com navegador em `pt-BR`/`es-AR`, sem redirecionamento em `en-US` ou com preferência gravada, seletor, `lang` e `hreflang`;
   - o verificador de português passa a olhar só as páginas em inglês.
 - **Exceção à regra da seção 2** ("todo o texto em inglês"): vale para a página padrão `/`. As páginas `/pt/` e `/es/` são traduções.
+
+## 11. Adendo (28/09/2026): World Tour sincronizado com a MAW e ícone oficial
+
+Pedido do usuário: "sempre que o projeto vai atualizando, ele precisa atualizar também, o que está na estrada, o que está ensaiando e o que está anunciado". O roadmap escrito à mão já estava velho: dos 6 itens "ensaiando", 5 foram mergeados na MAW entre 24 e 28/09, junto com o porte para Linux.
+
+Decisões do usuário (28/09): "Na estrada" = está no instalador publicado; "Anunciado" = issues da MAW com a etiqueta `roadmap`; ícone da aba = ícone oficial do app.
+
+### 11.1 Fonte e regras de status
+
+Fonte única: o GitHub da MAW (`WaynerMoraes12/MAW`), lido pelo `gh` já autenticado neste PC.
+
+| Status | Entra | Sai |
+|---|---|---|
+| **Na estrada** | a versão do instalador do site (`release.json`: versão, data do build e o novo campo `mawCommit`). Uma parada por versão publicada: "Version 1.0 — debut", depois "Version 1.1 — …" | nunca (histórico) |
+| **Ensaiando** | PR de recurso (branch `feature/*` ou título `feat…`) mergeado na `main` **depois** do `mawCommit` do instalador; PR de recurso aberto; branch `feature/*` no GitHub com commits fora da `main` e sem PR | quando entra num instalador novo (vira parte da parada da versão) |
+| **Anunciado** | issue aberta com a etiqueta `roadmap` | quando um PR ou branch a referencia (`#N` no PR, ou branch criado pela issue, `N-…`): vira Ensaiando; issue fechada some |
+
+- `fix/*`, `docs/*` e PR sem `feat` ficam de fora: o tour mostra recursos, não correções.
+- Branch cujo PR foi fechado sem merge (ex.: `feature/automacao-completa`, PR #59, conteúdo entregue no #60) fica de fora.
+- Ordem: Na estrada (versão mais antiga primeiro), Ensaiando (merge ou último commit mais recente primeiro), Anunciado (ordem de criação). Até 14 paradas; se passar, cortam-se os Ensaiando mais antigos.
+- Instalador atual: `mawCommit` = `5433daa` (reflog da MAW: `main` em 5433daa às 11:46 de 23/09; `MAW_APP.exe` compilado às 11:49). Hoje isso dá 1 parada Na estrada, 10 Ensaiando (#58, #60–#67, #70) e 0 Anunciado.
+
+### 11.2 Textos nas três línguas
+
+Cada parada precisa de um título curto (até ~48 caracteres, no tom das paradas atuais) em EN, PT e ES. O `npm run tour` pede ao Claude CLI (`claude -p`, já logado neste PC) o título nas três línguas a partir do título e da descrição do PR/issue, **só para itens novos**. Tudo fica em `src/data/tour.json`, commitado: dá para revisar e editar à mão, e uma edição manual nunca é sobrescrita. A coluna da esquerda: Na estrada = mês e ano do build da versão; Ensaiando = "In rehearsal"; Anunciado = "Next tour" (rótulos dos dicionários).
+
+### 11.3 Build, verificação e deploy
+
+- O build **não** acessa a rede: lê o `src/data/tour.json`. `npm run tour` é o único passo que fala com o GitHub e com o Claude.
+- `check:tour` (entra no `check:dist` e, portanto, no deploy) falha se: alguma parada não tem texto em alguma língua; o snapshot foi feito com outro instalador (`mawCommit` diferente do `release.json`). O verificador de português continua cobrindo a página em inglês.
+- `build-installer` passa a gravar `mawCommit` (HEAD do repo da MAW) e para se o `MAW_APP.exe` for mais velho que esse commit (exe desatualizado em relação ao código).
+
+### 11.4 Quando sincroniza (gatilho)
+
+Recomendado: **tarefa agendada no Windows deste PC**, uma vez por dia: roda `npm run tour`; se algo mudou, faz commit ("chore: World Tour sincronizado com a MAW") e push no branch atual do site. Usa o `gh` e o Claude já logados aqui, sem criar segredo novo. Depende do PC ligado; se ficar dias desligado, o `check:tour` não trava (o snapshot continua coerente com o instalador), só fica atrasado.
+
+Alternativas: GitHub Actions diário (não depende do PC, mas exige criar dois segredos: token de leitura da MAW e chave da API da Anthropic); ou só manual (`npm run tour`).
+
+### 11.5 Ícone oficial (feito)
+
+A aba usa `public/favicon.ico` com os quadros de 16/32/48 px do `icon.ico` oficial da MAW; o apple-touch-icon é o `icon_MAW.png` oficial reduzido; o instalador usa o `icon.ico` oficial sem mudança (`tools/make_icons.py`).
+
+### 11.6 Verificação
+
+- Unitário: classificação de status (PR antes/depois do instalador, PR aberto, branch sem PR, PR fechado, issue referenciada, fix fora), preservação de texto editado à mão, `check:tour`.
+- e2e: as paradas do snapshot aparecem nas três línguas com o selo certo.
+- Execução real: `npm run tour` contra o GitHub da MAW produz as 11 paradas descritas em 11.1.
