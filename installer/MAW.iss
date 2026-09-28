@@ -9,6 +9,9 @@
 #ifndef MawRepo
   #error MawRepo precisa ser definido (/DMawRepo=...)
 #endif
+#ifndef RedistMajor
+  #error RedistMajor/RedistMinor/RedistBld vêm da versão do vc_redist.x64.exe (build-installer.mjs)
+#endif
 
 [Setup]
 AppId={{DD0F02F2-3F2C-48E1-A02E-F3A0C7F76221}
@@ -52,7 +55,24 @@ Name: "{group}\{cm:UninstallProgram,MAW}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\MAW"; Filename: "{app}\MAW.exe"; Tasks: desktopicon
 
 [Run]
-; O MAW_APP.exe é /MD (MultiThreadedDLL): precisa do runtime. O instalador da Microsoft
-; não faz nada se a mesma versão ou uma mais nova já estiver instalada.
-Filename: "{tmp}\vc_redist.x64.exe"; Parameters: "/install /quiet /norestart"; StatusMsg: "Installing the Microsoft Visual C++ runtime..."; Flags: waituntilterminated
+; O MAW_APP.exe é /MD (MultiThreadedDLL): precisa do runtime. Só roda se faltar ou for mais velho (spec §6).
+Filename: "{tmp}\vc_redist.x64.exe"; Parameters: "/install /quiet /norestart"; StatusMsg: "Installing the Microsoft Visual C++ runtime..."; Flags: waituntilterminated; Check: VCRedistNeeded
 Filename: "{app}\MAW.exe"; Description: "{cm:LaunchProgram,MAW}"; Flags: nowait postinstall skipifsilent
+
+[Code]
+// Runtime do Visual C++ x64 já instalado e pelo menos da versão que vem no instalador? Então não roda o vc_redist.
+function VCRedistNeeded: Boolean;
+var
+  Installed, Major, Minor, Bld: Cardinal;
+  Key: String;
+begin
+  Key := 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64';
+  Result := True;
+  if RegQueryDWordValue(HKLM64, Key, 'Installed', Installed) and (Installed = 1) and
+     RegQueryDWordValue(HKLM64, Key, 'Major', Major) and
+     RegQueryDWordValue(HKLM64, Key, 'Minor', Minor) and
+     RegQueryDWordValue(HKLM64, Key, 'Bld', Bld) then
+    Result := (Major < {#RedistMajor}) or
+              ((Major = {#RedistMajor}) and (Minor < {#RedistMinor})) or
+              ((Major = {#RedistMajor}) and (Minor = {#RedistMinor}) and (Bld < {#RedistBld}));
+end;

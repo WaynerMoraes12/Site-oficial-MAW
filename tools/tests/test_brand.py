@@ -45,6 +45,14 @@ class WebLogoTests(unittest.TestCase):
         web.putpixel((600 - BOX[0], 410 - BOX[1]), (150, 0, 255, 255))
         self.assertFalse(drawing_pixels_identical(original, web))
 
+    def test_detects_erased_part_of_the_drawing(self):
+        original = synthetic_logo()
+        web = make_web_logo(original)
+        # apaga (alpha 0) um bloco do traço: o logo ficou incompleto
+        a = np.asarray(web).copy()
+        a[400 - BOX[1]:410 - BOX[1], 500 - BOX[0]:700 - BOX[0], 3] = 0
+        self.assertFalse(drawing_pixels_identical(original, Image.fromarray(a, "RGBA")))
+
     @unittest.skipUnless(SOURCE.exists(), "logo original da MAW não encontrado")
     def test_real_logo(self):
         original = Image.open(SOURCE).convert("RGB")

@@ -30,6 +30,8 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run check:dist
+      # com release.json, o botão de download só pode ir ao ar se o instalador já estiver publicado (e igual)
+      - run: node tools/check-release.mjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: dist

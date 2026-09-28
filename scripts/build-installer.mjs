@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildReleaseInfo, findIscc, sha256File } from './lib/release-info.mjs';
+import { assertMicrosoftSigned, buildReleaseInfo, findIscc, parseProductVersion, parseRedistInfo, sha256File } from './lib/release-info.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const site = JSON.parse(readFileSync(join(root, 'src/data/site.json'), 'utf8'));
@@ -22,6 +22,13 @@ if (!existsSync(redist)) {
   console.log(`baixado ${redist}`);
 }
 
+// Só empacota o runtime com assinatura válida da Microsoft; a versão vai para a checagem de registro do .iss.
+const psCmd = `$p='${redist.replace(/'/g, "''")}'; $s=Get-AuthenticodeSignature -LiteralPath $p; [pscustomobject]@{Status=[string]$s.Status; Subject=[string]$s.SignerCertificate.Subject; Version=[string](Get-Item -LiteralPath $p).VersionInfo.ProductVersion} | ConvertTo-Json -Compress`;
+const redistInfo = parseRedistInfo(execFileSync('powershell', ['-NoProfile', '-NonInteractive', '-Command', psCmd], { encoding: 'utf8' }));
+assertMicrosoftSigned(redistInfo);
+const redistVersion = parseProductVersion(redistInfo.version);
+console.log(`vc_redist.x64.exe ${redistInfo.version}: assinatura Microsoft válida`);
+
 const iscc = findIscc([
   process.env.ISCC,
   'C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe',
@@ -29,7 +36,11 @@ const iscc = findIscc([
 ]);
 if (!iscc) throw new Error('ISCC.exe não encontrado: instale o Inno Setup 6 ou defina ISCC');
 
-execFileSync(iscc, [`/DAppVersion=${site.version}`, `/DSourceExe=${sourceExe}`, `/DMawRepo=${mawRepo}`, join(root, 'installer', 'MAW.iss')], { stdio: 'inherit' });
+execFileSync(iscc, [
+  `/DAppVersion=${site.version}`, `/DSourceExe=${sourceExe}`, `/DMawRepo=${mawRepo}`,
+  `/DRedistMajor=${redistVersion.major}`, `/DRedistMinor=${redistVersion.minor}`, `/DRedistBld=${redistVersion.build}`,
+  join(root, 'installer', 'MAW.iss'),
+], { stdio: 'inherit' });
 
 const file = `MAW-Setup-${site.version}.exe`;
 const out = join(root, 'installer', 'output', file);

@@ -19,10 +19,11 @@ def make_web_logo(original: Image.Image) -> Image.Image:
 
 
 def drawing_pixels_identical(original: Image.Image, web: Image.Image) -> bool:
-    src = np.asarray(original.convert("RGB").crop(BOX))
+    # igual pixel a pixel (cor e transparência) a uma regeneração do original: pega cor mudada
+    # e também parte do desenho apagada, que uma comparação só dos pixels opacos deixaria passar
+    expected = np.asarray(make_web_logo(original))
     out = np.asarray(web.convert("RGBA"))
-    drawing = out[..., 3] == 255
-    return bool(drawing.any() and (out[..., :3][drawing] == src[drawing]).all())
+    return bool(expected.shape == out.shape and np.array_equal(expected, out))
 
 
 def main(argv=None) -> int:

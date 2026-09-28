@@ -33,3 +33,22 @@ describe('findIscc', () => {
     expect(findIscc(['C:/a/ISCC.exe'], () => false)).toBeNull();
   });
 });
+
+import { assertMicrosoftSigned, parseProductVersion, parseRedistInfo } from '../../scripts/lib/release-info.mjs';
+
+describe('VC++ redistributable verification', () => {
+  const good = parseRedistInfo('{"Status":"Valid","Subject":"CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US","Version":"14.51.36247.0"}');
+  it('reads status, signer and version from PowerShell JSON', () => {
+    expect(good).toEqual({ status: 'Valid', subject: 'CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US', version: '14.51.36247.0' });
+  });
+  it('accepts only a valid Microsoft signature', () => {
+    expect(() => assertMicrosoftSigned(good)).not.toThrow();
+    expect(() => assertMicrosoftSigned({ ...good, status: 'NotSigned' })).toThrow(/Microsoft/);
+    expect(() => assertMicrosoftSigned({ ...good, status: 'HashMismatch' })).toThrow(/Microsoft/);
+    expect(() => assertMicrosoftSigned({ ...good, subject: 'CN=Evil Corp, O=Evil Corp' })).toThrow(/Microsoft/);
+  });
+  it('splits the product version used by the installer registry check', () => {
+    expect(parseProductVersion('14.51.36247.0')).toEqual({ major: 14, minor: 51, build: 36247 });
+    expect(() => parseProductVersion('garbage')).toThrow(/versão/);
+  });
+});

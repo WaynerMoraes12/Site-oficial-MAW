@@ -16,6 +16,7 @@
     "check:links": "node tools/check-base-links.mjs dist",
     "check:dist": "npm run check:pt && npm run check:links",
     "og-image": "node tools/og-image.mjs",
+    "check:release": "node tools/check-release.mjs",
     "installer": "node scripts/build-installer.mjs"
   },
   "dependencies": {
