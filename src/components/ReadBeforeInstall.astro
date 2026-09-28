@@ -1,0 +1,20 @@
+---
+import site from '../data/site.json';
+import { readBeforeInstallPlates } from '../lib/notices';
+
+const plates = readBeforeInstallPlates(site.neuralServerBundled);
+---
+<section class="warn" id="read-before-install">
+  <div class="wrap">
+    <div class="eyebrow">Read before installing</div>
+    <h2 class="h-stencil">Fragile. Handle<br />with care.</h2>
+    <div class="plates">
+      {plates.map((p) => (
+        <article class={p.hot ? 'plate hot' : 'plate'}>
+          <h3>{p.title}</h3>
+          <p>{p.body}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

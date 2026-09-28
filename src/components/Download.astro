@@ -1,0 +1,54 @@
+---
+import logo from '../assets/brand/maw-logo-web.png';
+import site from '../data/site.json';
+import { releaseView } from '../lib/release';
+
+// release.json só existe depois do build do instalador (Task 10); sem ele, o botão fica "coming soon".
+const found = import.meta.glob('../data/release.json', { eager: true, import: 'default' });
+const release = releaseView(Object.values(found)[0], site);
+const fileName = `MAW-Setup-${site.version}.exe`;
+---
+<section class="sec dl" id="download">
+  <div class="wrap dl-grid">
+    <div class="lanyard" aria-hidden="true">
+      <div class="strap"></div>
+      <div class="pass">
+        <div class="hole"></div>
+        <div class="logo-row"><img data-logo src={logo.src} alt="" /></div>
+        <div class="aa">ALL ACCESS</div>
+        <div class="body">
+          <dl>
+            <dt>VERSION</dt><dd>{site.version}</dd>
+            <dt>PLATFORM</dt><dd>Windows 10/11 · x64</dd>
+            <dt>FILE</dt><dd>{fileName}</dd>
+            <dt>LICENSE</dt><dd>GNU GPL v3</dd>
+          </dl>
+          <div class="holo"><img data-logo src={logo.src} alt="" /></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="eyebrow">Download</div>
+      <h2 class="chrome h-rock xl">Your backstage<br />pass</h2>
+      <p class="lede">The official MAW installer for Windows. Free, no sign-up.</p>
+      <ol class="steps">
+        <li><span>Download <b>{fileName}</b>.</span></li>
+        <li><span>If Windows shows SmartScreen, click <b>More info → Run anyway</b>.</span></li>
+        <li><span>Follow the installer: it adds a Start Menu shortcut, an uninstaller and the Visual C++ runtime if it's missing.</span></li>
+        <li><span>Open MAW and pick your audio interface at <b>MENU → ASIO Audio Setup</b>.</span></li>
+      </ol>
+      {release.state === 'ready' ? (
+        <Fragment>
+          <a class="btn btn-rec" href={release.url} data-download>Download MAW {site.version} · Windows</a>
+          <div class="hash">SHA-256: {release.sha256} · {release.sizeLabel}</div>
+        </Fragment>
+      ) : (
+        <Fragment>
+          <span class="btn btn-rec" role="link" aria-disabled="true" data-download>Installer coming soon</span>
+          <div class="hash">The installer is being pressed. Check back soon.</div>
+        </Fragment>
+      )}
+      {site.sourceCodeUrl && <a class="source-link" href={site.sourceCodeUrl}>Source code (GNU GPL v3)</a>}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,26 @@
+---
+import { riderNote, riderRows } from '../data/rider';
+import site from '../data/site.json';
+---
+<section class="sec rider" id="rider">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">System requirements</div>
+      <h2 class="h-stencil white">Tech rider</h2>
+    </div>
+    <div class="sheet">
+      <div class="sheet-top"><span>MAW {site.version} — TECH RIDER</span><span>REV. 09/2026</span></div>
+      <table class="input">
+        <thead>
+          <tr><th scope="col">CH</th><th scope="col">ITEM</th><th scope="col">MINIMUM</th><th scope="col">RECOMMENDED</th></tr>
+        </thead>
+        <tbody>
+          {riderRows.map((r) => (
+            <tr><td>{r.ch}</td><td>{r.item}</td><td>{r.min}</td><td>{r.rec}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="rider-note">{riderNote}</p>
+  </div>
+</section>
