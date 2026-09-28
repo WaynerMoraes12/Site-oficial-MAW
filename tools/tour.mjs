@@ -13,12 +13,17 @@ const gh = (...args) => execFileSync('gh', args, { encoding: 'utf8', maxBuffer: 
 const ghJson = (...args) => JSON.parse(gh(...args));
 
 // No Windows o npm instala o Claude Code como claude.cmd, que o Node não roda sem shell: usa o claude.exe dele.
+let bin;
 function claudeBin() {
+  bin ??= findClaude();
+  return bin;
+}
+function findClaude() {
   if (process.env.CLAUDE_BIN) return process.env.CLAUDE_BIN;
   if (process.platform !== 'win32') return 'claude';
   const where = (name) => {
     try {
-      return execFileSync('where', [name], { encoding: 'utf8' }).split(/\r?\n/)[0].trim();
+      return execFileSync('where', [name], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).split(/\r?\n/)[0].trim();
     } catch {
       return '';
     }
@@ -31,11 +36,11 @@ function claudeBin() {
 }
 
 function writeTexts(source) {
-  const bin = claudeBin();
+  const cli = claudeBin();
   let lastError;
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      const out = execFileSync(bin, ['-p', '--tools', '', '--no-session-persistence'], {
+      const out = execFileSync(cli, ['-p', '--tools', '', '--no-session-persistence'], {
         input: buildPrompt(source),
         encoding: 'utf8',
         timeout: 180_000,
