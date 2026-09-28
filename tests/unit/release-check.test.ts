@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import { checkPublishedRelease, readReleaseJson } from '../../tools/lib/release-check.mjs';
+import { releaseView } from '../../src/lib/release';
 
 const site = { version: '1.0.0', releaseBaseUrl: 'https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download' };
 const bytes = Buffer.from('fake installer bytes');
@@ -33,6 +34,26 @@ describe('checkPublishedRelease', () => {
       status: 'ok',
       url: 'https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download/v1.0.0/MAW-Setup-1.0.0.exe',
     });
+  });
+});
+
+describe('checkPublishedRelease agrees with the page', () => {
+  const variants = [
+    release,
+    { ...release, version: '1.1', file: 'MAW-Setup-1.1.exe' },
+    { ...release, version: '1.0.0-beta.1', file: 'MAW-Setup-1.0.0-beta.1.exe' },
+    { ...release, version: '0.9.0', file: 'MAW-Setup-0.9.0.exe' },
+    { ...release, file: 'maw.exe' },
+    { ...release, sha256: 'nope' },
+    { ...release, bytes: 0 },
+  ];
+  it('blocks the deploy whenever release.json exists but the page would show "coming soon"', async () => {
+    for (const v of variants) {
+      const pending = releaseView(v, site).state === 'pending';
+      const run = checkPublishedRelease({ release: v, site, fetchImpl: fakeFetch(200) });
+      if (pending) await expect(run, JSON.stringify(v)).rejects.toThrow(/coming soon/);
+      else await expect(run, JSON.stringify(v)).resolves.toMatchObject({ status: 'ok' });
+    }
   });
 });
 

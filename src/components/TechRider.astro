@@ -9,8 +9,8 @@ interface Props {
 }
 const { t } = Astro.props;
 const r = t.rider;
-// medido no build do instalador; antes de existir instalador, a estimativa do executável (9,1 MB → 10 MB)
-const disk = diskLabel(releaseData, site) ?? '10 MB';
+// medido no build do instalador; antes de existir instalador, a estimativa (MAW.exe + desinstalador ≈ 13,4 MB → 14 MB)
+const disk = diskLabel(releaseData, site) ?? '14 MB';
 ---
 <section class="sec rider" id="rider">
   <div class="wrap">

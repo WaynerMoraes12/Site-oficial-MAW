@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { assertMicrosoftSigned, buildReleaseInfo, findIscc, parseProductVersion, parseRedistInfo, sha256File } from './lib/release-info.mjs';
+import { assertMicrosoftSigned, buildReleaseInfo, findIscc, installedFiles, parseProductVersion, parseRedistInfo, sha256File } from './lib/release-info.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const site = JSON.parse(readFileSync(join(root, 'src/data/site.json'), 'utf8'));
@@ -44,8 +44,7 @@ execFileSync(iscc, [
 
 const file = `MAW-Setup-${site.version}.exe`;
 const out = join(root, 'installer', 'output', file);
-// o que vai para a pasta do app (ver [Files] do .iss, fora o runtime que fica no temp)
-const installedBytes = [sourceExe, join(mawRepo, 'LICENSE'), join(mawRepo, 'LICENSE-THIRD-PARTY.md')].reduce((n, f) => n + statSync(f).size, 0);
+const installedBytes = installedFiles({ sourceExe, mawRepo, iscc }).reduce((n, f) => n + statSync(f).size, 0);
 const info = buildReleaseInfo({ file, bytes: statSync(out).size, sha256: await sha256File(out), version: site.version, builtAt: new Date().toISOString(), installedBytes });
 writeFileSync(join(root, 'src', 'data', 'release.json'), `${JSON.stringify(info, null, 2)}\n`);
 console.log(`release.json: ${file} · ${info.bytes} bytes · ${info.sha256}`);

@@ -6,9 +6,9 @@ test.beforeEach(async ({ page }) => page.goto('/'));
 
 test('tech rider lists 8 channels and the VC++ runtime note', async ({ page }) => {
   await expect(page.locator('#rider tbody tr')).toHaveCount(8);
-  // espaço em disco vem do build do instalador (release.json); sem ele, a estimativa de 10 MB
+  // espaço em disco vem do build do instalador (release.json); sem ele, a estimativa de 14 MB
   const text = existsSync('src/data/release.json') ? readFileSync('src/data/release.json', 'utf8') : undefined;
-  const disk = diskLabel(parseRelease(text), JSON.parse(readFileSync('src/data/site.json', 'utf8'))) ?? '10 MB';
+  const disk = diskLabel(parseRelease(text), JSON.parse(readFileSync('src/data/site.json', 'utf8'))) ?? '14 MB';
   await expect(page.locator('#rider tbody tr', { hasText: 'Disk' })).toContainText(`About ${disk} for MAW`);
   await expect(page.locator('#rider .rider-note')).toContainText('Visual C++ Redistributable');
 });
@@ -26,6 +26,8 @@ test('download button matches the real release state', async ({ page }) => {
   // mesma decisão que a página toma (arquivo, versão, hash), não só "o arquivo existe"
   const text = existsSync('src/data/release.json') ? readFileSync('src/data/release.json', 'utf8') : undefined;
   const view = releaseView(parseRelease(text), JSON.parse(readFileSync('src/data/site.json', 'utf8')));
+  // com release.json, a página tem que oferecer o download (o deploy também exige isso)
+  expect(view.state).toBe(text ? 'ready' : 'pending');
   if (view.state === 'ready') {
     await expect(button).toHaveAttribute('href', view.url);
     await expect(page.locator('#download .hash')).toContainText(view.sha256);

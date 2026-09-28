@@ -2,7 +2,7 @@ import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { buildReleaseInfo, findIscc, sha256File } from '../../scripts/lib/release-info.mjs';
+import { buildReleaseInfo, findIscc, installedFiles, sha256File } from '../../scripts/lib/release-info.mjs';
 import { isReleaseInfo } from '../../src/lib/release';
 
 describe('sha256File', () => {
@@ -25,12 +25,28 @@ describe('buildReleaseInfo', () => {
     expect(isReleaseInfo(info)).toBe(true);
     expect(() => buildReleaseInfo({ ...ok, installedBytes: 0 })).toThrow(/installedBytes/);
   });
+  it('refuses a version the site would not show (only x.y.z)', () => {
+    expect(() => buildReleaseInfo({ ...ok, version: '1.1', file: 'MAW-Setup-1.1.exe' })).toThrow(/version/);
+    expect(() => buildReleaseInfo({ ...ok, version: '1.0.0-beta.1', file: 'MAW-Setup-1.0.0-beta.1.exe' })).toThrow(/version/);
+  });
   it('refuses an installer not named after its version', () => {
     expect(() => buildReleaseInfo({ ...ok, file: 'MAW-Setup-9.9.9.exe' })).toThrow(/file/);
   });
   it('refuses a bad hash or an empty file', () => {
     expect(() => buildReleaseInfo({ ...ok, sha256: 'nope' })).toThrow(/sha256/);
     expect(() => buildReleaseInfo({ ...ok, bytes: 0 })).toThrow(/bytes/);
+  });
+});
+
+describe('installedFiles', () => {
+  it('counts what lands in the app folder, uninstaller included', () => {
+    const files = installedFiles({ sourceExe: join('C:', 'm', 'MAW_APP.exe'), mawRepo: join('C:', 'm'), iscc: join('C:', 'inno', 'ISCC.exe') });
+    expect(files).toEqual([
+      join('C:', 'm', 'MAW_APP.exe'),
+      join('C:', 'm', 'LICENSE'),
+      join('C:', 'm', 'LICENSE-THIRD-PARTY.md'),
+      join('C:', 'inno', 'Setup.e32'),
+    ]);
   });
 });
 

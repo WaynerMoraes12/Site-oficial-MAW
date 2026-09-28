@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { createReadStream, existsSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 
 export function sha256File(path) {
   return new Promise((resolve, reject) => {
@@ -13,12 +14,20 @@ export function sha256File(path) {
 
 // Mesmo formato que src/lib/release.ts aceita (isReleaseInfo).
 export function buildReleaseInfo({ file, bytes, sha256, version, builtAt, installedBytes }) {
+  // o site só mostra o download para versões x.y.z (src/lib/release.ts); qualquer outra ficaria "coming soon"
+  if (!/^\d+\.\d+\.\d+$/.test(version)) throw new Error(`version inválida: ${version} (use x.y.z no site.json)`);
   if (file !== `MAW-Setup-${version}.exe`) throw new Error(`file inválido: ${file} (esperado MAW-Setup-${version}.exe)`);
   if (!Number.isInteger(bytes) || bytes <= 0) throw new Error(`bytes inválido: ${bytes}`);
   if (!/^[0-9a-f]{64}$/.test(sha256)) throw new Error(`sha256 inválido: ${sha256}`);
   if (installedBytes === undefined) return { file, bytes, sha256, version, builtAt };
   if (!Number.isInteger(installedBytes) || installedBytes <= 0) throw new Error(`installedBytes inválido: ${installedBytes}`);
   return { file, bytes, sha256, version, builtAt, installedBytes };
+}
+
+// O que o instalador põe na pasta do app ([Files] do .iss, fora o runtime que vai para o temp) mais o
+// desinstalador: o unins000.exe é uma cópia do Setup.e32 do Inno Setup (o unins000.dat, de poucos KB, fica de fora).
+export function installedFiles({ sourceExe, mawRepo, iscc }) {
+  return [sourceExe, join(mawRepo, 'LICENSE'), join(mawRepo, 'LICENSE-THIRD-PARTY.md'), join(dirname(iscc), 'Setup.e32')];
 }
 
 export function findIscc(candidates, exists = existsSync) {
