@@ -15,7 +15,8 @@
     "check:pt": "node tools/check-portuguese.mjs dist",
     "check:links": "node tools/check-base-links.mjs dist",
     "check:dist": "npm run check:pt && npm run check:links",
-    "og-image": "node tools/og-image.mjs"
+    "og-image": "node tools/og-image.mjs",
+    "installer": "node scripts/build-installer.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
