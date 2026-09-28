@@ -1,5 +1,6 @@
 ---
-import { trackKeys } from '../data/tracklist';
+import { synthPresets, trackKeys } from '../data/tracklist';
+import Keep from './Keep.astro';
 import { barcodeBars } from '../lib/barcode';
 import site from '../data/site.json';
 import { fill, type Dictionary } from '../i18n';
@@ -30,7 +31,7 @@ const perSide = trackKeys[0].length;
             {side.tracks.map((track, i) => (
               <li class="trk">
                 <span class="n">{String(s * perSide + i + 1).padStart(2, '0')}</span>
-                <span class="t">{track.title}<em>{track.detail}</em></span>
+                <span class="t">{track.title}<em><Keep text={track.detail} terms={synthPresets} /></em></span>
                 <span class="kbd" translate="no">{trackKeys[s][i]}</span>
               </li>
             ))}

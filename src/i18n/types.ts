@@ -1,7 +1,8 @@
 export type Locale = 'en' | 'pt' | 'es';
 
 // Linha com um trecho em negrito no meio (sem HTML nos dicionários).
-export interface RichLine { before: string; bold: string; after: string }
+// keep: o trecho em negrito é nome de arquivo ou do app, protegido do tradutor do navegador.
+export interface RichLine { before: string; bold: string; after: string; keep?: boolean }
 export interface Shot { label: string; alt: string }
 export interface Caption { alt: string; caption: string }
 export interface PlateText { title: string; body: string }

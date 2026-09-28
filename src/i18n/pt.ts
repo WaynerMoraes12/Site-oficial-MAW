@@ -9,7 +9,7 @@ export const pt: Dictionary = {
   },
   nav: {
     aria: 'Principal', home: 'MAW — voltar ao topo', stage: 'O Palco', tracklist: 'Faixas', ai: 'IA', rider: 'Requisitos',
-    tour: 'Roteiro', story: 'História', faq: 'Dúvidas', download: 'Baixar', menu: 'Menu', language: 'Idioma',
+    tour: 'Roadmap', story: 'História', faq: 'Dúvidas', download: 'Baixar', menu: 'Menu', language: 'Idioma',
   },
   hero: {
     title1: 'A DAW que entende',
@@ -62,7 +62,7 @@ export const pt: Dictionary = {
           { title: 'Marcadores com nome', detail: 'Dê nome às partes da música e pule entre elas' },
           { title: 'Piano roll', detail: 'Quantização com força e swing, velocity e transposição' },
           { title: 'Controladores MIDI USB', detail: 'Reconhecidos sozinhos, até plugando com o app aberto' },
-          { title: 'Sintetizador interno', detail: '7 presets: Senoide, Teclas, Baixo, Lead, Pad, Pluck, Órgão' },
+          { title: 'Sintetizador interno', detail: '7 presets, com os nomes do app: Senoide, Teclas, Baixo, Lead, Pad, Pluck, Orgao' },
         ],
       },
       {
@@ -106,7 +106,7 @@ export const pt: Dictionary = {
       },
       stems: {
         hud: '// STEMS · 2 · 4 · 5 PARTES', title: 'Separação de stems',
-        text: 'Voz, bateria, baixo, piano e o resto — ou deixa a MAW decidir o que existe de fato na música.',
+        text: 'Voz, bateria, baixo, piano e o resto — ou deixe a MAW decidir o que existe de fato na música.',
         alt: 'Menu do Assistente IA com separação de stems, Smart Mix, Conselheiro e transcrição', keyLabels: [],
       },
       whisper: {
@@ -164,7 +164,7 @@ export const pt: Dictionary = {
       { item: 'Conselheiro com Gemini', min: '— (regras locais)', rec: 'Sua própria chave da API do Gemini' },
       { item: 'Internet', min: 'Não precisa para produzir', rec: 'Só para baixar modelos de IA e usar o Gemini' },
     ],
-    note: 'Também é necessário: Microsoft Visual C++ Redistributable (x64). O instalador coloca sozinho se estiver faltando.',
+    note: 'Também é necessário: Microsoft Visual C++ Redistributable (x64). O instalador instala sozinho se estiver faltando.',
   },
   readBefore: {
     eyebrow: 'Leia antes de instalar',
@@ -191,10 +191,10 @@ export const pt: Dictionary = {
     lede: 'O instalador oficial da MAW para Windows. Gratuito, sem cadastro.',
     labels: { version: 'VERSÃO', platform: 'PLATAFORMA', file: 'ARQUIVO', license: 'LICENÇA' },
     steps: [
-      { before: 'Baixe o ', bold: '{file}', after: '.' },
+      { before: 'Baixe o ', bold: '{file}', after: '.', keep: true },
       { before: 'Se o Windows mostrar o SmartScreen, clique em ', bold: 'Mais informações → Executar assim mesmo', after: '.' },
-      { before: 'Siga o instalador: ele cria o atalho no Menu Iniciar, o desinstalador e coloca o runtime do Visual C++ se estiver faltando.', bold: '', after: '' },
-      { before: 'Abra a MAW e escolha sua interface de áudio em ', bold: 'MENU → ASIO Audio Setup', after: '.' },
+      { before: 'Siga o instalador: ele cria o atalho no Menu Iniciar, o desinstalador e instala o runtime do Visual C++ se estiver faltando.', bold: '', after: '' },
+      { before: 'Abra a MAW e escolha sua interface de áudio em ', bold: 'MENU → ASIO Audio Setup', after: '.', keep: true },
     ],
     ready: 'Baixar MAW {version} · Windows',
     pending: 'Instalador em breve',
@@ -202,7 +202,7 @@ export const pt: Dictionary = {
     source: 'Código-fonte (GNU GPL v3)',
   },
   tour: {
-    eyebrow: 'Roteiro',
+    eyebrow: 'Roadmap',
     title: 'MAW World Tour',
     years: '2026 — 2027',
     stamps: { live: 'Na estrada', reh: 'Ensaiando', next: 'Anunciado' },

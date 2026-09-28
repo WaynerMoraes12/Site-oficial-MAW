@@ -63,7 +63,7 @@ export const en: Dictionary = {
           { title: 'Named markers', detail: 'Name your song sections and jump between them' },
           { title: 'Piano roll', detail: 'Quantize with strength and swing, velocity and transpose' },
           { title: 'USB MIDI controllers', detail: 'Picked up automatically, even when plugged in with the app open' },
-          { title: 'Built-in synth', detail: '7 presets: Sine, Keys, Bass, Lead, Pad, Pluck, Organ' },
+          { title: 'Built-in synth', detail: '7 presets, named as in the app: Senoide (sine), Teclas (keys), Baixo (bass), Lead, Pad, Pluck, Orgao (organ)' },
         ],
       },
       {
@@ -192,10 +192,10 @@ export const en: Dictionary = {
     lede: 'The official MAW installer for Windows. Free, no sign-up.',
     labels: { version: 'VERSION', platform: 'PLATFORM', file: 'FILE', license: 'LICENSE' },
     steps: [
-      { before: 'Download ', bold: '{file}', after: '.' },
+      { before: 'Download ', bold: '{file}', after: '.', keep: true },
       { before: 'If Windows shows SmartScreen, click ', bold: 'More info → Run anyway', after: '.' },
       { before: "Follow the installer: it adds a Start Menu shortcut, an uninstaller and the Visual C++ runtime if it's missing.", bold: '', after: '' },
-      { before: 'Open MAW and pick your audio interface at ', bold: 'MENU → ASIO Audio Setup', after: '.' },
+      { before: 'Open MAW and pick your audio interface at ', bold: 'MENU → ASIO Audio Setup', after: '.', keep: true },
     ],
     ready: 'Download MAW {version} · Windows',
     pending: 'Installer coming soon',
@@ -258,7 +258,7 @@ export const en: Dictionary = {
     items: [
       { q: 'Is MAW free?', a: "Yes. The download is free and there's no sign-up." },
       { q: 'Does it run on Mac or Linux?', a: 'Not yet. Version 1.0 runs on Windows 10 and 11, 64-bit only.' },
-      { q: 'Is the interface in English?', a: "Not yet — MAW's interface is in Brazilian Portuguese. This site shows button names exactly as they appear in the app, so you can find them." },
+      { q: 'Is the interface in English?', a: "No — MAW's interface is in Brazilian Portuguese. This site shows button names exactly as they appear in the app, so you can find them." },
       { q: 'Do I need an audio interface?', a: "Not to get started — your PC's sound card works. For low-latency recording, an interface with an ASIO driver is recommended." },
       { q: 'Do my VST3 plugins work?', a: 'Yes. MAW scans the standard VST3 folder, keeps a cache and compensates plugin latency.' },
       { q: 'Does the AI send my music to the internet?', a: "No. Separation, transcription and analysis run on your PC. Only the Advisor's text report goes to Gemini, and only if you ask." },

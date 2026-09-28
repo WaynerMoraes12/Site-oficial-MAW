@@ -1,6 +1,7 @@
 ---
 import { Picture } from 'astro:assets';
-import { stageShots } from '../data/stage';
+import { demoProject, stageShots } from '../data/stage';
+import Keep from './Keep.astro';
 import type { Dictionary } from '../i18n';
 
 interface Props {
@@ -16,7 +17,7 @@ const s = t.stage;
   <div class="smoke" aria-hidden="true"></div>
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">{s.eyebrow}</div>
+      <div class="eyebrow"><Keep text={s.eyebrow} terms={[demoProject]} /></div>
       <h2 class="h-goth">{s.title}</h2>
       <p class="lede">{s.lede}</p>
     </div>

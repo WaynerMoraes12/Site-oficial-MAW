@@ -11,7 +11,7 @@ test('Portuguese page is complete and declared as pt-BR', async ({ page }) => {
 test('Spanish page is complete and declared as es', async ({ page }) => {
   await page.goto('/es/');
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
-  await expect(page.locator('.hero h1')).toHaveText(/La DAW que entiende\s*la música\s*que grabas/);
+  await expect(page.locator('.hero h1')).toHaveText(/La DAW que entiende\s*la música\s*que graba$/);
   await expect(page.locator('#read-before-install .plate')).toHaveCount(6);
 });
 
@@ -47,6 +47,28 @@ test('brand names, app buttons and shortcuts are protected from browser translat
     els.filter((el) => !el.closest('[translate="no"]')).map((el) => el.textContent || el.getAttribute('alt')),
   );
   expect(unprotected).toEqual([]);
+});
+
+test('the demo project and the synth presets keep their app names under the browser translator', async ({ page }) => {
+  for (const path of ['/', '/pt/', '/es/']) {
+    await page.goto(path);
+    for (const name of ['Noite Roxa', 'Senoide', 'Orgao']) {
+      const hits = page.getByText(name, { exact: true });
+      expect(await hits.count(), `${path} ${name}`).toBeGreaterThan(0);
+      const loose = await hits.evaluateAll((els) => els.filter((el) => !el.closest('[translate="no"]')).length);
+      expect(loose, `${path} ${name}`).toBe(0);
+    }
+  }
+});
+
+test('install steps protect the file name and the app menu, but let Windows wording be translated', async ({ page }) => {
+  await page.goto('/');
+  const bold = page.locator('#download .steps b');
+  await expect(bold.filter({ hasText: 'MAW-Setup-' })).toHaveAttribute('translate', 'no');
+  await expect(bold.filter({ hasText: 'MENU' })).toHaveAttribute('translate', 'no');
+  const windows = bold.filter({ hasText: 'Run anyway' });
+  await expect(windows).toHaveCount(1);
+  expect(await windows.evaluate((el) => !!el.closest('[translate="no"]'))).toBe(false);
 });
 
 test.describe('automatic language', () => {

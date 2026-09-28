@@ -40,7 +40,7 @@ const fileName = `MAW-Setup-${site.version}.exe`;
       <p class="lede">{d.lede}</p>
       <ol class="steps">
         {d.steps.map((step) => (
-          <li><span>{step.before}{step.bold && <b translate="no">{fill(step.bold, { file: fileName })}</b>}{step.after}</span></li>
+          <li><span>{step.before}{step.bold && <b translate={step.keep ? 'no' : undefined}>{fill(step.bold, { file: fileName })}</b>}{step.after}</span></li>
         ))}
       </ol>
       {release.state === 'ready' ? (

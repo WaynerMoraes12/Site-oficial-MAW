@@ -1,0 +1,11 @@
+---
+// Texto com os termos protegidos do tradutor do navegador (translate="no").
+import { splitKeep } from '../lib/keep';
+
+interface Props {
+  text: string;
+  terms: readonly string[];
+}
+const { text, terms } = Astro.props;
+---
+{splitKeep(text, terms).map((p) => (p.keep ? <span translate="no">{p.text}</span> : p.text))}

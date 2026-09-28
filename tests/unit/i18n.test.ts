@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { dictionaries, localeUrl, locales, pickLocale } from '../../src/i18n';
+import type { Locale } from '../../src/i18n/types';
+import { synthPresets } from '../../src/data/tracklist';
 
 describe('pickLocale', () => {
   it('opens Brazilian and Portuguese browsers in Portuguese', () => {
@@ -80,5 +82,32 @@ describe('dictionaries', () => {
     expect(dictionaries.en.meta.htmlLang).toBe('en');
     expect(dictionaries.pt.meta.htmlLang).toBe('pt-BR');
     expect(dictionaries.es.meta.htmlLang).toBe('es');
+  });
+});
+
+describe('copy details', () => {
+  const synthDetail = (l: Locale) =>
+    dictionaries[l].tracklist.sides.flatMap((s) => s.tracks).find((t) => t.detail.includes('7 presets'))?.detail ?? '';
+  it('names the synth presets exactly as the app does, in every language', () => {
+    for (const l of locales) {
+      for (const name of synthPresets) expect(synthDetail(l)).toContain(name);
+    }
+  });
+  it('writes neutral Latin American Spanish', () => {
+    const es = JSON.stringify(dictionaries.es);
+    for (const spainOnly of ['ordenador', 'Ingeniería Informática', 'fin de carrera', 'de pago', 'habitación', 'se pelean']) {
+      expect(es).not.toContain(spainOnly);
+    }
+    expect(dictionaries.es.meta.ogLocale).toBe('es_LA');
+  });
+  it('does not promise an interface in English or Spanish', () => {
+    const answer = (l: Locale) => dictionaries[l].faq.items.find((i) => /interface|interfaz/i.test(i.q))?.a ?? '';
+    expect(answer('en')).not.toMatch(/^Not yet/);
+    expect(answer('es')).not.toMatch(/^Todavía no/);
+  });
+  it('keeps Portuguese commands in the você form', () => {
+    const pt = JSON.stringify(dictionaries.pt);
+    expect(pt).not.toContain('ou deixa a MAW');
+    expect(pt).not.toContain('coloca sozinho');
   });
 });

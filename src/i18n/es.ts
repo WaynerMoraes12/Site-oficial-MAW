@@ -3,7 +3,7 @@ import type { Dictionary } from './types';
 export const es: Dictionary = {
   meta: {
     htmlLang: 'es',
-    ogLocale: 'es_ES',
+    ogLocale: 'es_LA',
     title: 'MAW — Musical Artificial Workspace · la DAW que entiende la música',
     description: 'MAW (Musical Artificial Workspace) es una estación de producción musical multipista para Windows con inteligencia artificial dentro de la línea de tiempo: separación de stems, transcripción, detección de acordes y un consejero de mezcla.',
   },
@@ -14,7 +14,7 @@ export const es: Dictionary = {
   hero: {
     title1: 'La DAW que entiende',
     title2a: 'la música',
-    title2b: 'que grabas',
+    title2b: 'que graba',
     ledeBefore: 'MAW — ',
     ledeAfter: '. Estación de producción musical multipista para Windows, con inteligencia artificial dentro de la línea de tiempo: separa stems, transcribe voces, detecta acordes y aconseja tu mezcla.',
     ctaDownload: 'Descargar para Windows',
@@ -62,7 +62,7 @@ export const es: Dictionary = {
           { title: 'Marcadores con nombre', detail: 'Nombra las partes de la canción y salta entre ellas' },
           { title: 'Piano roll', detail: 'Cuantización con fuerza y swing, velocity y transposición' },
           { title: 'Controladores MIDI USB', detail: 'Se reconocen solos, incluso al conectarlos con la app abierta' },
-          { title: 'Sintetizador interno', detail: '7 presets: Senoidal, Teclas, Bajo, Lead, Pad, Pluck, Órgano' },
+          { title: 'Sintetizador interno', detail: '7 presets, con los nombres de la app: Senoide (senoidal), Teclas (teclados), Baixo (bajo), Lead, Pad, Pluck, Orgao (órgano)' },
         ],
       },
       {
@@ -89,14 +89,14 @@ export const es: Dictionary = {
     titleRest: 'que escucha',
     quote: {
       before: 'Un analizador común dice que hay energía en 250 Hz. MAW dice que ',
-      bold: 'la pista 2 y la pista 5 se pelean los 250 Hz durante los 6,4 segundos en que suenan juntas',
+      bold: 'la pista 2 y la pista 5 se disputan los 250 Hz durante los 6,4 segundos en que suenan juntas',
       after: ' — y lo corrige con un clic.',
     },
     runtime: { app: 'Funciona en la app', server: 'Requiere el Servidor Neural MAW' },
     cards: {
       'smart-mix': {
         hud: '// SMART MIX · CHOQUES DE EQ', title: 'Smart Mix',
-        text: 'Descubre qué pistas se pelean la misma banda de frecuencia — y cuánto tiempo suenan juntas de verdad. Luego escribe los cortes en el ecualizador de cada pista.',
+        text: 'Descubre qué pistas se disputan la misma banda de frecuencia — y cuánto tiempo suenan juntas de verdad. Luego escribe los cortes en el ecualizador de cada pista.',
         alt: 'Informe de Smart Mix con choques de frecuencia entre batería, bajo, guitarras y voz', keyLabels: [],
       },
       advisor: {
@@ -191,10 +191,10 @@ export const es: Dictionary = {
     lede: 'El instalador oficial de MAW para Windows. Gratis, sin registro.',
     labels: { version: 'VERSIÓN', platform: 'PLATAFORMA', file: 'ARCHIVO', license: 'LICENCIA' },
     steps: [
-      { before: 'Descarga ', bold: '{file}', after: '.' },
+      { before: 'Descarga ', bold: '{file}', after: '.', keep: true },
       { before: 'Si Windows muestra SmartScreen, haz clic en ', bold: 'Más información → Ejecutar de todas formas', after: '.' },
-      { before: 'Sigue el instalador: crea el acceso en el menú Inicio, el desinstalador y agrega el runtime de Visual C++ si falta.', bold: '', after: '' },
-      { before: 'Abre MAW y elige tu interfaz de audio en ', bold: 'MENU → ASIO Audio Setup', after: '.' },
+      { before: 'Sigue el instalador: crea el acceso directo en el menú Inicio, el desinstalador y agrega el runtime de Visual C++ si falta.', bold: '', after: '' },
+      { before: 'Abre MAW y elige tu interfaz de audio en ', bold: 'MENU → ASIO Audio Setup', after: '.', keep: true },
     ],
     ready: 'Descargar MAW {version} · Windows',
     pending: 'Instalador muy pronto',
@@ -205,7 +205,7 @@ export const es: Dictionary = {
     eyebrow: 'Hoja de ruta',
     title: 'MAW World Tour',
     years: '2026 — 2027',
-    stamps: { live: 'En la ruta', reh: 'Ensayando', next: 'Anunciado' },
+    stamps: { live: 'De gira', reh: 'Ensayando', next: 'Anunciado' },
     stops: [
       { when: 'Sep 2026', what: 'Versión 1.0 — estreno' },
       { when: 'En ensayo', what: 'Automatización de cualquier parámetro' },
@@ -224,10 +224,10 @@ export const es: Dictionary = {
     titleRed: 'tesis',
     titleAfter: ',',
     titleLine2: 'hecha para sonar fuerte',
-    lead: 'MAW nació como el trabajo de fin de carrera de Wayner Pires de Moraes en Ingeniería Informática, en el Centro Universitário Hermínio Ometto (FHO), en Araras, Brasil.',
+    lead: 'MAW nació como el proyecto final de carrera de Wayner Pires de Moraes en Ingeniería en Computación, en el Centro Universitário Hermínio Ometto (FHO), en Araras, Brasil.',
     body: 'La pregunta era simple: ¿por qué una DAW graba tu música sin entender nada de ella? Seis meses después, la respuesta eran más de 44 mil líneas de C++, un motor de audio medido bloque a bloque y una IA que conversa con la línea de tiempo.',
     quote: '“Una DAW convencional no entiende la música que está grabando.”',
-    closing: 'Hecha para quien graba solo en su habitación — una guitarra, una interfaz de audio y un ordenador — y quiere sonar como un estudio.',
+    closing: 'Hecha para quien graba solo en su cuarto — una guitarra, una interfaz de audio y una computadora — y quiere sonar como un estudio.',
     timeline: [
       { when: '31 MAR 2026', what: 'Primer chasis visual y el morado MAW' },
       { when: '04 ABR', what: 'Detección de altura (YIN) — nace el afinador' },
@@ -241,7 +241,7 @@ export const es: Dictionary = {
     creditsTitle: 'Créditos',
     credits: [
       { role: 'Producción, código y arreglos', name: 'Wayner Pires de Moraes', note: '' },
-      { role: 'Institución', name: 'FHO — Araras, Brasil', note: 'Ingeniería Informática · 2026' },
+      { role: 'Institución', name: 'FHO — Araras, Brasil', note: 'Ingeniería en Computación · 2026' },
       { role: 'Motor de audio', name: 'JUCE 8', note: 'Raw Material Software · AGPLv3' },
       { role: 'Drivers y plugins', name: 'ASIO SDK · VST3 SDK', note: 'Steinberg Media Technologies' },
       { role: 'Separación de stems', name: 'Spleeter', note: 'Deezer · MIT' },
@@ -255,9 +255,9 @@ export const es: Dictionary = {
     eyebrow: 'Preguntas',
     title: 'Preguntas del público',
     items: [
-      { q: '¿MAW es de pago?', a: 'No. La descarga es gratuita y no pide registro.' },
+      { q: '¿MAW tiene costo?', a: 'No. La descarga es gratuita y no pide registro.' },
       { q: '¿Funciona en Mac o Linux?', a: 'Todavía no. La versión 1.0 funciona en Windows 10 y 11, solo 64 bits.' },
-      { q: '¿La interfaz está en español?', a: 'Todavía no — la interfaz de MAW está en portugués de Brasil. Este sitio muestra los nombres de los botones tal como aparecen en la app, para que los encuentres.' },
+      { q: '¿La interfaz está en español?', a: 'No — la interfaz de MAW está en portugués de Brasil. Este sitio muestra los nombres de los botones tal como aparecen en la app, para que los encuentres.' },
       { q: '¿Necesito una interfaz de audio?', a: 'No para empezar — la tarjeta de sonido del PC sirve. Para grabar con baja latencia se recomienda una interfaz con driver ASIO.' },
       { q: '¿Funcionan mis plugins VST3?', a: 'Sí. MAW busca en la carpeta estándar de VST3, guarda una caché y compensa la latencia de los plugins.' },
       { q: '¿La IA envía mi música a internet?', a: 'No. La separación, la transcripción y los análisis funcionan en tu PC. Solo el informe de texto del Consejero va a Gemini, y solo si lo pides.' },
