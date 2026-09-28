@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { pageShowsDownload } from './lib/release-check.mjs';
-import { classifyStops, mergeTexts, rememberTexts, snapshotProblems, updateVersions } from './lib/tour.mjs';
+import { adoptMawRelease, classifyStops, mergeTexts, rememberTexts, snapshotProblems, updateVersions } from './lib/tour.mjs';
 import { buildPrompt, parseTexts, versionText } from './lib/tour-texts.mjs';
 
 const REPO = 'WaynerMoraes12/MAW';
@@ -78,8 +78,7 @@ const mawRelease = latestMawRelease();
 if (mawRelease) {
   release = mawRelease;
   writeJsonIfChanged('src/data/release.json', mawRelease);
-  const site = readJson('src/data/site.json');
-  if (site.version !== mawRelease.version) writeJsonIfChanged('src/data/site.json', { ...site, version: mawRelease.version });
+  writeJsonIfChanged('src/data/site.json', adoptMawRelease(readJson('src/data/site.json'), mawRelease));
   console.log(`release da MAW: ${mawRelease.version}`);
 }
 const previous = readJson(OUT);
@@ -89,11 +88,12 @@ const commitDate = (sha) => (sha ? gh('api', `repos/${REPO}/commits/${sha}`, '--
 const installerCommit = release?.mawCommit ?? previous?.installerCommit ?? null;
 // o que entrou na main até o commit do último release já está num instalador; antes da estreia, é da 1.0
 const installedUntil = commitDate(installerCommit);
-const debutUntil = versions.length ? commitDate(versions[0].mawCommit) : installedUntil;
+const debutCommit = versions.length ? versions[0].mawCommit : installerCommit;
+const debutUntil = commitDate(debutCommit);
 
 const prs = ghJson(
   'pr', 'list', '-R', REPO, '--state', 'all', '--limit', '1000',
-  '--json', 'number,title,body,headRefName,baseRefName,state,mergedAt,createdAt,updatedAt',
+  '--json', 'number,title,body,headRefName,baseRefName,state,mergedAt,mergeCommit,createdAt,updatedAt',
 );
 const issues = ghJson('issue', 'list', '-R', REPO, '--state', 'open', '--label', 'roadmap', '--limit', '200', '--json', 'number,title,body,createdAt,labels')
   .map((i) => ({ ...i, labels: i.labels.map((l) => l.name) }));
@@ -107,7 +107,7 @@ const branches = gh('api', '--paginate', `repos/${REPO}/branches?per_page=100`, 
     return { name, ahead: c.ahead ?? 0, lastCommitAt: c.at ?? '', lastMessage: (c.message ?? '').split('\n')[0] };
   });
 
-const stops = mergeTexts(classifyStops({ versions, prs, branches, issues, installedUntil, debutUntil }), previous);
+const stops = mergeTexts(classifyStops({ versions, prs, branches, issues, installedUntil, debutUntil, installerCommit, debutCommit }), previous);
 const fresh = stops.filter((s) => !s.text);
 for (const stop of fresh) {
   try {

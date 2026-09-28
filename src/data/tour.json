@@ -19,6 +19,16 @@
       }
     },
     {
+      "id": "pr:74",
+      "status": "reh",
+      "date": "2026-09-28",
+      "text": {
+        "en": "Automatic updates with the AI included",
+        "pt": "Atualização automática com a IA inclusa",
+        "es": "Actualización automática con la IA incluida"
+      }
+    },
+    {
       "id": "pr:72",
       "status": "reh",
       "date": "2026-09-28",
@@ -129,16 +139,6 @@
       }
     },
     {
-      "id": "pr:58",
-      "status": "reh",
-      "date": "2026-09-23",
-      "text": {
-        "en": "Tuner for guitar, bass, ukulele & more",
-        "pt": "Afinador para guitarra, baixo, ukulele e mais",
-        "es": "Afinador para guitarra, bajo, ukulele y más"
-      }
-    },
-    {
       "id": "issue:73",
       "status": "next",
       "date": "2026-09-28",
@@ -224,6 +224,11 @@
       "en": "Punch-in & take history, polished",
       "pt": "Punch-in e histórico de takes aprimorados",
       "es": "Punch-in e historial de tomas mejorados"
+    },
+    "pr:74": {
+      "en": "Automatic updates with the AI included",
+      "pt": "Atualização automática com a IA inclusa",
+      "es": "Actualización automática con la IA incluida"
     }
   }
 }

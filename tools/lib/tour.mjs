@@ -15,7 +15,9 @@ const LOCALES = ['en', 'pt', 'es'];
 const mentions = (text, n) => new RegExp(`(^|[^\\w&])#${n}(?!\\d)`).test(text ?? '');
 const time = (iso) => (iso ? Date.parse(iso) : Number.NEGATIVE_INFINITY);
 
-export function classifyStops({ versions, prs, branches, issues, installedUntil, debutUntil = installedUntil }) {
+export function classifyStops({
+  versions, prs, branches, issues, installedUntil, debutUntil = installedUntil, installerCommit, debutCommit = installerCommit,
+}) {
   const newest = [...versions].sort((a, b) => time(a.builtAt) - time(b.builtAt)).at(-1);
   const version = newest
     ? [{ id: `version:${newest.version}`, status: 'live', date: newest.builtAt.slice(0, 10), source: { kind: 'version', ...newest } }]
@@ -29,6 +31,9 @@ export function classifyStops({ versions, prs, branches, issues, installedUntil,
   const aheadOfMain = (name) => (branchByName.get(name)?.ahead ?? 0) > 0;
   const installed = time(installedUntil);
   const debut = time(debutUntil);
+  // PR mergeado na main até um release: o merge dele é o commit do release, ou veio antes. O GitHub marca
+  // o merge até 1 s depois do commit de merge, então o commit do próprio release é conferido pelo SHA.
+  const upTo = (p, sha, when) => (sha && p.mergeCommit?.oid === sha) || time(p.mergedAt) <= when;
 
   const reh = [];
   const delivered = [];
@@ -38,8 +43,8 @@ export function classifyStops({ versions, prs, branches, issues, installedUntil,
     const merged = p.state === 'MERGED';
     // o commit do instalador está na main: PR mergeado na main até esse instante já está nele;
     // PR mergeado num branch que ainda tem trabalho fora da main também não chegou ao instalador
-    const pending = merged && (p.baseRefName === 'main' ? time(p.mergedAt) > installed : aheadOfMain(p.baseRefName));
-    const shipped = merged && p.baseRefName === 'main' && time(p.mergedAt) > debut && time(p.mergedAt) <= installed;
+    const pending = merged && (p.baseRefName === 'main' ? !upTo(p, installerCommit, installed) : aheadOfMain(p.baseRefName));
+    const shipped = merged && p.baseRefName === 'main' && !upTo(p, debutCommit, debut) && upTo(p, installerCommit, installed);
     if (pending) {
       reh.push({ id: `pr:${p.number}`, status: 'reh', date: p.mergedAt.slice(0, 10), sortAt: time(p.mergedAt), source });
     } else if (shipped) {
@@ -128,4 +133,10 @@ export function snapshotProblems(snapshot, release) {
     );
   }
   return problems;
+}
+
+// Release da esteira da MAW adotado pelo site: a versão acompanha e o instalador traz o servidor da IA
+// (todo release da esteira é o instalador completo), então o aviso "servidor ainda não vem junto" sai.
+export function adoptMawRelease(site, release) {
+  return { ...site, version: release.version, neuralServerBundled: true };
 }

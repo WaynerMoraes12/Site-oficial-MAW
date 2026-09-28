@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MAX_STOPS, classifyStops, mergeTexts, rememberTexts, snapshotProblems, updateVersions } from '../../tools/lib/tour.mjs';
+import { MAX_STOPS, adoptMawRelease, classifyStops, mergeTexts, rememberTexts, snapshotProblems, updateVersions } from '../../tools/lib/tour.mjs';
 
 type Pr = Record<string, unknown>;
 const pr = (n: number, o: Pr = {}) => ({
@@ -127,6 +127,22 @@ describe('classifyStops with an installer per merged PR', () => {
   it('dates a delivered feature by its merge', () => {
     const stops = classifyStops({ ...releases, prs: [pr(61, { mergedAt: '2026-10-01T10:00:00Z' })] });
     expect(stops.map((s: { date: string }) => s.date)).toEqual(['2026-10-02', '2026-10-01']);
+  });
+  it('knows the PR whose merge commit is the release commit is in it, even marked a second later', () => {
+    // o GitHub marca o merge até 1 s depois do commit de merge (PR #70: 05:30:23 x 05:30:22)
+    const withCommits = { ...releases, debutCommit: 'a'.repeat(40), installerCommit: 'c'.repeat(40) };
+    const prs = [
+      pr(57, { mergedAt: '2026-09-23T14:45:55Z', mergeCommit: { oid: 'a'.repeat(40) } }),
+      pr(70, { mergedAt: '2026-10-02T09:00:01Z', mergeCommit: { oid: 'c'.repeat(40) } }),
+    ];
+    expect(ids(classifyStops({ ...withCommits, prs }))).toEqual(['live:version:1.0.2', 'live:pr:70']);
+  });
+});
+
+describe('adoptMawRelease', () => {
+  it('follows the release version and says the installer brings the AI server', () => {
+    const site = { name: 'MAW', version: '1.0.0', neuralServerBundled: false, releaseBaseUrl: 'x' };
+    expect(adoptMawRelease(site, { version: '1.0.3' })).toEqual({ name: 'MAW', version: '1.0.3', neuralServerBundled: true, releaseBaseUrl: 'x' });
   });
 });
 
