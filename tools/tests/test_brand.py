@@ -1,6 +1,7 @@
 import sys
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import numpy as np
 from PIL import Image
@@ -52,6 +53,28 @@ class WebLogoTests(unittest.TestCase):
         a = np.asarray(web).copy()
         a[400 - BOX[1]:410 - BOX[1], 500 - BOX[0]:700 - BOX[0], 3] = 0
         self.assertFalse(drawing_pixels_identical(original, Image.fromarray(a, "RGBA")))
+
+    def test_catches_a_bug_in_the_generator_that_recolors(self):
+        original = synthetic_logo()
+
+        def buggy(img):
+            a = np.asarray(make_web_logo(img)).copy()
+            a[..., 0] = np.where(a[..., 3] > 0, a[..., 0] // 2, a[..., 0])
+            return Image.fromarray(a, "RGBA")
+
+        with mock.patch("logo_web.make_web_logo", buggy):
+            self.assertFalse(drawing_pixels_identical(original, buggy(original)))
+
+    def test_catches_a_bug_in_the_generator_that_erases(self):
+        original = synthetic_logo()
+
+        def buggy(img):
+            a = np.asarray(make_web_logo(img)).copy()
+            a[400 - BOX[1]:410 - BOX[1], 500 - BOX[0]:700 - BOX[0], 3] = 0
+            return Image.fromarray(a, "RGBA")
+
+        with mock.patch("logo_web.make_web_logo", buggy):
+            self.assertFalse(drawing_pixels_identical(original, buggy(original)))
 
     @unittest.skipUnless(SOURCE.exists(), "logo original da MAW não encontrado")
     def test_real_logo(self):
