@@ -13,3 +13,11 @@ installer/output/
 # sistema
 Thumbs.db
 .DS_Store
+
+# gerados
+public/press/maw-screenshots.zip
+test-results/
+playwright-report/
+.lighthouse.json
+installer/redist/
+.shots/
