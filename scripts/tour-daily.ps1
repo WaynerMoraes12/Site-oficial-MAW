@@ -4,6 +4,7 @@
 $repo = Split-Path -Parent $PSScriptRoot
 $logDir = Join-Path $env:LOCALAPPDATA 'MAW-site'
 $log = Join-Path $logDir 'tour-sync.log'
+$subject = 'chore: World Tour sincronizado com a MAW'
 New-Item -ItemType Directory -Force $logDir | Out-Null
 
 function Log([string]$message) {
@@ -21,8 +22,13 @@ Log "início em $repo"
 
 $branch = git symbolic-ref -q --short HEAD
 if (-not $branch) { Log 'repo fora de um branch (rebase ou HEAD solto); pulei'; exit 0 }
+foreach ($state in 'MERGE_HEAD', 'CHERRY_PICK_HEAD', 'REVERT_HEAD', 'rebase-merge', 'rebase-apply') {
+  if (Test-Path (git rev-parse --git-path $state)) { Log "operação do git em andamento ($state); pulei"; exit 0 }
+}
 # mudança à mão ainda não commitada no snapshot: não mexe, para não misturar nem perder
 if (git status --porcelain -- src/data/tour.json) { Log 'src/data/tour.json tem mudanças não commitadas; pulei'; exit 0 }
+# instalador novo ainda não commitado: o tour seria de um instalador que o GitHub não tem
+if (git status --porcelain -- src/data/release.json) { Log 'src/data/release.json tem mudanças não commitadas; pulei até ele ser commitado'; exit 0 }
 
 if ((Run 'npm run tour') -ne 0) {
   # snapshot incompleto (ex.: o Claude não respondeu): desfaz, amanhã tenta de novo
@@ -30,9 +36,24 @@ if ((Run 'npm run tour') -ne 0) {
   Log 'npm run tour falhou; nada commitado'
   exit 1
 }
-if (-not (git status --porcelain -- src/data/tour.json)) { Log 'sem mudanças'; exit 0 }
 
-$message = '-m "chore: World Tour sincronizado com a MAW" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"'
-if ((Run "git commit $message -- src/data/tour.json") -ne 0) { Log 'commit falhou'; exit 1 }
-if ((Run 'git push') -ne 0) { Log "push falhou; o commit ficou só no PC ($branch)"; exit 1 }
-Log "sincronizado e enviado ($branch)"
+if (git status --porcelain -- src/data/tour.json) {
+  $message = "-m `"$subject`" -m `"Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`""
+  if ((Run "git commit $message -- src/data/tour.json") -ne 0) {
+    Run 'git checkout -- src/data/tour.json' | Out-Null
+    Log 'commit falhou; tour.json desfeito, amanhã tenta de novo'
+    exit 1
+  }
+  Log "commit feito ($branch)"
+} else {
+  Log 'sem mudanças'
+}
+
+# sobe se houver commit do World Tour ainda não enviado (inclusive de um dia em que o push falhou)
+$upstream = git rev-parse --abbrev-ref '@{u}' 2>$null
+if (-not $upstream) { Log "branch $branch sem upstream; nada enviado"; exit 0 }
+$pending = git log '@{u}..HEAD' --format=%s
+if ($pending -contains $subject) {
+  if ((Run 'git push') -ne 0) { Log "push falhou; tenta de novo amanhã ($branch)"; exit 1 }
+  Log "enviado ($branch)"
+}

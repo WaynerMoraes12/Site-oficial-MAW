@@ -10,17 +10,21 @@ const EXAMPLES = [
   'MAW as a VST3 plugin',
 ];
 
+// Parada de versão: só o número, sem o Claude inventar um subtítulo (dá para completar à mão no tour.json).
+export function versionText(version) {
+  const [major, minor, patch] = version.split('.');
+  const v = patch === '0' ? `${major}.${minor}` : version;
+  return { en: `Version ${v}`, pt: `Versão ${v}`, es: `Versión ${v}` };
+}
+
 export function buildPrompt(source) {
-  const what =
-    source.kind === 'version'
-      ? `A new MAW version is out: ${source.version}. Name the stop "Version ${source.version.split('.').slice(0, 2).join('.')} — <two or three words about it>".`
-      : [
-          `Source: ${source.kind === 'issue' ? 'a planned feature (GitHub issue)' : source.kind === 'branch' ? 'work in progress (git branch)' : 'a feature pull request'} of MAW, written in Portuguese.`,
-          `Title: ${source.title ?? source.name ?? ''}`,
-          source.body ? `Description (excerpt):\n${String(source.body).slice(0, BODY_LIMIT)}` : '',
-        ]
-          .filter(Boolean)
-          .join('\n');
+  const what = [
+    `Source: ${source.kind === 'issue' ? 'a planned feature (GitHub issue)' : source.kind === 'branch' ? 'work in progress (git branch)' : 'a feature pull request'} of MAW, written in Portuguese.`,
+    `Title: ${source.title ?? source.name ?? ''}`,
+    source.body ? `Description (excerpt):\n${String(source.body).slice(0, BODY_LIMIT)}` : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
   return [
     'You write the stop names of the "MAW World Tour", the roadmap on the official website of MAW, a music production app (DAW) for Windows.',
     'Each stop is one short feature name, like these: ' + EXAMPLES.map((e) => `"${e}"`).join(', ') + '.',

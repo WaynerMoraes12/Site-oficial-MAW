@@ -1,53 +1,73 @@
 // Paradas do World Tour a partir do estado da MAW no GitHub (spec §11).
 //   Na estrada: cada versão publicada no instalador do site.
-//   Ensaiando: recurso mergeado na main depois do instalador, PR de recurso aberto, branch feature/* sem PR.
-//   Anunciado: issue aberta com a etiqueta roadmap que nenhum PR ou branch pegou ainda.
+//   Ensaiando: trabalho que ainda não chegou ao instalador — recurso mergeado na main depois dele, recurso
+//     mergeado num branch que a main ainda não tem, PR aberto, branch com trabalho e sem PR — e o que pegou
+//     uma issue do roadmap (PR que cita #N, branch criado pela issue "N-…").
+//   Anunciado: issue aberta com a etiqueta roadmap que nada pegou ainda.
 export const MAX_STOPS = 14;
 export const STATUSES = ['live', 'reh', 'next'];
 const LOCALES = ['en', 'pt', 'es'];
 
-const isFeature = (pr) => (pr.headRefName ?? '').startsWith('feature/') || /^feat/i.test(pr.title ?? '');
 // "#12" num título ou descrição (não pega "#123" nem a entidade "&#12;")
 const mentions = (text, n) => new RegExp(`(^|[^\\w&])#${n}(?!\\d)`).test(text ?? '');
+const time = (iso) => (iso ? Date.parse(iso) : Number.NEGATIVE_INFINITY);
 
 export function classifyStops({ versions, prs, branches, issues, installedUntil }) {
   const live = [...versions]
-    .sort((a, b) => a.builtAt.localeCompare(b.builtAt))
+    .sort((a, b) => time(a.builtAt) - time(b.builtAt))
     .map((v) => ({ id: `version:${v.version}`, status: 'live', date: v.builtAt.slice(0, 10), source: { kind: 'version', ...v } }));
+
+  const roadmap = issues.filter((i) => i.labels.includes('roadmap')).map((i) => i.number);
+  const picksUp = (p, n) => mentions(p.title, n) || mentions(p.body, n) || (p.headRefName ?? '').startsWith(`${n}-`);
+  const isStop = (p) =>
+    (p.headRefName ?? '').startsWith('feature/') || /^feat/i.test(p.title ?? '') || roadmap.some((n) => picksUp(p, n));
+  const branchByName = new Map(branches.map((b) => [b.name, b]));
+  const aheadOfMain = (name) => (branchByName.get(name)?.ahead ?? 0) > 0;
+  const installed = time(installedUntil);
 
   const reh = [];
   for (const p of prs) {
-    if (!isFeature(p)) continue;
+    if (!isStop(p)) continue;
     const source = { kind: 'pr', number: p.number, title: p.title, body: p.body };
-    // o commit do instalador está na main: PR mergeado na main até esse instante já está nele
-    if (p.state === 'MERGED' && p.baseRefName === 'main' && p.mergedAt > installedUntil) {
-      reh.push({ id: `pr:${p.number}`, status: 'reh', date: p.mergedAt.slice(0, 10), sortAt: p.mergedAt, source });
+    const merged = p.state === 'MERGED';
+    // o commit do instalador está na main: PR mergeado na main até esse instante já está nele;
+    // PR mergeado num branch que ainda tem trabalho fora da main também não chegou ao instalador
+    const pending = merged && (p.baseRefName === 'main' ? time(p.mergedAt) > installed : aheadOfMain(p.baseRefName));
+    if (pending) {
+      reh.push({ id: `pr:${p.number}`, status: 'reh', date: p.mergedAt.slice(0, 10), sortAt: time(p.mergedAt), source });
     } else if (p.state === 'OPEN') {
       const at = p.updatedAt ?? p.createdAt;
-      reh.push({ id: `pr:${p.number}`, status: 'reh', date: at.slice(0, 10), sortAt: at, source });
+      reh.push({ id: `pr:${p.number}`, status: 'reh', date: p.createdAt.slice(0, 10), sortAt: time(at), source });
     }
   }
-  // branch com PR (aberto, mergeado ou fechado) já foi decidido pelo PR
-  const hasPr = new Set(prs.map((p) => p.headRefName));
+
+  // branch com trabalho fora da main: sem PR, ou com o PR já mergeado e trabalho novo por cima
+  // (se um PR foi mergeado dentro dele, é esse PR que conta a história)
+  const prsByHead = new Map();
+  for (const p of prs) prsByHead.set(p.headRefName, [...(prsByHead.get(p.headRefName) ?? []), p]);
+  const hasInnerPr = (name) => prs.some((p) => p.state === 'MERGED' && p.baseRefName === name);
   for (const b of branches) {
-    if (!b.name.startsWith('feature/') || hasPr.has(b.name) || b.ahead < 1) continue;
+    const fromIssue = /^(\d+)-/.exec(b.name);
+    const kind = b.name.startsWith('feature/') || (fromIssue && roadmap.includes(Number(fromIssue[1])));
+    if (!kind || b.ahead < 1 || hasInnerPr(b.name)) continue;
+    const own = prsByHead.get(b.name) ?? [];
+    if (own.some((p) => p.state !== 'MERGED')) continue; // aberto já aparece; fechado sem merge foi descartado
+    if (own.some((p) => p.baseRefName !== 'main')) continue; // mergeado noutro branch: o próprio PR já representa
     reh.push({
       id: `branch:${b.name}`,
       status: 'reh',
       date: b.lastCommitAt.slice(0, 10),
-      sortAt: b.lastCommitAt,
+      sortAt: time(b.lastCommitAt),
       source: { kind: 'branch', name: b.name, title: b.lastMessage },
     });
   }
-  reh.sort((a, b) => b.sortAt.localeCompare(a.sortAt));
+  reh.sort((a, b) => b.sortAt - a.sortAt);
 
   const alive = prs.filter((p) => p.state !== 'CLOSED');
-  const pickedUp = (n) =>
-    alive.some((p) => mentions(p.title, n) || mentions(p.body, n) || (p.headRefName ?? '').startsWith(`${n}-`)) ||
-    branches.some((b) => b.name.startsWith(`${n}-`));
+  const pickedUp = (n) => alive.some((p) => picksUp(p, n)) || branches.some((b) => b.name.startsWith(`${n}-`));
   const next = issues
-    .filter((i) => i.labels.includes('roadmap') && !pickedUp(i.number))
-    .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+    .filter((i) => roadmap.includes(i.number) && !pickedUp(i.number))
+    .sort((a, b) => time(a.createdAt) - time(b.createdAt))
     .map((i) => ({
       id: `issue:${i.number}`,
       status: 'next',
@@ -59,10 +79,28 @@ export function classifyStops({ versions, prs, branches, issues, installedUntil 
   return [...live, ...reh.slice(0, room), ...next].map(({ sortAt, ...stop }) => stop);
 }
 
-// Texto já escrito (pelo Claude ou à mão) vale para sempre; parada nova fica sem texto até alguém escrever.
+// Histórico de versões: a do instalador entra uma vez; reconstruir a mesma versão só troca o commit (a data fica).
+export function updateVersions(previous, release) {
+  const versions = (previous ?? []).map((v) => ({ ...v }));
+  if (!release?.mawCommit) return versions;
+  const same = versions.find((v) => v.version === release.version);
+  if (same) same.mawCommit = release.mawCommit;
+  else versions.push({ version: release.version, mawCommit: release.mawCommit, builtAt: release.builtAt });
+  return versions;
+}
+
+// Todo texto já escrito fica guardado (mesmo de parada que saiu do tour); edição à mão nas paradas vale mais.
+export function rememberTexts(previous, stops) {
+  const texts = { ...(previous?.texts ?? {}) };
+  for (const s of previous?.stops ?? []) if (s.text) texts[s.id] = s.text;
+  for (const s of stops) if (s.text) texts[s.id] = s.text;
+  return texts;
+}
+
+// Parada nova fica sem texto até alguém escrever; a que já teve texto recebe o que estava guardado.
 export function mergeTexts(stops, previous) {
-  const known = new Map((previous?.stops ?? []).map((s) => [s.id, s.text]));
-  return stops.map((s) => ({ ...s, text: known.get(s.id) ?? null }));
+  const known = rememberTexts(previous, []);
+  return stops.map((s) => ({ ...s, text: known[s.id] ?? null }));
 }
 
 export function snapshotProblems(snapshot, release) {

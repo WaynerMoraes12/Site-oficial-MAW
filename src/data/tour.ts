@@ -9,4 +9,5 @@ export interface TourStop {
   date: string;
   text: Record<Locale, string>;
 }
-export const tourStops = snapshot.stops as TourStop[];
+// parada sem texto (sincronização que falhou no meio) não aparece; o check:tour acusa antes do deploy
+export const tourStops = (snapshot.stops as (TourStop & { text: TourStop['text'] | null })[]).filter((s): s is TourStop => !!s.text);

@@ -45,11 +45,11 @@ O World Tour não é escrito à mão: `npm run tour` lê o GitHub da MAW e grava
 
 - **Na estrada**: a versão que está no instalador do site (o `mawCommit` do `release.json`).
 - **Ensaiando**: PR de recurso (`feature/*` ou título `feat…`) mergeado na `main` da MAW depois do instalador, PR de recurso aberto, ou branch `feature/*` com trabalho e sem PR.
-- **Anunciado**: issue aberta na MAW com a etiqueta `roadmap`. Quando um PR mencionar `#número` da issue (ou o branch for criado a partir dela), ela passa para Ensaiando.
+- **Anunciado**: issue aberta na MAW com a etiqueta `roadmap`. Quando um PR mencionar `#número` da issue (ou um branch for criado a partir dela, `73-…`), ela passa para Ensaiando. Um branch `feature/…` sem PR não sabe de qual issue é: cite `#número` no PR.
 
 Para parada nova, o Claude CLI deste PC escreve o título curto em EN/PT/ES. Dá para corrigir qualquer texto direto no `src/data/tour.json`: o que já está escrito nunca é sobrescrito. `npm run check:tour` (dentro do `check:dist`) trava o deploy se faltar texto ou se o snapshot não for do instalador atual.
 
-Uma tarefa do Agendador do Windows (**MAW Site - World Tour**) roda `scripts/tour-daily.ps1` todo dia às 09:00 (ou quando o PC ligar): sincroniza e, se mudou, commita só o `src/data/tour.json` e dá push no branch atual. Não roda se o `tour.json` tiver mudança sua ainda não commitada. Log em `%LOCALAPPDATA%\MAW-site\tour-sync.log`. Registrar de novo: `powershell -ExecutionPolicy Bypass -File scripts\register-tour-task.ps1`; remover: `Unregister-ScheduledTask -TaskName 'MAW Site - World Tour' -Confirm:$false`.
+Uma tarefa do Agendador do Windows (**MAW Site - World Tour**) roda `scripts/tour-daily.ps1` todo dia às 09:00 (ou quando o PC ligar): sincroniza e, se mudou, commita só o `src/data/tour.json` e dá push no branch atual. Não roda se o `tour.json` ou o `release.json` tiverem mudança ainda não commitada, nem com merge/rebase em andamento. Atenção: o push sobe o branch inteiro, então commits seus ainda não enviados nesse branch vão junto. Log em `%LOCALAPPDATA%\MAW-site\tour-sync.log`. Registrar de novo: `powershell -ExecutionPolicy Bypass -File scripts\register-tour-task.ps1`; remover: `Unregister-ScheduledTask -TaskName 'MAW Site - World Tour' -Confirm:$false`.
 
 ## Instalador
 

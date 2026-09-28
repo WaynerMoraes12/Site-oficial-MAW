@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildPrompt, parseTexts } from '../../tools/lib/tour-texts.mjs';
+import { buildPrompt, parseTexts, versionText } from '../../tools/lib/tour-texts.mjs';
 
 describe('parseTexts', () => {
   it('reads the JSON even with text around it', () => {
@@ -30,7 +30,8 @@ describe('buildPrompt', () => {
     const p = buildPrompt({ kind: 'pr', number: 1, title: 't', body: 'y'.repeat(5000) });
     expect(p.length).toBeLessThan(3500);
   });
-  it('names a version stop after the version', () => {
-    expect(buildPrompt({ kind: 'version', version: '1.1.0' })).toContain('Version 1.1');
+  it('names a version stop plainly, without inventing what is in it', () => {
+    expect(versionText('1.1.0')).toEqual({ en: 'Version 1.1', pt: 'Versão 1.1', es: 'Versión 1.1' });
+    expect(versionText('2.0.3')).toEqual({ en: 'Version 2.0.3', pt: 'Versão 2.0.3', es: 'Versión 2.0.3' });
   });
 });

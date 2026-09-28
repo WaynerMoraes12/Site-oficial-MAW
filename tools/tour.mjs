@@ -3,8 +3,8 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { classifyStops, mergeTexts, snapshotProblems } from './lib/tour.mjs';
-import { buildPrompt, parseTexts } from './lib/tour-texts.mjs';
+import { classifyStops, mergeTexts, rememberTexts, snapshotProblems, updateVersions } from './lib/tour.mjs';
+import { buildPrompt, parseTexts, versionText } from './lib/tour-texts.mjs';
 
 const REPO = 'WaynerMoraes12/MAW';
 const OUT = 'src/data/tour.json';
@@ -56,13 +56,7 @@ function writeTexts(source) {
 const release = readJson('src/data/release.json');
 const previous = readJson(OUT);
 
-// histórico de versões: a do instalador atual entra uma vez; reconstruir a mesma versão só troca o commit
-const versions = (previous?.versions ?? []).map((v) => ({ ...v }));
-if (release?.mawCommit) {
-  const same = versions.find((v) => v.version === release.version);
-  if (!same) versions.push({ version: release.version, mawCommit: release.mawCommit, builtAt: release.builtAt });
-  else same.mawCommit = release.mawCommit;
-}
+const versions = updateVersions(previous?.versions, release);
 const installerCommit = release?.mawCommit ?? previous?.installerCommit ?? null;
 const installedUntil = installerCommit ? gh('api', `repos/${REPO}/commits/${installerCommit}`, '--jq', '.commit.committer.date').trim() : '';
 
@@ -72,11 +66,11 @@ const prs = ghJson(
 );
 const issues = ghJson('issue', 'list', '-R', REPO, '--state', 'open', '--label', 'roadmap', '--limit', '200', '--json', 'number,title,body,createdAt,labels')
   .map((i) => ({ ...i, labels: i.labels.map((l) => l.name) }));
-const withPr = new Set(prs.map((p) => p.headRefName));
+// branches de recurso e os criados a partir de uma issue ("73-plugin-vst3"): quanto trabalho têm fora da main
 const branches = gh('api', '--paginate', `repos/${REPO}/branches?per_page=100`, '--jq', '.[].name')
   .split(/\r?\n/)
   .map((n) => n.trim())
-  .filter((n) => n.startsWith('feature/') && !withPr.has(n))
+  .filter((n) => n.startsWith('feature/') || /^\d+-/.test(n))
   .map((name) => {
     const c = ghJson('api', `repos/${REPO}/compare/main...${name}`, '--jq', '{ahead: .ahead_by, at: .commits[-1].commit.committer.date, message: .commits[-1].commit.message}');
     return { name, ahead: c.ahead ?? 0, lastCommitAt: c.at ?? '', lastMessage: (c.message ?? '').split('\n')[0] };
@@ -86,14 +80,16 @@ const stops = mergeTexts(classifyStops({ versions, prs, branches, issues, instal
 const fresh = stops.filter((s) => !s.text);
 for (const stop of fresh) {
   try {
-    stop.text = writeTexts(stop.source);
+    stop.text = stop.source.kind === 'version' ? versionText(stop.source.version) : writeTexts(stop.source);
     console.log(`texto novo  ${stop.id}: ${stop.text.en}`);
   } catch (err) {
     console.error(`sem texto   ${stop.id}: ${err.message.split('\n')[0]}`);
   }
 }
 
-const snapshot = { installerCommit, versions, stops: stops.map(({ source, ...s }) => s) };
+const cleanStops = stops.map(({ source, ...s }) => s);
+// texts guarda tudo que já foi escrito, para uma parada que sai do tour e volta não perder o texto (nem a edição à mão)
+const snapshot = { installerCommit, versions, stops: cleanStops, texts: rememberTexts(previous, cleanStops) };
 writeFileSync(OUT, `${JSON.stringify(snapshot, null, 2)}\n`);
 
 const count = (status) => snapshot.stops.filter((s) => s.status === status).length;

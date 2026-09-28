@@ -148,3 +148,16 @@ test('reloading the page keeps the reader where they were, with the #section sti
   expect(Math.abs((await page.evaluate(() => window.scrollY)) - y)).toBeLessThan(400);
   await expect(page).toHaveURL(/#tour$/);
 });
+
+test('a section clicked while the reloaded page is still loading keeps its #hash', async ({ page }) => {
+  await page.goto('/#tour');
+  await settle(page);
+  await page.route('**/*.{png,avif,webp}', async (route) => {
+    await new Promise((r) => setTimeout(r, 1500));
+    await route.continue();
+  });
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.locator('a[href="#faq"]').first().evaluate((a: HTMLAnchorElement) => a.click());
+  await page.waitForLoadState('load');
+  await expect(page).toHaveURL(/#faq$/);
+});
