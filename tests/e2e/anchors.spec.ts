@@ -80,3 +80,39 @@ test('after jumping to Download with the keyboard, Tab continues inside the down
   await page.keyboard.press('Tab');
   expect(await page.evaluate(() => !!document.activeElement?.closest('#download'))).toBe(true);
 });
+
+test('clicking the same section twice adds only one step to the back button', async ({ page }) => {
+  await page.goto('/');
+  const before = await page.evaluate(() => history.length);
+  const faq = page.locator('a[href="#faq"]').first();
+  await faq.evaluate((a: HTMLAnchorElement) => a.click());
+  await settle(page);
+  await faq.evaluate((a: HTMLAnchorElement) => a.click());
+  await settle(page);
+  expect(await page.evaluate(() => history.length)).toBe(before + 1);
+});
+
+test('a malformed #hash in a shared link does not break the page', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.goto('/#%E0%A4%A');
+  await page.waitForLoadState('load');
+  expect(errors).toEqual([]);
+});
+
+test('on a slow connection, the reader who already scrolled is not pulled back when the page finishes loading', async ({ page }) => {
+  // segura as imagens para o evento load demorar
+  await page.route('**/*.{png,avif,webp}', async (route) => {
+    await new Promise((r) => setTimeout(r, 1500));
+    await route.continue();
+  });
+  await page.goto('/#faq', { waitUntil: 'domcontentloaded' });
+  await page.waitForTimeout(300);
+  // a pessoa gira a roda e sai dali; o navegador troca a rolagem pela dela
+  await page.mouse.move(200, 400);
+  await page.mouse.wheel(0, -100);
+  await page.evaluate(() => window.scrollTo({ top: Math.max(0, window.scrollY - 2500), behavior: 'instant' }));
+  await page.waitForLoadState('load');
+  await settle(page);
+  expect(await topOf(page, '#faq')).toBeGreaterThan(300);
+});
