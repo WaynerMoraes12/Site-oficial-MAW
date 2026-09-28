@@ -29,6 +29,18 @@ describe('findPortuguese', () => {
   it('does not flag accented proper nouns that are allowed', () => {
     expect(findPortuguese('<p>Centro Universitário Hermínio Ometto (FHO)</p>', ['Centro Universitário Hermínio Ometto'])).toEqual([]);
   });
+  it('does not mistake audio jargon and acronyms for Portuguese', () => {
+    expect(findPortuguese('<p>Put a de-esser on the vocal. Runs on Windows, not DOS.</p>')).toEqual([]);
+  });
+  it('skips text marked as another language, such as native language names', () => {
+    expect(findPortuguese('<a lang="pt-BR" href="/pt/">Português</a> <span lang="es">Descarga para Windows</span>')).toEqual([]);
+  });
+  it('still reads text marked as English', () => {
+    expect(findPortuguese('<p lang="en-US">Baixe o instalador</p>')).not.toEqual([]);
+  });
+  it('still catches long Portuguese words in capitals', () => {
+    expect(findPortuguese('<b>BAIXAR AGORA</b>')).toContain('baixar');
+  });
   it('accepts plain English', () => {
     expect(findPortuguese('<h1>The DAW that understands the music it records</h1>')).toEqual([]);
   });
