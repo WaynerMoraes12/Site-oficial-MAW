@@ -4,7 +4,12 @@ export const PT_WORDS = [
   'trilha', 'trilhas', 'gravação', 'gravacao', 'mixagem', 'baixar', 'recursos', 'requisitos', 'história',
   'historia', 'perguntas', 'canais', 'seu', 'sua', 'com', 'sem', 'pelo', 'pela', 'então', 'entao', 'porque',
   'quando', 'ainda', 'aqui', 'grave', 'edite', 'mixe', 'entregue', 'leia', 'antes', 'instalar',
+  'que', 'de', 'da', 'dos', 'das', 'ao', 'são', 'é', 'abrir', 'baixe', 'clique', 'veja', 'instale', 'instalador',
+  'janela', 'projeto', 'faixas', 'sobre',
 ];
+
+// Qualquer palavra com acento típico do português (depois de tirar os nomes permitidos) também é suspeita.
+const ACCENTED = /(?<!\p{L})\p{L}*[áéíóúâêôãõçà]\p{L}*(?!\p{L})/giu;
 
 export function extractText(html) {
   const noCode = html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' ');
@@ -19,5 +24,7 @@ export function findPortuguese(html, allow = []) {
     .replace(/[\w.+-]+@[\w-]+\.[\w.]+/g, ' ');
   for (const phrase of allow) text = text.split(phrase).join(' ');
   const re = new RegExp(`(?<!\\p{L})(${PT_WORDS.join('|')})(?!\\p{L})`, 'giu');
-  return [...new Set([...text.matchAll(re)].map((m) => m[1].toLowerCase()))];
+  const words = [...text.matchAll(re)].map((m) => m[1]);
+  const accented = [...text.matchAll(ACCENTED)].map((m) => m[0]);
+  return [...new Set([...words, ...accented].map((w) => w.toLowerCase()))];
 }

@@ -25,6 +25,7 @@ const links = [
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-nav-toggle>{t.nav.menu}</button>
     <ul id="nav-links">
       {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      <li class="menu-download"><a href="#download">{t.nav.download}</a></li>
     </ul>
     <div class="lang" data-lang-switch translate="no" role="group" aria-label={t.nav.language}>
       {locales.map((l) => (

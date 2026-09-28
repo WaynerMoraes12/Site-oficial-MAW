@@ -364,3 +364,26 @@ picture img { height: auto; }
 .lang a { font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; padding: 6px 8px; border: 1px solid #2a2a33; border-radius: 3px; color: #bdb8cc; }
 .lang a:hover { color: #fff; border-color: #3b3b48; }
 .lang a[aria-current="true"] { background: var(--maw); color: #fff; border-color: var(--maw-bright); }
+/* âncoras: antes de rolar, as seções calculam o tamanho real (senão o content-visibility erra o alvo);
+   o nav fixo não cobre o título da seção */
+html.cv-off main > section { content-visibility: visible; }
+section[id], header[id] { scroll-margin-top: 72px; }
+.nav ul .menu-download { display: none; }
+@media (max-width: 980px) { .nav ul .menu-download { display: list-item; } }
+/* cards de canal: a coluna pode encolher e o e-mail quebra em vez de vazar da tela */
+.contact-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.chan { min-width: 0; }
+.chan > div { min-width: 0; }
+.chan span { overflow-wrap: anywhere; }
+@media (max-width: 980px) { .contact-grid { grid-template-columns: minmax(0, 1fr); } }
+/* rider técnico: cabeçalho com espaço; no celular cada linha vira um cartão com rótulos (data-label) */
+.sheet-top { gap: 8px 20px; flex-wrap: wrap; }
+@media (max-width: 560px) {
+  .sheet { overflow-x: visible; }
+  table.input thead { display: none; }
+  table.input, table.input tbody, table.input tr, table.input td { display: block; width: 100%; }
+  table.input tr { padding: 12px 0; border-bottom: 1px solid #1e1e25; }
+  table.input td { border: 0; padding: 4px 16px; overflow-wrap: anywhere; }
+  table.input td::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 600; letter-spacing: .18em; color: var(--maw-bright); }
+  table.input td:first-child { width: 100%; }
+}

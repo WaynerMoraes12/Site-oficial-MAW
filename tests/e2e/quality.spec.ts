@@ -5,7 +5,8 @@ test('no heading, paragraph or button spills outside the screen', async ({ page 
   // content-visibility pula seções fora da tela; força o layout real antes de medir
   await page.addStyleTag({ content: 'main > section { content-visibility: visible !important; }' });
   const spills = await page.evaluate(() => {
-    const w = window.innerWidth;
+    // clientWidth é a largura real da tela; innerWidth cresce junto com o conteúdo que vaza no celular
+    const w = document.documentElement.clientWidth;
     return Array.from(document.querySelectorAll('h1, h2, h3, p, .btn, .trk, .plate, .date, .chan, td'))
       .filter((el) => !el.closest('.ticker'))
       .map((el) => ({ el, r: el.getBoundingClientRect() }))
@@ -13,6 +14,11 @@ test('no heading, paragraph or button spills outside the screen', async ({ page 
       .map(({ el, r }) => `${el.tagName}.${(el as HTMLElement).className} ${Math.round(r.left)}..${Math.round(r.right)} "${el.textContent?.trim().slice(0, 40)}"`);
   });
   expect(spills).toEqual([]);
+  const pageOverflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  expect(pageOverflow).toBeLessThanOrEqual(0);
+  // nada escondido dentro de caixas com rolagem lateral (ex.: a tabela do rider)
+  const hidden = await page.locator('.sheet').evaluateAll((els) => els.map((el) => el.scrollWidth - el.clientWidth).filter((d) => d > 1));
+  expect(hidden).toEqual([]);
 });
 
 test('reduced motion stops every animation', async ({ page }) => {
