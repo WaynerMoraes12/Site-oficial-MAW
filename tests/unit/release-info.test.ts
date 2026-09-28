@@ -19,6 +19,15 @@ describe('buildReleaseInfo', () => {
   it('returns data the site accepts', () => {
     expect(isReleaseInfo(buildReleaseInfo(ok))).toBe(true);
   });
+  it('keeps the installed size so the site can show the real disk space', () => {
+    const info = buildReleaseInfo({ ...ok, installedBytes: 9_565_687 });
+    expect(info.installedBytes).toBe(9_565_687);
+    expect(isReleaseInfo(info)).toBe(true);
+    expect(() => buildReleaseInfo({ ...ok, installedBytes: 0 })).toThrow(/installedBytes/);
+  });
+  it('refuses an installer not named after its version', () => {
+    expect(() => buildReleaseInfo({ ...ok, file: 'MAW-Setup-9.9.9.exe' })).toThrow(/file/);
+  });
   it('refuses a bad hash or an empty file', () => {
     expect(() => buildReleaseInfo({ ...ok, sha256: 'nope' })).toThrow(/sha256/);
     expect(() => buildReleaseInfo({ ...ok, bytes: 0 })).toThrow(/bytes/);

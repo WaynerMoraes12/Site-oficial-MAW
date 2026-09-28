@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatBytes, isReleaseInfo, parseRelease, releaseView } from '../../src/lib/release';
+import { diskLabel, formatBytes, isReleaseInfo, parseRelease, releaseView } from '../../src/lib/release';
 
 const site = { version: '1.0.0', releaseBaseUrl: 'https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download' };
 const good = {
@@ -68,5 +68,21 @@ describe('parseRelease', () => {
   it('reads a valid file and reports a missing one as undefined', () => {
     expect(parseRelease(JSON.stringify(good))).toEqual(good);
     expect(parseRelease(undefined)).toBeUndefined();
+  });
+});
+
+describe('diskLabel', () => {
+  it('rounds the installed size up to whole megabytes', () => {
+    expect(diskLabel({ ...good, installedBytes: 9_565_687 }, site)).toBe('10 MB');
+    expect(diskLabel({ ...good, installedBytes: 25 * 1024 * 1024 + 1 }, site)).toBe('26 MB');
+  });
+  it('has no value without a valid release of this version that knows its size', () => {
+    expect(diskLabel(good, site)).toBeNull();
+    expect(diskLabel({ ...good, installedBytes: 9_565_687, version: '0.9.0', file: 'MAW-Setup-0.9.0.exe' }, site)).toBeNull();
+    expect(diskLabel(undefined, site)).toBeNull();
+  });
+  it('rejects a size that is not a positive whole number', () => {
+    expect(isReleaseInfo({ ...good, installedBytes: -1 })).toBe(false);
+    expect(isReleaseInfo({ ...good, installedBytes: 1.5 })).toBe(false);
   });
 });

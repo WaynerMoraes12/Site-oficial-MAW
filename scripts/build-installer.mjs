@@ -44,6 +44,8 @@ execFileSync(iscc, [
 
 const file = `MAW-Setup-${site.version}.exe`;
 const out = join(root, 'installer', 'output', file);
-const info = buildReleaseInfo({ file, bytes: statSync(out).size, sha256: await sha256File(out), version: site.version, builtAt: new Date().toISOString() });
+// o que vai para a pasta do app (ver [Files] do .iss, fora o runtime que fica no temp)
+const installedBytes = [sourceExe, join(mawRepo, 'LICENSE'), join(mawRepo, 'LICENSE-THIRD-PARTY.md')].reduce((n, f) => n + statSync(f).size, 0);
+const info = buildReleaseInfo({ file, bytes: statSync(out).size, sha256: await sha256File(out), version: site.version, builtAt: new Date().toISOString(), installedBytes });
 writeFileSync(join(root, 'src', 'data', 'release.json'), `${JSON.stringify(info, null, 2)}\n`);
 console.log(`release.json: ${file} · ${info.bytes} bytes · ${info.sha256}`);

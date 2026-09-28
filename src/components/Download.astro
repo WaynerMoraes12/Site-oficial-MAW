@@ -1,7 +1,8 @@
 ---
 import logo from '../assets/brand/maw-logo-web.png';
 import site from '../data/site.json';
-import { parseRelease, releaseView } from '../lib/release';
+import { releaseView } from '../lib/release';
+import { releaseData } from '../data/release';
 import { fill, type Dictionary } from '../i18n';
 
 interface Props {
@@ -10,10 +11,7 @@ interface Props {
 const { t } = Astro.props;
 const d = t.download;
 
-// release.json só existe depois do build do instalador; sem ele (ou corrompido), o botão fica "coming soon".
-// Lido como texto para um JSON quebrado não derrubar o build.
-const found = import.meta.glob<string>('../data/release.json', { eager: true, query: '?raw', import: 'default' });
-const release = releaseView(parseRelease(Object.values(found)[0]), site);
+const release = releaseView(releaseData, site);
 const fileName = `MAW-Setup-${site.version}.exe`;
 ---
 <section class="sec dl" id="download">

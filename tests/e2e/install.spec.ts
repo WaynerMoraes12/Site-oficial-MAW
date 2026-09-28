@@ -1,11 +1,15 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { parseRelease, releaseView } from '../../src/lib/release';
+import { diskLabel, parseRelease, releaseView } from '../../src/lib/release';
 
 test.beforeEach(async ({ page }) => page.goto('/'));
 
 test('tech rider lists 8 channels and the VC++ runtime note', async ({ page }) => {
   await expect(page.locator('#rider tbody tr')).toHaveCount(8);
+  // espaço em disco vem do build do instalador (release.json); sem ele, a estimativa de 10 MB
+  const text = existsSync('src/data/release.json') ? readFileSync('src/data/release.json', 'utf8') : undefined;
+  const disk = diskLabel(parseRelease(text), JSON.parse(readFileSync('src/data/site.json', 'utf8'))) ?? '10 MB';
+  await expect(page.locator('#rider tbody tr', { hasText: 'Disk' })).toContainText(`About ${disk} for MAW`);
   await expect(page.locator('#rider .rider-note')).toContainText('Visual C++ Redistributable');
 });
 

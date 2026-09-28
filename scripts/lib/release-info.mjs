@@ -12,11 +12,13 @@ export function sha256File(path) {
 }
 
 // Mesmo formato que src/lib/release.ts aceita (isReleaseInfo).
-export function buildReleaseInfo({ file, bytes, sha256, version, builtAt }) {
-  if (!file.endsWith('.exe')) throw new Error(`file inválido: ${file}`);
+export function buildReleaseInfo({ file, bytes, sha256, version, builtAt, installedBytes }) {
+  if (file !== `MAW-Setup-${version}.exe`) throw new Error(`file inválido: ${file} (esperado MAW-Setup-${version}.exe)`);
   if (!Number.isInteger(bytes) || bytes <= 0) throw new Error(`bytes inválido: ${bytes}`);
   if (!/^[0-9a-f]{64}$/.test(sha256)) throw new Error(`sha256 inválido: ${sha256}`);
-  return { file, bytes, sha256, version, builtAt };
+  if (installedBytes === undefined) return { file, bytes, sha256, version, builtAt };
+  if (!Number.isInteger(installedBytes) || installedBytes <= 0) throw new Error(`installedBytes inválido: ${installedBytes}`);
+  return { file, bytes, sha256, version, builtAt, installedBytes };
 }
 
 export function findIscc(candidates, exists = existsSync) {

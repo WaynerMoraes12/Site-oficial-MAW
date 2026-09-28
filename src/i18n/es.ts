@@ -160,7 +160,7 @@ export const es: Dictionary = {
       { item: 'Pantalla', min: '1329 × 620', rec: '1580 px de ancho o más (cabecera completa)' },
       { item: 'MIDI', min: '—', rec: 'Controlador USB (se reconoce al conectarlo)' },
       { item: 'IA: stems y transcripción', min: 'Servidor Neural MAW (Python 3.10 + ffmpeg)', rec: 'GPU NVIDIA con CUDA' },
-      { item: 'Disco', min: 'Unos 10 MB para MAW', rec: '+ ~3 GB para el modelo Whisper en el primer uso' },
+      { item: 'Disco', min: 'Unos {disk} para MAW', rec: '+ ~3 GB para el modelo Whisper en el primer uso' },
       { item: 'Consejero con Gemini', min: '— (reglas locales)', rec: 'Tu propia clave de API de Gemini' },
       { item: 'Internet', min: 'No hace falta para producir', rec: 'Solo para descargar modelos de IA y usar Gemini' },
     ],

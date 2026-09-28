@@ -4,6 +4,8 @@ export interface ReleaseInfo {
   sha256: string;
   version: string;
   builtAt: string;
+  // o que o instalador põe na pasta do app (MAW.exe + licenças), para o espaço em disco do rider
+  installedBytes?: number;
 }
 
 export type ReleaseView =
@@ -18,7 +20,8 @@ export function isReleaseInfo(raw: unknown): raw is ReleaseInfo {
     typeof r.version === 'string' && /^\d+\.\d+\.\d+$/.test(r.version) && r.file === `MAW-Setup-${r.version}.exe` &&
     typeof r.bytes === 'number' && Number.isInteger(r.bytes) && r.bytes > 0 &&
     typeof r.sha256 === 'string' && /^[0-9a-f]{64}$/.test(r.sha256) &&
-    typeof r.builtAt === 'string'
+    typeof r.builtAt === 'string' &&
+    (r.installedBytes === undefined || (typeof r.installedBytes === 'number' && Number.isInteger(r.installedBytes) && r.installedBytes > 0))
   );
 }
 
@@ -35,6 +38,12 @@ export function parseRelease(text: string | undefined): unknown {
 export function formatBytes(bytes: number): string {
   const mb = 1024 * 1024;
   return bytes < mb ? `${Math.round(bytes / 1024)} KB` : `${(bytes / mb).toFixed(1)} MB`;
+}
+
+// Espaço em disco medido no build do instalador, arredondado para cima ("10 MB"); null se não houver medida.
+export function diskLabel(raw: unknown, site: { version: string }): string | null {
+  if (!isReleaseInfo(raw) || raw.version !== site.version || raw.installedBytes === undefined) return null;
+  return `${Math.ceil(raw.installedBytes / (1024 * 1024))} MB`;
 }
 
 // Sem instalador válido desta versão, o site mostra "coming soon" em vez de link quebrado.
