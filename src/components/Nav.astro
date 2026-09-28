@@ -1,0 +1,58 @@
+---
+import logo from '../assets/brand/maw-logo-web.png';
+import { dictionaries, localeUrl, locales, type Dictionary, type Locale } from '../i18n';
+
+interface Props {
+  t: Dictionary;
+  locale: Locale;
+}
+const { t, locale } = Astro.props;
+const links = [
+  { href: '#stage', label: t.nav.stage },
+  { href: '#tracklist', label: t.nav.tracklist },
+  { href: '#ai', label: t.nav.ai },
+  { href: '#rider', label: t.nav.rider },
+  { href: '#tour', label: t.nav.tour },
+  { href: '#liner-notes', label: t.nav.story },
+  { href: '#faq', label: t.nav.faq },
+];
+---
+<nav class="nav" data-nav aria-label={t.nav.aria}>
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label={t.nav.home} translate="no">
+      <img data-logo src={logo.src} width={logo.width} height={logo.height} alt="MAW" />
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-nav-toggle>{t.nav.menu}</button>
+    <ul id="nav-links">
+      {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      <li class="menu-download"><a href="#download">{t.nav.download}</a></li>
+    </ul>
+    <div class="lang" data-lang-switch translate="no" role="group" aria-label={t.nav.language}>
+      {locales.map((l) => (
+        <a
+          href={`${localeUrl(l)}?lang=${l}`}
+          hreflang={dictionaries[l].meta.htmlLang}
+          lang={dictionaries[l].meta.htmlLang}
+          data-lang={l}
+          aria-current={l === locale ? 'true' : undefined}
+        >{l.toUpperCase()}</a>
+      ))}
+    </div>
+    <a class="btn btn-rec" href="#download">{t.nav.download}</a>
+  </div>
+</nav>
+<script>
+  const nav = document.querySelector('[data-nav]');
+  const toggle = document.querySelector('[data-nav-toggle]');
+  if (nav && toggle) {
+    const close = () => {
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    };
+    toggle.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+    nav.querySelectorAll('#nav-links a').forEach((a) => a.addEventListener('click', close));
+  }
+</script>

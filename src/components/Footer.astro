@@ -1,0 +1,19 @@
+---
+import logo from '../assets/brand/maw-logo-web.png';
+import site from '../data/site.json';
+import { fill, type Dictionary } from '../i18n';
+
+interface Props {
+  t: Dictionary;
+}
+const { t } = Astro.props;
+---
+<footer>
+  <div class="wrap">
+    <div class="top" translate="no">
+      <img data-logo src={logo.src} width={logo.width} height={logo.height} alt="MAW" />
+      <span>MAW — {site.fullName} · v{site.version}</span>
+    </div>
+    <p class="legal">{fill(t.footer.legal, { year: site.year, author: site.author })}</p>
+  </div>
+</footer>

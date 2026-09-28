@@ -1,0 +1,42 @@
+---
+import site from '../data/site.json';
+import { releaseData } from '../data/release';
+import { diskLabel } from '../lib/release';
+import { fill, type Dictionary } from '../i18n';
+
+interface Props {
+  t: Dictionary;
+}
+const { t } = Astro.props;
+const r = t.rider;
+// medido no build do instalador; antes de existir instalador, a estimativa (MAW.exe + desinstalador ≈ 13,4 MB → 14 MB)
+const disk = diskLabel(releaseData, site) ?? '14 MB';
+---
+<section class="sec rider" id="rider">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">{r.eyebrow}</div>
+      <h2 class="h-stencil white">{r.title}</h2>
+    </div>
+    <div class="sheet">
+      <div class="sheet-top"><span>MAW {site.version} — {r.sheet}</span><span>{r.rev}</span></div>
+      <!-- papéis explícitos: no celular as linhas viram cartões (display:block) e o Safari perderia a tabela -->
+      <table class="input" role="table">
+        <thead role="rowgroup">
+          <tr role="row">{r.headers.map((h) => <th scope="col" role="columnheader">{h}</th>)}</tr>
+        </thead>
+        <tbody role="rowgroup">
+          {r.rows.map((row, i) => (
+            <tr role="row">
+              <td role="cell" data-label={r.headers[0]}>{String(i + 1).padStart(2, '0')}</td>
+              <td role="cell" data-label={r.headers[1]}>{row.item}</td>
+              <td role="cell" data-label={r.headers[2]}>{fill(row.min, { disk })}</td>
+              <td role="cell" data-label={r.headers[3]}>{fill(row.rec, { disk })}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="rider-note">{r.note}</p>
+  </div>
+</section>

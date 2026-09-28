@@ -1,0 +1,77 @@
+---
+import { Picture } from 'astro:assets';
+import { demoProject, stageShots } from '../data/stage';
+import Keep from './Keep.astro';
+import type { Dictionary } from '../i18n';
+
+interface Props {
+  t: Dictionary;
+}
+const { t } = Astro.props;
+const s = t.stage;
+---
+<section class="sec stage" id="stage" data-stage>
+  <div class="beam b1" aria-hidden="true"></div>
+  <div class="beam b2" aria-hidden="true"></div>
+  <div class="beam b3" aria-hidden="true"></div>
+  <div class="smoke" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow"><Keep text={s.eyebrow} terms={[demoProject]} /></div>
+      <h2 class="h-goth">{s.title}</h2>
+      <p class="lede">{s.lede}</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label={s.tablist}>
+      {stageShots.map((shot, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`tab-${shot.id}`}
+          aria-controls={`panel-${shot.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          class={i === 0 ? 'on' : undefined}
+        >{s.shots[shot.id].label}</button>
+      ))}
+    </div>
+    <div class="screen">
+      {stageShots.map((shot, i) => (
+        <div role="tabpanel" id={`panel-${shot.id}`} aria-labelledby={`tab-${shot.id}`} hidden={i !== 0}>
+          <Picture
+            src={shot.image}
+            formats={['avif', 'webp']}
+            widths={[640, 960, 1280, 1920]}
+            sizes="(max-width: 1240px) 100vw, 1220px"
+            quality={88}
+            loading="lazy"
+            alt={s.shots[shot.id].alt}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+<script>
+  const root = document.querySelector('[data-stage]');
+  if (root) {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+    const select = (index: number, focus = false) => {
+      tabs.forEach((tab, j) => {
+        const on = j === index;
+        tab.setAttribute('aria-selected', String(on));
+        tab.tabIndex = on ? 0 : -1;
+        tab.classList.toggle('on', on);
+        if (on && focus) tab.focus();
+      });
+      panels.forEach((panel, j) => { panel.hidden = j !== index; });
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(i));
+      tab.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') select((i + 1) % tabs.length, true);
+        if (e.key === 'ArrowLeft') select((i - 1 + tabs.length) % tabs.length, true);
+      });
+    });
+  }
+</script>

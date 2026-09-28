@@ -1,0 +1,36 @@
+---
+import logo from '../assets/brand/maw-logo-web.png';
+import { channels } from '../data/channels';
+import { visibleChannels } from '../lib/channels';
+import { withBase } from '../lib/url';
+import type { Dictionary } from '../i18n';
+
+interface Props {
+  t: Dictionary;
+}
+const { t } = Astro.props;
+const c = t.contact;
+const shown = visibleChannels(channels(t));
+const press = [withBase('press/logo_MAW.png'), logo.src, withBase('press/icon_MAW.png'), withBase('press/maw-screenshots.zip')].map(
+  (href, i) => ({ href, label: c.press[i] }),
+);
+---
+<section class="sec contact" id="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">{c.eyebrow}</div>
+      <h2 class="chrome h-rock sm">{c.title}</h2>
+    </div>
+    <div class="contact-grid">
+      {shown.map((ch) => (
+        <a class="chan" href={ch.href} data-channel={ch.id}>
+          <div class="ic" aria-hidden="true">{ch.icon}</div>
+          <div><b>{ch.label}</b><span translate="no">{ch.value}</span></div>
+        </a>
+      ))}
+    </div>
+    <nav class="press" aria-label={c.pressAria}>
+      {press.map((p) => <a href={p.href} download>{p.label}</a>)}
+    </nav>
+  </div>
+</section>

@@ -1,0 +1,52 @@
+---
+import { synthPresets, trackKeys } from '../data/tracklist';
+import Keep from './Keep.astro';
+import { barcodeBars } from '../lib/barcode';
+import site from '../data/site.json';
+import { fill, type Dictionary } from '../i18n';
+
+interface Props {
+  t: Dictionary;
+}
+const { t } = Astro.props;
+const tl = t.tracklist;
+const bars = barcodeBars(7, 186);
+const perSide = trackKeys[0].length;
+---
+<section class="sec tracklist" id="tracklist">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">{tl.eyebrow}</div>
+      <h2 class="chrome h-rock">
+        {tl.words.map((w, i) => (
+          <Fragment>{i > 0 && <Fragment> <span class="bolt" aria-hidden="true"></span> </Fragment>}{w}</Fragment>
+        ))}
+      </h2>
+    </div>
+    <div class="tl-grid">
+      {tl.sides.map((side, s) => (
+        <div class="side">
+          <h3>{side.name} <small>{side.subtitle}</small></h3>
+          <ol class="tracks">
+            {side.tracks.map((track, i) => (
+              <li class="trk">
+                <span class="n">{String(s * perSide + i + 1).padStart(2, '0')}</span>
+                <span class="t">{track.title}<em><Keep text={track.detail} terms={synthPresets} /></em></span>
+                <span class="kbd" translate="no">{trackKeys[s][i]}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))}
+    </div>
+    <div class="backcover-foot">
+      <div>{fill(tl.footer1, { year: site.year, author: site.author })}<br />{tl.footer2}</div>
+      <div class="barcode" aria-hidden="true">
+        <svg width="190" height="52" viewBox="0 0 190 52">
+          {bars.map((b) => <rect x={b.x} y="0" width={b.width} height="52" fill="#000" />)}
+        </svg>
+        <div>7 891000 202601</div>
+      </div>
+    </div>
+  </div>
+</section>

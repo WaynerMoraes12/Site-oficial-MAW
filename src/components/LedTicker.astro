@@ -1,0 +1,14 @@
+---
+import type { Dictionary } from '../i18n';
+
+interface Props {
+  t: Dictionary;
+}
+const { t } = Astro.props;
+---
+<div class="ticker" role="marquee" aria-label={t.ticker.aria}>
+  <div class="track">
+    {t.ticker.items.map((item) => <span>{item}<i aria-hidden="true">✦</i></span>)}
+    {t.ticker.items.map((item) => <span aria-hidden="true">{item}<i>✦</i></span>)}
+  </div>
+</div>

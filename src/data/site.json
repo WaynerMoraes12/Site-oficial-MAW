@@ -1,0 +1,11 @@
+{
+  "name": "MAW",
+  "fullName": "Musical Artificial Workspace",
+  "version": "1.0.0",
+  "year": 2026,
+  "author": "Wayner Pires de Moraes",
+  "description": "MAW (Musical Artificial Workspace) is a multitrack music production workstation for Windows with AI built into the timeline: stem separation, transcription, chord detection and a mix advisor.",
+  "neuralServerBundled": false,
+  "sourceCodeUrl": "",
+  "releaseBaseUrl": "https://github.com/WaynerMoraes12/MAW/releases/download"
+}

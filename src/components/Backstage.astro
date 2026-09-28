@@ -1,0 +1,38 @@
+---
+import { Picture } from 'astro:assets';
+import { backstageShots, stats } from '../data/backstage';
+import type { Dictionary, Locale } from '../i18n';
+
+interface Props {
+  t: Dictionary;
+  locale: Locale;
+}
+const { t, locale } = Astro.props;
+const b = t.backstage;
+---
+<section class="sec engine" id="backstage">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">{b.eyebrow}</div>
+      <h2 class="h-goth md">{b.title}</h2>
+      <p class="lede mt">{b.lede}</p>
+    </div>
+    <div class="stats">
+      {stats.map((s, i) => (
+        <div class="stat">
+          <div class={s.purple ? 'v p' : 'v'}>{locale === 'en' ? s.value : s.valueComma}</div>
+          <div class="l">{b.stats[i].label}</div>
+          <div class="s">{b.stats[i].sub}</div>
+        </div>
+      ))}
+    </div>
+    <div class="two">
+      {backstageShots.map((image, i) => (
+        <figure class="shot">
+          <Picture src={image} formats={['avif', 'webp']} widths={[600, 1000]} sizes="(max-width: 980px) 100vw, 610px" quality={88} alt={b.shots[i].alt} />
+          <figcaption>{b.shots[i].caption}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>

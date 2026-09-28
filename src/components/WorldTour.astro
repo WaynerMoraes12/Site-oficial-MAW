@@ -1,0 +1,34 @@
+---
+import { tourStops, type TourStop } from '../data/tour';
+import type { Dictionary, Locale } from '../i18n';
+
+interface Props {
+  t: Dictionary;
+  locale: Locale;
+}
+const { t, locale } = Astro.props;
+const tour = t.tour;
+// na estrada: mês e ano da versão; ensaiando e anunciado: o rótulo de cada um
+const when = (stop: TourStop) =>
+  stop.status === 'live'
+    ? `${tour.months[Number(stop.date.slice(5, 7)) - 1]} ${stop.date.slice(0, 4)}`
+    : stop.status === 'reh'
+      ? tour.whenReh
+      : tour.whenNext;
+---
+<section class="sec tour" id="tour">
+  <div class="wrap">
+    <div class="eyebrow">{tour.eyebrow}</div>
+    <h2 class="h-tour chrome" translate="no">{tour.title}</h2>
+    <div class="years">{tour.years}</div>
+    <ol class="dates">
+      {tourStops.map((stop) => (
+        <li class="date">
+          <span class="when">{when(stop)}</span>
+          <span class="what">{stop.text[locale]}</span>
+          <span class={`stamp ${stop.status}`}>{tour.stamps[stop.status]}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

@@ -1,0 +1,38 @@
+---
+import { Picture } from 'astro:assets';
+import { pedals, rackShots } from '../data/rack';
+import type { Dictionary } from '../i18n';
+
+interface Props {
+  t: Dictionary;
+}
+const { t } = Astro.props;
+const r = t.rack;
+---
+<section class="sec rack" id="rack">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">{r.eyebrow}</div>
+      <h2 class="chrome h-rock">{r.titleBefore} <span class="bolt" aria-hidden="true"></span> {r.titleAfter}</h2>
+      <p class="lede mt">{r.lede}</p>
+    </div>
+    <ul class="board" aria-label={r.boardAria}>
+      {pedals.map((p) => (
+        <li class="pedal" style={`--c:${p.color};${p.ink ? `--ink2:${p.ink};` : ''}`}>
+          <div class="led"></div>
+          <div class="knobs">{p.knobs.map((deg) => <div class="knob" style={`--r:${deg}deg`}></div>)}</div>
+          <div class="name" translate="no">{p.name}</div>
+          <div class="sw"></div>
+        </li>
+      ))}
+    </ul>
+    <div class="rack-foot">
+      {rackShots.map((image, i) => (
+        <figure class="shot">
+          <Picture src={image} formats={['avif', 'webp']} widths={[400, 800]} sizes="(max-width: 980px) 100vw, 400px" quality={88} alt={r.shots[i].alt} />
+          <figcaption>{r.shots[i].caption}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>

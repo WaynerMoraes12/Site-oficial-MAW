@@ -1,0 +1,42 @@
+---
+import type { Dictionary } from '../i18n';
+
+interface Props {
+  t: Dictionary;
+}
+const { t } = Astro.props;
+const l = t.liner;
+---
+<section class="sec liner" id="liner-notes">
+  <svg class="grain" width="100%" height="100%" aria-hidden="true">
+    <filter id="gr">
+      <feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0" />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#gr)" />
+  </svg>
+  <div class="wrap">
+    <div class="eyebrow">{l.eyebrow}</div>
+    <h2 class="h-liner">{l.titleBefore}<span class="red">{l.titleRed}</span>{l.titleAfter}<br />{l.titleLine2}</h2>
+    <div class="liner-grid">
+      <div>
+        <p>{l.lead}</p>
+        <p>{l.body}</p>
+        <blockquote>{l.quote}</blockquote>
+        <p>{l.closing}</p>
+      </div>
+      <ol class="timeline">
+        {l.timeline.map((item) => <li><b>{item.when}</b><span>{item.what}</span></li>)}
+      </ol>
+    </div>
+    <section class="credits" id="credits" aria-labelledby="credits-title">
+      <h3 id="credits-title">{l.creditsTitle}</h3>
+      {l.credits.map((c) => (
+        <dl class="credit">
+          <dt>{c.role}</dt>
+          <dd>{c.name}{c.note && <small>{c.note}</small>}</dd>
+        </dl>
+      ))}
+    </section>
+  </div>
+</section>

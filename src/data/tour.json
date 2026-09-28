@@ -1,0 +1,234 @@
+{
+  "installerCommit": "5433daadac1d063a335a72fa01a7b0d504a6145d",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "mawCommit": "5433daadac1d063a335a72fa01a7b0d504a6145d",
+      "builtAt": "2026-09-28T11:21:55.339Z"
+    }
+  ],
+  "stops": [
+    {
+      "id": "version:1.0.0",
+      "status": "live",
+      "date": "2026-09-28",
+      "text": {
+        "en": "Version 1.0 — debut",
+        "pt": "Versão 1.0 — estreia",
+        "es": "Versión 1.0 — estreno"
+      }
+    },
+    {
+      "id": "pr:74",
+      "status": "reh",
+      "date": "2026-09-28",
+      "text": {
+        "en": "Automatic updates with the AI included",
+        "pt": "Atualização automática com a IA inclusa",
+        "es": "Actualización automática con la IA incluida"
+      }
+    },
+    {
+      "id": "pr:72",
+      "status": "reh",
+      "date": "2026-09-28",
+      "text": {
+        "en": "Punch in/out & edit history",
+        "pt": "Punch in/out e histórico de edições",
+        "es": "Punch in/out e historial de ediciones"
+      }
+    },
+    {
+      "id": "pr:71",
+      "status": "reh",
+      "date": "2026-09-28",
+      "text": {
+        "en": "Time-stretch & pitch shift for every clip",
+        "pt": "Esticar o tempo e mudar o tom de cada clipe",
+        "es": "Estirar el tiempo y cambiar el tono de cada clip"
+      }
+    },
+    {
+      "id": "pr:70",
+      "status": "reh",
+      "date": "2026-09-28",
+      "text": {
+        "en": "MAW runs natively on Linux",
+        "pt": "A MAW roda nativamente no Linux",
+        "es": "MAW funciona de forma nativa en Linux"
+      }
+    },
+    {
+      "id": "pr:67",
+      "status": "reh",
+      "date": "2026-09-25",
+      "text": {
+        "en": "Tempo map: BPM & time signature changes",
+        "pt": "Mapa de andamento: mudanças de BPM e compasso",
+        "es": "Mapa de tempo: cambios de BPM y de compás"
+      }
+    },
+    {
+      "id": "pr:66",
+      "status": "reh",
+      "date": "2026-09-25",
+      "text": {
+        "en": "CC & pitch bend lanes in the piano roll",
+        "pt": "Faixas de CC e pitch bend no piano roll",
+        "es": "Carriles de CC y pitch bend en el piano roll"
+      }
+    },
+    {
+      "id": "pr:65",
+      "status": "reh",
+      "date": "2026-09-25",
+      "text": {
+        "en": "Freeze tracks to free up your CPU",
+        "pt": "Congelar trilhas para aliviar a CPU",
+        "es": "Congelar pistas para liberar la CPU"
+      }
+    },
+    {
+      "id": "pr:64",
+      "status": "reh",
+      "date": "2026-09-24",
+      "text": {
+        "en": "Loop recording, takes & comping",
+        "pt": "Gravação em ciclo, tomadas e montagem",
+        "es": "Grabación en bucle, tomas y comping"
+      }
+    },
+    {
+      "id": "pr:63",
+      "status": "reh",
+      "date": "2026-09-24",
+      "text": {
+        "en": "MIDI learn for mixer, transport & effects",
+        "pt": "MIDI learn para mesa, transporte e efeitos",
+        "es": "MIDI learn para mezclador, transporte y efectos"
+      }
+    },
+    {
+      "id": "pr:62",
+      "status": "reh",
+      "date": "2026-09-24",
+      "text": {
+        "en": "Sidechain for the compressor & noise gate",
+        "pt": "Sidechain no compressor e no noise gate",
+        "es": "Sidechain en el compresor y el noise gate"
+      }
+    },
+    {
+      "id": "pr:61",
+      "status": "reh",
+      "date": "2026-09-24",
+      "text": {
+        "en": "Sampler, drum kits & step sequencer",
+        "pt": "Sampler, kit de bateria e sequenciador de passos",
+        "es": "Sampler, kit de batería y secuenciador de pasos"
+      }
+    },
+    {
+      "id": "pr:60",
+      "status": "reh",
+      "date": "2026-09-24",
+      "text": {
+        "en": "Aux sends, buses & track groups",
+        "pt": "Envios auxiliares, barramentos e grupos",
+        "es": "Envíos auxiliares, buses y grupos"
+      }
+    },
+    {
+      "id": "issue:73",
+      "status": "next",
+      "date": "2026-09-28",
+      "text": {
+        "en": "MAW as a VST3 plugin inside other DAWs",
+        "pt": "A MAW como plugin VST3 em outras DAWs",
+        "es": "MAW como plugin VST3 dentro de otras DAW"
+      }
+    }
+  ],
+  "texts": {
+    "version:1.0.0": {
+      "en": "Version 1.0 — debut",
+      "pt": "Versão 1.0 — estreia",
+      "es": "Versión 1.0 — estreno"
+    },
+    "pr:71": {
+      "en": "Time-stretch & pitch shift for every clip",
+      "pt": "Esticar o tempo e mudar o tom de cada clipe",
+      "es": "Estirar el tiempo y cambiar el tono de cada clip"
+    },
+    "pr:70": {
+      "en": "MAW runs natively on Linux",
+      "pt": "A MAW roda nativamente no Linux",
+      "es": "MAW funciona de forma nativa en Linux"
+    },
+    "pr:67": {
+      "en": "Tempo map: BPM & time signature changes",
+      "pt": "Mapa de andamento: mudanças de BPM e compasso",
+      "es": "Mapa de tempo: cambios de BPM y de compás"
+    },
+    "pr:66": {
+      "en": "CC & pitch bend lanes in the piano roll",
+      "pt": "Faixas de CC e pitch bend no piano roll",
+      "es": "Carriles de CC y pitch bend en el piano roll"
+    },
+    "pr:65": {
+      "en": "Freeze tracks to free up your CPU",
+      "pt": "Congelar trilhas para aliviar a CPU",
+      "es": "Congelar pistas para liberar la CPU"
+    },
+    "pr:64": {
+      "en": "Loop recording, takes & comping",
+      "pt": "Gravação em ciclo, tomadas e montagem",
+      "es": "Grabación en bucle, tomas y comping"
+    },
+    "pr:63": {
+      "en": "MIDI learn for mixer, transport & effects",
+      "pt": "MIDI learn para mesa, transporte e efeitos",
+      "es": "MIDI learn para mezclador, transporte y efectos"
+    },
+    "pr:62": {
+      "en": "Sidechain for the compressor & noise gate",
+      "pt": "Sidechain no compressor e no noise gate",
+      "es": "Sidechain en el compresor y el noise gate"
+    },
+    "pr:61": {
+      "en": "Sampler, drum kits & step sequencer",
+      "pt": "Sampler, kit de bateria e sequenciador de passos",
+      "es": "Sampler, kit de batería y secuenciador de pasos"
+    },
+    "pr:60": {
+      "en": "Aux sends, buses & track groups",
+      "pt": "Envios auxiliares, barramentos e grupos",
+      "es": "Envíos auxiliares, buses y grupos"
+    },
+    "pr:58": {
+      "en": "Tuner for guitar, bass, ukulele & more",
+      "pt": "Afinador para guitarra, baixo, ukulele e mais",
+      "es": "Afinador para guitarra, bajo, ukulele y más"
+    },
+    "issue:73": {
+      "en": "MAW as a VST3 plugin inside other DAWs",
+      "pt": "A MAW como plugin VST3 em outras DAWs",
+      "es": "MAW como plugin VST3 dentro de otras DAW"
+    },
+    "pr:72": {
+      "en": "Punch in/out & edit history",
+      "pt": "Punch in/out e histórico de edições",
+      "es": "Punch in/out e historial de ediciones"
+    },
+    "branch:feature/punch-e-historico": {
+      "en": "Punch-in & take history, polished",
+      "pt": "Punch-in e histórico de takes aprimorados",
+      "es": "Punch-in e historial de tomas mejorados"
+    },
+    "pr:74": {
+      "en": "Automatic updates with the AI included",
+      "pt": "Atualização automática com a IA inclusa",
+      "es": "Actualización automática con la IA incluida"
+    }
+  }
+}

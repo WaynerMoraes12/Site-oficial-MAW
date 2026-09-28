@@ -1,0 +1,59 @@
+---
+import logo from '../assets/brand/maw-logo-web.png';
+import site from '../data/site.json';
+import { releaseView } from '../lib/release';
+import { releaseData } from '../data/release';
+import { fill, type Dictionary } from '../i18n';
+
+interface Props {
+  t: Dictionary;
+}
+const { t } = Astro.props;
+const d = t.download;
+
+const release = releaseView(releaseData, site);
+const fileName = `MAW-Setup-${site.version}.exe`;
+---
+<section class="sec dl" id="download">
+  <div class="wrap dl-grid">
+    <div class="lanyard" aria-hidden="true" translate="no">
+      <div class="strap"></div>
+      <div class="pass">
+        <div class="hole"></div>
+        <div class="logo-row"><img data-logo src={logo.src} width={logo.width} height={logo.height} alt="" /></div>
+        <div class="aa">ALL ACCESS</div>
+        <div class="body">
+          <dl>
+            <dt>{d.labels.version}</dt><dd>{site.version}</dd>
+            <dt>{d.labels.platform}</dt><dd>Windows 10/11 · x64</dd>
+            <dt>{d.labels.file}</dt><dd>{fileName}</dd>
+            <dt>{d.labels.license}</dt><dd>GNU GPL v3</dd>
+          </dl>
+          <div class="holo"><img data-logo src={logo.src} width={logo.width} height={logo.height} alt="" /></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="eyebrow">{d.eyebrow}</div>
+      <h2 class="chrome h-rock xl">{d.title1}<br />{d.title2}</h2>
+      <p class="lede">{d.lede}</p>
+      <ol class="steps">
+        {d.steps.map((step) => (
+          <li><span>{step.before}{step.bold && <b translate={step.keep ? 'no' : undefined}>{fill(step.bold, { file: fileName })}</b>}{step.after}</span></li>
+        ))}
+      </ol>
+      {release.state === 'ready' ? (
+        <Fragment>
+          <a class="btn btn-rec" href={release.url} data-download>{fill(d.ready, { version: site.version })}</a>
+          <div class="hash" translate="no">SHA-256: {release.sha256} · {release.sizeLabel}</div>
+        </Fragment>
+      ) : (
+        <Fragment>
+          <span class="btn btn-rec" role="link" aria-disabled="true" data-download>{d.pending}</span>
+          <div class="hash">{d.pendingNote}</div>
+        </Fragment>
+      )}
+      {site.sourceCodeUrl && <a class="source-link" href={site.sourceCodeUrl}>{d.source}</a>}
+    </div>
+  </div>
+</section>
