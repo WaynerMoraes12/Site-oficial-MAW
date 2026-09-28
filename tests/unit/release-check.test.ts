@@ -46,6 +46,8 @@ describe('checkPublishedRelease agrees with the page', () => {
     { ...release, file: 'maw.exe' },
     { ...release, sha256: 'nope' },
     { ...release, bytes: 0 },
+    { ...release, mawCommit: 'nope' },
+    { ...release, mawCommit: 'd'.repeat(40) },
   ];
   it('blocks the deploy whenever release.json exists but the page would show "coming soon"', async () => {
     for (const v of variants) {

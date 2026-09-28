@@ -13,15 +13,26 @@ export function sha256File(path) {
 }
 
 // Mesmo formato que src/lib/release.ts aceita (isReleaseInfo).
-export function buildReleaseInfo({ file, bytes, sha256, version, builtAt, installedBytes }) {
+export function buildReleaseInfo({ file, bytes, sha256, version, builtAt, installedBytes, mawCommit }) {
   // o site só mostra o download para versões x.y.z (src/lib/release.ts); qualquer outra ficaria "coming soon"
   if (!/^\d+\.\d+\.\d+$/.test(version)) throw new Error(`version inválida: ${version} (use x.y.z no site.json)`);
   if (file !== `MAW-Setup-${version}.exe`) throw new Error(`file inválido: ${file} (esperado MAW-Setup-${version}.exe)`);
   if (!Number.isInteger(bytes) || bytes <= 0) throw new Error(`bytes inválido: ${bytes}`);
   if (!/^[0-9a-f]{64}$/.test(sha256)) throw new Error(`sha256 inválido: ${sha256}`);
-  if (installedBytes === undefined) return { file, bytes, sha256, version, builtAt };
-  if (!Number.isInteger(installedBytes) || installedBytes <= 0) throw new Error(`installedBytes inválido: ${installedBytes}`);
-  return { file, bytes, sha256, version, builtAt, installedBytes };
+  if (installedBytes !== undefined && (!Number.isInteger(installedBytes) || installedBytes <= 0)) {
+    throw new Error(`installedBytes inválido: ${installedBytes}`);
+  }
+  if (mawCommit !== undefined && !/^[0-9a-f]{40}$/.test(mawCommit)) throw new Error(`mawCommit inválido: ${mawCommit}`);
+  const info = { file, bytes, sha256, version, builtAt };
+  if (installedBytes !== undefined) info.installedBytes = installedBytes;
+  if (mawCommit !== undefined) info.mawCommit = mawCommit;
+  return info;
+}
+
+// O MAW.exe precisa ser mais novo que o commit da MAW que o release.json diz ser a origem dele;
+// senão o repo andou depois da compilação e o commit gravado não descreve o que vai no instalador.
+export function exeIsCurrent(exeMtime, commitDate) {
+  return exeMtime.getTime() >= commitDate.getTime();
 }
 
 // O que o instalador põe na pasta do app ([Files] do .iss, fora o runtime que vai para o temp) mais o

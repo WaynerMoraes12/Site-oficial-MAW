@@ -6,6 +6,8 @@ export interface ReleaseInfo {
   builtAt: string;
   // o que o instalador põe na pasta do app (MAW.exe + licenças), para o espaço em disco do rider
   installedBytes?: number;
+  // commit da MAW de onde saiu o MAW.exe do instalador (o World Tour usa para saber o que está "na estrada")
+  mawCommit?: string;
 }
 
 export type ReleaseView =
@@ -21,7 +23,8 @@ export function isReleaseInfo(raw: unknown): raw is ReleaseInfo {
     typeof r.bytes === 'number' && Number.isInteger(r.bytes) && r.bytes > 0 &&
     typeof r.sha256 === 'string' && /^[0-9a-f]{64}$/.test(r.sha256) &&
     typeof r.builtAt === 'string' &&
-    (r.installedBytes === undefined || (typeof r.installedBytes === 'number' && Number.isInteger(r.installedBytes) && r.installedBytes > 0))
+    (r.installedBytes === undefined || (typeof r.installedBytes === 'number' && Number.isInteger(r.installedBytes) && r.installedBytes > 0)) &&
+    (r.mawCommit === undefined || (typeof r.mawCommit === 'string' && /^[0-9a-f]{40}$/.test(r.mawCommit)))
   );
 }
 

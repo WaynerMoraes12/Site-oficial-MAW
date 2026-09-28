@@ -49,6 +49,13 @@ describe('isReleaseInfo', () => {
   });
 });
 
+describe('MAW commit of the installer', () => {
+  it('accepts the MAW commit of the installer and rejects a malformed one', () => {
+    expect(isReleaseInfo({ ...good, mawCommit: 'a'.repeat(40) })).toBe(true);
+    expect(isReleaseInfo({ ...good, mawCommit: '5433daa' })).toBe(false);
+  });
+});
+
 describe('strict release file', () => {
   it('only accepts the installer named after its own version', () => {
     expect(isReleaseInfo({ ...good, file: 'evil.exe' })).toBe(false);

@@ -22,7 +22,8 @@ function pageShowsDownload(release, site) {
     Number.isInteger(r.bytes) && r.bytes > 0 &&
     typeof r.sha256 === 'string' && /^[0-9a-f]{64}$/.test(r.sha256) &&
     typeof r.builtAt === 'string' &&
-    (r.installedBytes === undefined || (Number.isInteger(r.installedBytes) && r.installedBytes > 0))
+    (r.installedBytes === undefined || (Number.isInteger(r.installedBytes) && r.installedBytes > 0)) &&
+    (r.mawCommit === undefined || (typeof r.mawCommit === 'string' && /^[0-9a-f]{40}$/.test(r.mawCommit)))
   );
 }
 

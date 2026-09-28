@@ -2,7 +2,7 @@ import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { buildReleaseInfo, findIscc, installedFiles, sha256File } from '../../scripts/lib/release-info.mjs';
+import { buildReleaseInfo, exeIsCurrent, findIscc, installedFiles, sha256File } from '../../scripts/lib/release-info.mjs';
 import { isReleaseInfo } from '../../src/lib/release';
 
 describe('sha256File', () => {
@@ -28,6 +28,14 @@ describe('buildReleaseInfo', () => {
   it('refuses a version the site would not show (only x.y.z)', () => {
     expect(() => buildReleaseInfo({ ...ok, version: '1.1', file: 'MAW-Setup-1.1.exe' })).toThrow(/version/);
     expect(() => buildReleaseInfo({ ...ok, version: '1.0.0-beta.1', file: 'MAW-Setup-1.0.0-beta.1.exe' })).toThrow(/version/);
+  });
+  it('records the MAW commit the installer was built from', () => {
+    expect(buildReleaseInfo({ ...ok, mawCommit: 'c'.repeat(40) }).mawCommit).toBe('c'.repeat(40));
+    expect(() => buildReleaseInfo({ ...ok, mawCommit: 'xyz' })).toThrow(/mawCommit/);
+  });
+  it('refuses an executable older than the commit it claims to come from', () => {
+    expect(exeIsCurrent(new Date('2026-09-23T14:49:16Z'), new Date('2026-09-23T14:45:54Z'))).toBe(true);
+    expect(exeIsCurrent(new Date('2026-09-23T14:00:00Z'), new Date('2026-09-23T14:45:54Z'))).toBe(false);
   });
   it('refuses an installer not named after its version', () => {
     expect(() => buildReleaseInfo({ ...ok, file: 'MAW-Setup-9.9.9.exe' })).toThrow(/file/);

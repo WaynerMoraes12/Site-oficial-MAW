@@ -3,6 +3,7 @@
   "bytes": 23521513,
   "sha256": "fc24dd3f8ca567f9a53e09631345660c54d0ebd0d8c39012b5bba9aa5999e240",
   "version": "1.0.0",
-  "builtAt": "2026-09-28T11:06:58.486Z",
-  "installedBytes": 13992951
+  "builtAt": "2026-09-28T11:21:55.339Z",
+  "installedBytes": 13992951,
+  "mawCommit": "5433daadac1d063a335a72fa01a7b0d504a6145d"
 }
