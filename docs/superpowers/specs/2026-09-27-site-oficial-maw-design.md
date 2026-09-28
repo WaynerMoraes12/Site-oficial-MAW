@@ -379,3 +379,23 @@ scripts/
 - Versões para macOS e Linux.
 - Assinatura de código do instalador.
 - Publicar (Pages ou Release) sem autorização explícita.
+
+---
+
+## 10. Adendo (28/09/2026): tradução automática
+
+Mudança pedida pelo usuário depois da implementação: o site nasce em inglês e **abre na língua do PC da pessoa**. Opção escolhida: "tradução nossa + automático".
+
+- **Idiomas:** inglês (`/`, padrão e fonte), português do Brasil (`/pt/`) e espanhol (`/es/`). As traduções são escritas por nós, não por máquina. Estrutura e estética são as mesmas nas três.
+- **Detecção automática:** na raiz em inglês, um script inline no `<head>` lê `navigator.languages` e segue a primeira língua suportada da lista: `pt*` → `/pt/`, `es*` → `/es/`, `en*` → fica. Se nenhuma for suportada, fica em inglês. Só redireciona se a pessoa ainda não escolheu uma língua pelo seletor (preferência em `localStorage` `maw-lang`).
+- **Seletor** EN · PT · ES na barra de navegação, também no celular. Clicar grava a preferência.
+- **Outras línguas:** o tradutor do navegador (Chrome/Edge/Safari) continua disponível. Nomes da MAW, botões do app, atalhos, nomes dos efeitos e "Noite Roxa" levam `translate="no"`.
+- **SEO:** `<html lang>` por página (`en`, `pt-BR`, `es`), `<link rel="alternate" hreflang>` para as três mais `x-default`, e `og:locale`.
+- **Texto:** todo o texto sai dos dicionários `src/i18n/{en,pt,es}.ts`, com o mesmo formato (`Dictionary`). Os arquivos de dados guardam só o que não é texto (imagens, atalhos, cores, números, status).
+- **Verificação:**
+  - dicionários com a mesma forma e o mesmo tamanho de listas;
+  - PT/ES sem frase idêntica ao inglês, fora os termos universais;
+  - `pickLocale` testado;
+  - e2e: redirecionamento com navegador em `pt-BR`/`es-AR`, sem redirecionamento em `en-US` ou com preferência gravada, seletor, `lang` e `hreflang`;
+  - o verificador de português passa a olhar só as páginas em inglês.
+- **Exceção à regra da seção 2** ("todo o texto em inglês"): vale para a página padrão `/`. As páginas `/pt/` e `/es/` são traduções.
