@@ -1,0 +1,19 @@
+---
+import { roadmap, stampLabel } from '../data/roadmap';
+---
+<section class="sec tour" id="tour">
+  <div class="wrap">
+    <div class="eyebrow">Roadmap</div>
+    <h2 class="h-tour chrome">MAW World Tour</h2>
+    <div class="years">2026 — 2027</div>
+    <ol class="dates">
+      {roadmap.map((d) => (
+        <li class="date">
+          <span class="when">{d.when}</span>
+          <span class="what">{d.what}</span>
+          <span class={`stamp ${d.status}`}>{stampLabel[d.status]}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

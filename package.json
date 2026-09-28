@@ -7,6 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node tools/press-kit.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "test": "vitest run",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
+    "fflate": "^0.8.3",
     "vitest": "^5.0.2"
   }
 }
