@@ -1,17 +1,24 @@
 ---
-import { roadmap, stampLabel } from '../data/roadmap';
+import { tourStatuses } from '../data/roadmap';
+import type { Dictionary } from '../i18n';
+
+interface Props {
+  t: Dictionary;
+}
+const { t } = Astro.props;
+const tour = t.tour;
 ---
 <section class="sec tour" id="tour">
   <div class="wrap">
-    <div class="eyebrow">Roadmap</div>
-    <h2 class="h-tour chrome">MAW World Tour</h2>
-    <div class="years">2026 — 2027</div>
+    <div class="eyebrow">{tour.eyebrow}</div>
+    <h2 class="h-tour chrome" translate="no">{tour.title}</h2>
+    <div class="years">{tour.years}</div>
     <ol class="dates">
-      {roadmap.map((d) => (
+      {tour.stops.map((stop, i) => (
         <li class="date">
-          <span class="when">{d.when}</span>
-          <span class="what">{d.what}</span>
-          <span class={`stamp ${d.status}`}>{stampLabel[d.status]}</span>
+          <span class="when">{stop.when}</span>
+          <span class="what">{stop.what}</span>
+          <span class={`stamp ${tourStatuses[i]}`}>{tour.stamps[tourStatuses[i]]}</span>
         </li>
       ))}
     </ol>

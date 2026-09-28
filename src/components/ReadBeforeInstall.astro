@@ -1,13 +1,19 @@
 ---
 import site from '../data/site.json';
 import { readBeforeInstallPlates } from '../lib/notices';
+import type { Dictionary } from '../i18n';
 
-const plates = readBeforeInstallPlates(site.neuralServerBundled);
+interface Props {
+  t: Dictionary;
+}
+const { t } = Astro.props;
+const rb = t.readBefore;
+const plates = readBeforeInstallPlates(site.neuralServerBundled, rb);
 ---
 <section class="warn" id="read-before-install">
   <div class="wrap">
-    <div class="eyebrow">Read before installing</div>
-    <h2 class="h-stencil">Fragile. Handle<br />with care.</h2>
+    <div class="eyebrow">{rb.eyebrow}</div>
+    <h2 class="h-stencil">{rb.title1}<br />{rb.title2}</h2>
     <div class="plates">
       {plates.map((p) => (
         <article class={p.hot ? 'plate hot' : 'plate'}>

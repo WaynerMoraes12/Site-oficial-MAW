@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from './Nav.astro';
+import Hero from './Hero.astro';
+import LedTicker from './LedTicker.astro';
+import Stage from './Stage.astro';
+import Tracklist from './Tracklist.astro';
+import AiSection from './AiSection.astro';
+import Rack from './Rack.astro';
+import Backstage from './Backstage.astro';
+import TechRider from './TechRider.astro';
+import ReadBeforeInstall from './ReadBeforeInstall.astro';
+import Download from './Download.astro';
+import WorldTour from './WorldTour.astro';
+import LinerNotes from './LinerNotes.astro';
+import Faq from './Faq.astro';
+import Contact from './Contact.astro';
+import Footer from './Footer.astro';
+import { dictionaries, type Locale } from '../i18n';
+
+// A página inteira, igual nas três línguas; só o dicionário muda.
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = dictionaries[locale];
+---
+<Base locale={locale}>
+  <Nav t={t} locale={locale} />
+  <Hero t={t} />
+  <LedTicker t={t} />
+  <main id="content">
+    <Stage t={t} />
+    <Tracklist t={t} />
+    <AiSection t={t} />
+    <Rack t={t} />
+    <Backstage t={t} locale={locale} />
+    <TechRider t={t} />
+    <ReadBeforeInstall t={t} />
+    <Download t={t} />
+    <WorldTour t={t} />
+    <LinerNotes t={t} />
+    <Faq t={t} />
+    <Contact t={t} />
+  </main>
+  <Footer t={t} />
+</Base>

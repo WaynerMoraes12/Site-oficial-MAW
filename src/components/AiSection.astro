@@ -1,6 +1,13 @@
 ---
 import { Picture } from 'astro:assets';
-import { aiCards, runtimeLabel } from '../data/ai';
+import { aiCards } from '../data/ai';
+import type { Dictionary } from '../i18n';
+
+interface Props {
+  t: Dictionary;
+}
+const { t } = Astro.props;
+const ai = t.ai;
 ---
 <section class="sec ia" id="ai">
   <svg class="sigil" viewBox="0 0 760 760" fill="none" stroke="#b84dff" aria-hidden="true">
@@ -21,34 +28,37 @@ import { aiCards, runtimeLabel } from '../data/ai';
     <line x1="0" y1="380" x2="760" y2="380" stroke-width=".4" />
   </svg>
   <div class="wrap">
-    <div class="eyebrow">AI Assistant</div>
-    <h2 class="h-wide"><span class="glitch" data-t="Intelligence">Intelligence</span><br />that listens</h2>
-    <p class="quote">A generic analyzer says there's energy at 250 Hz. MAW says <b>track 2 and track 5 are fighting over 250 Hz for the 6.4 seconds they play together</b> — and fixes it in one click.</p>
+    <div class="eyebrow">{ai.eyebrow}</div>
+    <h2 class="h-wide"><span class="glitch" data-t={ai.titleGlitch}>{ai.titleGlitch}</span><br />{ai.titleRest}</h2>
+    <p class="quote">{ai.quote.before}<b>{ai.quote.bold}</b>{ai.quote.after}</p>
     <div class="ia-grid">
-      {aiCards.map((c) => (
-        <article class={`card ${c.size}`}>
-          <div class="hud">{c.hud}</div>
-          <span class={`runtime ${c.runtime}`}>{runtimeLabel[c.runtime]}</span>
-          <h3>{c.title}</h3>
-          {c.keys && (
-            <div class="keys">
-              {c.keys.map((k) => <span><span class="kbd">{k.key}</span> {k.label}</span>)}
-            </div>
-          )}
-          <p>{c.text}</p>
-          {c.image && c.alt && (
-            <Picture
-              src={c.image}
-              formats={['avif', 'webp']}
-              widths={[480, 960]}
-              sizes="(max-width: 980px) 100vw, 700px"
-              quality={88}
-              alt={c.alt}
-              class={c.tall ? 'tall' : undefined}
-            />
-          )}
-        </article>
-      ))}
+      {aiCards.map((c) => {
+        const text = ai.cards[c.id];
+        return (
+          <article class={`card ${c.size}`}>
+            <div class="hud">{text.hud}</div>
+            <span class={`runtime ${c.runtime}`}>{ai.runtime[c.runtime]}</span>
+            <h3>{text.title}</h3>
+            {c.keys && (
+              <div class="keys">
+                {c.keys.map((k, i) => <span><span class="kbd" translate="no">{k}</span> {text.keyLabels[i]}</span>)}
+              </div>
+            )}
+            <p>{text.text}</p>
+            {c.image && (
+              <Picture
+                src={c.image}
+                formats={['avif', 'webp']}
+                widths={[480, 960]}
+                sizes="(max-width: 980px) 100vw, 700px"
+                quality={88}
+                alt={text.alt}
+                class={c.tall ? 'tall' : undefined}
+              />
+            )}
+          </article>
+        );
+      })}
     </div>
   </div>
 </section>

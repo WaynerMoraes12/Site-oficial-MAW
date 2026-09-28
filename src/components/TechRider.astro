@@ -1,26 +1,37 @@
 ---
-import { riderNote, riderRows } from '../data/rider';
 import site from '../data/site.json';
+import type { Dictionary } from '../i18n';
+
+interface Props {
+  t: Dictionary;
+}
+const { t } = Astro.props;
+const r = t.rider;
 ---
 <section class="sec rider" id="rider">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">System requirements</div>
-      <h2 class="h-stencil white">Tech rider</h2>
+      <div class="eyebrow">{r.eyebrow}</div>
+      <h2 class="h-stencil white">{r.title}</h2>
     </div>
     <div class="sheet">
-      <div class="sheet-top"><span>MAW {site.version} — TECH RIDER</span><span>REV. 09/2026</span></div>
+      <div class="sheet-top"><span>MAW {site.version} — {r.sheet}</span><span>{r.rev}</span></div>
       <table class="input">
         <thead>
-          <tr><th scope="col">CH</th><th scope="col">ITEM</th><th scope="col">MINIMUM</th><th scope="col">RECOMMENDED</th></tr>
+          <tr>{r.headers.map((h) => <th scope="col">{h}</th>)}</tr>
         </thead>
         <tbody>
-          {riderRows.map((r) => (
-            <tr><td>{r.ch}</td><td>{r.item}</td><td>{r.min}</td><td>{r.rec}</td></tr>
+          {r.rows.map((row, i) => (
+            <tr>
+              <td data-label={r.headers[0]}>{String(i + 1).padStart(2, '0')}</td>
+              <td data-label={r.headers[1]}>{row.item}</td>
+              <td data-label={r.headers[2]}>{row.min}</td>
+              <td data-label={r.headers[3]}>{row.rec}</td>
+            </tr>
           ))}
         </tbody>
       </table>
     </div>
-    <p class="rider-note">{riderNote}</p>
+    <p class="rider-note">{r.note}</p>
   </div>
 </section>

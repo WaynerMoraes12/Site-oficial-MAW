@@ -1,26 +1,43 @@
 ---
 import logo from '../assets/brand/maw-logo-web.png';
+import { dictionaries, localeUrl, locales, type Dictionary, type Locale } from '../i18n';
 
+interface Props {
+  t: Dictionary;
+  locale: Locale;
+}
+const { t, locale } = Astro.props;
 const links = [
-  { href: '#stage', label: 'The Stage' },
-  { href: '#tracklist', label: 'Tracklist' },
-  { href: '#ai', label: 'AI' },
-  { href: '#rider', label: 'Requirements' },
-  { href: '#tour', label: 'Roadmap' },
-  { href: '#liner-notes', label: 'Story' },
-  { href: '#faq', label: 'FAQ' },
+  { href: '#stage', label: t.nav.stage },
+  { href: '#tracklist', label: t.nav.tracklist },
+  { href: '#ai', label: t.nav.ai },
+  { href: '#rider', label: t.nav.rider },
+  { href: '#tour', label: t.nav.tour },
+  { href: '#liner-notes', label: t.nav.story },
+  { href: '#faq', label: t.nav.faq },
 ];
 ---
-<nav class="nav" data-nav aria-label="Main">
+<nav class="nav" data-nav aria-label={t.nav.aria}>
   <div class="wrap">
-    <a class="logo" href="#top" aria-label="MAW — back to top">
+    <a class="logo" href="#top" aria-label={t.nav.home} translate="no">
       <img data-logo src={logo.src} width={logo.width} height={logo.height} alt="MAW" />
     </a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-nav-toggle>Menu</button>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-nav-toggle>{t.nav.menu}</button>
     <ul id="nav-links">
       {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
     </ul>
-    <a class="btn btn-rec" href="#download">Download</a>
+    <div class="lang" data-lang-switch translate="no" role="group" aria-label={t.nav.language}>
+      {locales.map((l) => (
+        <a
+          href={localeUrl(l)}
+          hreflang={dictionaries[l].meta.htmlLang}
+          lang={dictionaries[l].meta.htmlLang}
+          data-lang={l}
+          aria-current={l === locale ? 'true' : undefined}
+        >{l.toUpperCase()}</a>
+      ))}
+    </div>
+    <a class="btn btn-rec" href="#download">{t.nav.download}</a>
   </div>
 </nav>
 <script>
@@ -37,4 +54,14 @@ const links = [
     });
     nav.querySelectorAll('#nav-links a').forEach((a) => a.addEventListener('click', close));
   }
+  // Escolha explícita de língua vale mais que a detecção automática da raiz.
+  document.querySelectorAll<HTMLAnchorElement>('[data-lang]').forEach((a) =>
+    a.addEventListener('click', () => {
+      try {
+        localStorage.setItem('maw-lang', a.dataset.lang ?? 'en');
+      } catch {
+        // navegação privada sem storage: só não lembra a escolha
+      }
+    }),
+  );
 </script>

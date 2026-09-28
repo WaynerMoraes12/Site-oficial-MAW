@@ -359,3 +359,8 @@ footer .top img { height: 44px; width: auto; }
 main > section { content-visibility: auto; contain-intrinsic-size: auto 1000px; }
 /* <Picture> põe width/height do arquivo no <img>; sem height:auto o print estica quando o CSS muda a largura */
 picture img { height: auto; }
+/* seletor de idioma (EN · PT · ES) */
+.lang { display: flex; gap: 2px; }
+.lang a { font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; padding: 6px 8px; border: 1px solid #2a2a33; border-radius: 3px; color: #bdb8cc; }
+.lang a:hover { color: #fff; border-color: #3b3b48; }
+.lang a[aria-current="true"] { background: var(--maw); color: #fff; border-color: var(--maw-bright); }
