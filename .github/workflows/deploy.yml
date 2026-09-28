@@ -5,10 +5,9 @@ name: Deploy site to GitHub Pages
 on:
   workflow_dispatch:
 
+# só leitura por padrão; publicar no Pages fica restrito ao job de deploy
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
@@ -38,6 +37,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
