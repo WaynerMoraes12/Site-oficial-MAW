@@ -52,12 +52,24 @@ test('brand names, app buttons and shortcuts are protected from browser translat
 test('the demo project and the synth presets keep their app names under the browser translator', async ({ page }) => {
   for (const path of ['/', '/pt/', '/es/']) {
     await page.goto(path);
-    for (const name of ['Noite Roxa', 'Senoide', 'Orgao']) {
-      const hits = page.getByText(name, { exact: true });
-      expect(await hits.count(), `${path} ${name}`).toBeGreaterThan(0);
-      const loose = await hits.evaluateAll((els) => els.filter((el) => !el.closest('[translate="no"]')).length);
-      expect(loose, `${path} ${name}`).toBe(0);
-    }
+    // percorre todo texto visível da página: qualquer ocorrência fora de translate="no" é pega, até no meio de uma frase
+    const { found, loose } = await page.evaluate((names) => {
+      const found: Record<string, number> = {};
+      const loose: string[] = [];
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        const parent = node.parentElement;
+        if (!parent || parent.closest('script, style')) continue;
+        for (const name of names) {
+          if (!new RegExp(`(?<![\\p{L}\\p{N}])${name}(?![\\p{L}\\p{N}])`, 'u').test(node.nodeValue ?? '')) continue;
+          found[name] = (found[name] ?? 0) + 1;
+          if (!parent.closest('[translate="no"]')) loose.push(`${name}: "${(node.nodeValue ?? '').trim().slice(0, 60)}"`);
+        }
+      }
+      return { found, loose };
+    }, ['Noite Roxa', 'Senoide', 'Orgao']);
+    expect(Object.keys(found).sort(), path).toEqual(['Noite Roxa', 'Orgao', 'Senoide']);
+    expect(loose, path).toEqual([]);
   }
 });
 

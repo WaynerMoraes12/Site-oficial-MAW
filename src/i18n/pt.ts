@@ -164,7 +164,7 @@ export const pt: Dictionary = {
       { item: 'Conselheiro com Gemini', min: '— (regras locais)', rec: 'Sua própria chave da API do Gemini' },
       { item: 'Internet', min: 'Não precisa para produzir', rec: 'Só para baixar modelos de IA e usar o Gemini' },
     ],
-    note: 'Também é necessário: Microsoft Visual C++ Redistributable (x64). O instalador instala sozinho se estiver faltando.',
+    note: 'Também é necessário: Microsoft Visual C++ Redistributable (x64). Se estiver faltando, o instalador cuida disso.',
   },
   readBefore: {
     eyebrow: 'Leia antes de instalar',

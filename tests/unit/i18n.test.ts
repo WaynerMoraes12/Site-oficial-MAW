@@ -48,25 +48,34 @@ const leaves = (v: unknown, path = ''): [string, string][] => {
   return [];
 };
 
-// Caminhos que podem ficar iguais ao inglês: nomes próprios, marcas, siglas, rótulos do app e datas com o mesmo mês.
-// Chave por caminho, não por texto: um "Download for Windows" esquecido em outro lugar continua sendo pego.
+// Caminhos que podem ficar iguais ao inglês, por língua: nomes próprios, marcas, siglas, rótulos do app e datas
+// com o mesmo mês. Chave língua:caminho, não texto: um "Download for Windows" esquecido em outro lugar continua
+// sendo pego, e o "Roadmap" que vale em português não libera o espanhol.
 const SAME_AS_ENGLISH = new Set([
-  'nav.tour', 'nav.menu', 'hero.ledeBefore', 'ticker.items[5]', 'ticker.items[6]', 'stage.shots.mixer.label',
-  'stage.shots.piano-roll.label', 'tracklist.sides[0].tracks[5].title', 'ai.cards.smart-mix.title',
-  'ai.cards.whisper.hud', 'rider.rev', 'rider.headers[0]', 'rider.headers[1]', 'rider.rows[3].item',
-  'rider.rows[7].item', 'download.steps[0].bold', 'download.steps[3].bold', 'tour.eyebrow', 'tour.title',
-  'liner.timeline[0].when', 'liner.timeline[4].when', 'liner.timeline[5].when', 'liner.credits[0].name',
-  'liner.credits[2].name', 'liner.credits[2].note', 'liner.credits[3].name', 'liner.credits[3].note',
-  'liner.credits[4].name', 'liner.credits[4].note', 'liner.credits[5].name', 'liner.credits[5].note',
-  'liner.credits[6].name', 'liner.credits[6].note', 'liner.credits[7].name', 'liner.credits[8].name',
-  'ai.cards.keys.keyLabels[1]', 'ai.cards.keys.keyLabels[2]', 'rider.rows[1].item', 'tour.stops[0].when',
-  'liner.timeline[3].when', 'liner.timeline[7].when',
+  'es:hero.ledeBefore', 'es:ticker.items[5]', 'es:ticker.items[6]', 'es:tracklist.sides[0].tracks[5].title',
+  'es:ai.cards.smart-mix.title', 'es:ai.cards.whisper.hud', 'es:rider.rev', 'es:rider.headers[0]',
+  'es:rider.rows[3].item', 'es:rider.rows[7].item', 'es:download.steps[0].bold', 'es:download.steps[3].bold',
+  'es:tour.title', 'es:liner.timeline[0].when', 'es:liner.timeline[4].when', 'es:liner.timeline[5].when',
+  'es:liner.credits[0].name', 'es:liner.credits[2].name', 'es:liner.credits[2].note', 'es:liner.credits[3].name',
+  'es:liner.credits[3].note', 'es:liner.credits[4].name', 'es:liner.credits[4].note', 'es:liner.credits[5].name',
+  'es:liner.credits[5].note', 'es:liner.credits[6].name', 'es:liner.credits[6].note', 'es:liner.credits[7].name',
+  'es:liner.credits[8].name', 'es:ai.cards.keys.keyLabels[1]', 'es:ai.cards.keys.keyLabels[2]',
+  'es:rider.rows[1].item', 'es:tour.stops[0].when', 'es:liner.timeline[3].when', 'es:liner.timeline[7].when',
+  'pt:nav.tour', 'pt:nav.menu', 'pt:hero.ledeBefore', 'pt:ticker.items[5]', 'pt:ticker.items[6]',
+  'pt:stage.shots.mixer.label', 'pt:stage.shots.piano-roll.label', 'pt:tracklist.sides[0].tracks[5].title',
+  'pt:ai.cards.smart-mix.title', 'pt:ai.cards.whisper.hud', 'pt:rider.rev', 'pt:rider.headers[0]',
+  'pt:rider.headers[1]', 'pt:rider.rows[3].item', 'pt:rider.rows[7].item', 'pt:download.steps[0].bold',
+  'pt:download.steps[3].bold', 'pt:tour.eyebrow', 'pt:tour.title', 'pt:liner.timeline[0].when',
+  'pt:liner.timeline[4].when', 'pt:liner.timeline[5].when', 'pt:liner.credits[0].name', 'pt:liner.credits[2].name',
+  'pt:liner.credits[2].note', 'pt:liner.credits[3].name', 'pt:liner.credits[3].note', 'pt:liner.credits[4].name',
+  'pt:liner.credits[4].note', 'pt:liner.credits[5].name', 'pt:liner.credits[5].note', 'pt:liner.credits[6].name',
+  'pt:liner.credits[6].note', 'pt:liner.credits[7].name', 'pt:liner.credits[8].name',
 ]);
 
-const untranslated = (dict: unknown): string[] => {
+const untranslated = (locale: 'pt' | 'es', dict: unknown): string[] => {
   const en = new Map(leaves(dictionaries.en));
   return leaves(dict)
-    .filter(([path, text]) => /\p{L}/u.test(text) && en.get(path) === text && !SAME_AS_ENGLISH.has(path))
+    .filter(([path, text]) => /\p{L}/u.test(text) && en.get(path) === text && !SAME_AS_ENGLISH.has(`${locale}:${path}`))
     .map(([path, text]) => `${path}: ${text}`);
 };
 
@@ -84,18 +93,26 @@ describe('dictionaries', () => {
       expect(shape(dictionaries[locale])).toEqual(shape(dictionaries.en));
     });
     it(`${locale} leaves no English sentence untranslated`, () => {
-      expect(untranslated(dictionaries[locale])).toEqual([]);
+      expect(untranslated(locale, dictionaries[locale])).toEqual([]);
     });
   }
-  it('allows only paths that really stay the same in some language', () => {
-    const same = new Set(untranslatedPaths(dictionaries.pt).concat(untranslatedPaths(dictionaries.es)));
-    expect([...SAME_AS_ENGLISH].filter((path) => !same.has(path))).toEqual([]);
+  it('allows only entries that really stay the same', () => {
+    const same = new Set([
+      ...untranslatedPaths(dictionaries.pt).map((path) => `pt:${path}`),
+      ...untranslatedPaths(dictionaries.es).map((path) => `es:${path}`),
+    ]);
+    expect([...SAME_AS_ENGLISH].filter((key) => !same.has(key))).toEqual([]);
   });
   it('catches English left behind even when the same words are fine elsewhere', () => {
     const pt = structuredClone(dictionaries.pt);
     pt.hero.ctaDownload = dictionaries.en.hero.ctaDownload;
     pt.nav.story = dictionaries.en.nav.story;
-    expect(untranslated(pt)).toEqual(['nav.story: Story', 'hero.ctaDownload: Download for Windows']);
+    expect(untranslated('pt', pt)).toEqual(['nav.story: Story', 'hero.ctaDownload: Download for Windows']);
+  });
+  it('allows a term per language: Portuguese says "Roadmap", Spanish must not', () => {
+    const es = structuredClone(dictionaries.es);
+    es.nav.tour = dictionaries.en.nav.tour;
+    expect(untranslated('es', es)).toEqual(['nav.tour: Roadmap']);
   });
   it('declares the page language for each locale', () => {
     expect(dictionaries.en.meta.htmlLang).toBe('en');
@@ -114,7 +131,7 @@ describe('copy details', () => {
   });
   it('writes neutral Latin American Spanish', () => {
     const es = JSON.stringify(dictionaries.es);
-    for (const spainOnly of ['ordenador', 'Ingeniería Informática', 'fin de carrera', 'de pago', 'habitación', 'se pelean']) {
+    for (const spainOnly of ['ordenador', 'Ingeniería Informática', 'fin de carrera', 'de pago', 'habitación', 'se pelean', 'pulsas']) {
       expect(es).not.toContain(spainOnly);
     }
     expect(dictionaries.es.meta.ogLocale).toBe('es_LA');
@@ -128,5 +145,6 @@ describe('copy details', () => {
     const pt = JSON.stringify(dictionaries.pt);
     expect(pt).not.toContain('ou deixa a MAW');
     expect(pt).not.toContain('coloca sozinho');
+    expect(pt).not.toContain('instalador instala');
   });
 });

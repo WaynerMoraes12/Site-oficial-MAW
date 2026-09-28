@@ -181,7 +181,7 @@ export const es: Dictionary = {
       title: 'La IA descarga modelos en el primer uso',
       body: 'La separación y la transcripción usan el Servidor Neural MAW incluido en el instalador (Python 3.10 + ffmpeg). El modelo Whisper large-v3 (unos 3 GB) se descarga la primera vez que transcribes.',
     },
-    privacy: { title: 'Tu audio es tuyo', body: 'Todo funciona en tu PC. Solo el informe de texto del Consejero va a Gemini — y solo cuando pulsas el botón.' },
+    privacy: { title: 'Tu audio es tuyo', body: 'Todo funciona en tu PC. Solo el informe de texto del Consejero va a Gemini — y solo cuando haces clic en el botón.' },
     version: { title: 'Versión 1.0', body: 'En desarrollo activo. Límites conocidos hoy: automatización solo de volumen, las tareas de IA no se pueden cancelar y el VST3 del master no se guarda con el proyecto.' },
   },
   download: {
