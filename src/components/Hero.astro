@@ -1,0 +1,29 @@
+---
+import logo from '../assets/brand/maw-logo-web.png';
+import site from '../data/site.json';
+---
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="catalog"><span><b>MAW-001</b></span><span>WINDOWS x64</span><span>v{site.version}</span><span>℗ {site.year}</span></div>
+      <h1>
+        <span class="chrome">The DAW that understands</span>
+        <span class="l2 chrome">the music <span class="bolt" aria-hidden="true"></span> it records</span>
+      </h1>
+      <p class="lede">MAW — <b>Musical Artificial Workspace</b>. A multitrack music production workstation for Windows, with AI built into the timeline: it separates stems, transcribes vocals, detects chords and advises your mix.</p>
+      <div class="ctas">
+        <a class="btn btn-rec" href="#download">Download for Windows</a>
+        <a class="btn btn-ghost" href="#stage">See MAW in action</a>
+      </div>
+      <div class="meta">Free download · Windows 10/11 64-bit · Interface in Brazilian Portuguese</div>
+    </div>
+    <div class="record" aria-hidden="true">
+      <div class="vinyl"><div class="label"><img data-logo src={logo.src} alt="" /></div></div>
+      <div class="sleeve">
+        <img data-logo src={logo.src} alt="" />
+        <div class="spine"><span>MUSICAL</span><span>ARTIFICIAL</span><span>WORKSPACE</span></div>
+      </div>
+      <div class="advisory"><div class="t">LISTENER ADVISORY</div><div class="b">PRODUCTION</div><div class="s">EXPLICITLY MUSICAL</div></div>
+    </div>
+  </div>
+</header>

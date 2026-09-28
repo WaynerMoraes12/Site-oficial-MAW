@@ -1,0 +1,40 @@
+---
+import logo from '../assets/brand/maw-logo-web.png';
+
+const links = [
+  { href: '#stage', label: 'The Stage' },
+  { href: '#tracklist', label: 'Tracklist' },
+  { href: '#ai', label: 'AI' },
+  { href: '#rider', label: 'Requirements' },
+  { href: '#tour', label: 'Roadmap' },
+  { href: '#liner-notes', label: 'Story' },
+  { href: '#faq', label: 'FAQ' },
+];
+---
+<nav class="nav" data-nav aria-label="Main">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="MAW — back to top">
+      <img data-logo src={logo.src} width={logo.width} height={logo.height} alt="MAW" />
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-nav-toggle>Menu</button>
+    <ul id="nav-links">
+      {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+    </ul>
+    <a class="btn btn-rec" href="#download">Download</a>
+  </div>
+</nav>
+<script>
+  const nav = document.querySelector('[data-nav]');
+  const toggle = document.querySelector('[data-nav-toggle]');
+  if (nav && toggle) {
+    const close = () => {
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    };
+    toggle.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+    nav.querySelectorAll('#nav-links a').forEach((a) => a.addEventListener('click', close));
+  }
+</script>
