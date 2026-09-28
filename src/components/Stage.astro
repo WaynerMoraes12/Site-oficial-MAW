@@ -1,0 +1,69 @@
+---
+import { Picture } from 'astro:assets';
+import { stageShots } from '../data/stage';
+---
+<section class="sec stage" id="stage" data-stage>
+  <div class="beam b1" aria-hidden="true"></div>
+  <div class="beam b2" aria-hidden="true"></div>
+  <div class="beam b3" aria-hidden="true"></div>
+  <div class="smoke" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Real screenshots · demo project “Noite Roxa”</div>
+      <h2 class="h-goth">The Stage</h2>
+      <p class="lede">Arrangement, mixer, piano roll and MIDI in one dark window, with studio-console labels. Everything is drawn as vectors — the way MAW is built.</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="MAW screens">
+      {stageShots.map((s, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`tab-${s.id}`}
+          aria-controls={`panel-${s.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          class={i === 0 ? 'on' : undefined}
+        >{s.label}</button>
+      ))}
+    </div>
+    <div class="screen">
+      {stageShots.map((s, i) => (
+        <div role="tabpanel" id={`panel-${s.id}`} aria-labelledby={`tab-${s.id}`} hidden={i !== 0}>
+          <Picture
+            src={s.image}
+            formats={['avif', 'webp']}
+            widths={[640, 960, 1280, 1920]}
+            sizes="(max-width: 1240px) 100vw, 1220px"
+            quality={88}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            alt={s.alt}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+<script>
+  const root = document.querySelector('[data-stage]');
+  if (root) {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+    const select = (index: number, focus = false) => {
+      tabs.forEach((tab, j) => {
+        const on = j === index;
+        tab.setAttribute('aria-selected', String(on));
+        tab.tabIndex = on ? 0 : -1;
+        tab.classList.toggle('on', on);
+        if (on && focus) tab.focus();
+      });
+      panels.forEach((panel, j) => { panel.hidden = j !== index; });
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(i));
+      tab.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') select((i + 1) % tabs.length, true);
+        if (e.key === 'ArrowLeft') select((i - 1 + tabs.length) % tabs.length, true);
+      });
+    });
+  }
+</script>

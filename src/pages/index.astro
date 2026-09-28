@@ -3,12 +3,15 @@ import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
 import LedTicker from '../components/LedTicker.astro';
+import Stage from '../components/Stage.astro';
 import Footer from '../components/Footer.astro';
 ---
 <Base>
   <Nav />
   <Hero />
   <LedTicker />
-  <main id="content"></main>
+  <main id="content">
+    <Stage />
+  </main>
   <Footer />
 </Base>
