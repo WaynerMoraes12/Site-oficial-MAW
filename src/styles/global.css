@@ -295,6 +295,8 @@ footer .legal { max-width: 900px; line-height: 1.6; }
 
 /* ================= ACRÉSCIMOS DA IMPLEMENTAÇÃO ================= */
 :focus-visible { outline: 2px solid var(--maw-bright); outline-offset: 3px; }
+/* seção que recebeu o foco por um link interno: sem contorno em volta da seção inteira */
+[tabindex="-1"]:focus-visible { outline: none; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .tracks, .dates, .timeline { list-style: none; }
 .h-rock { font-family: var(--f-rock); font-weight: 400; font-size: clamp(48px, 6vw, 86px); line-height: .95; text-transform: uppercase; }

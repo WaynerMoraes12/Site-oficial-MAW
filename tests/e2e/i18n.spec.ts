@@ -48,6 +48,10 @@ test.describe('automatic language', () => {
       await expect(page).toHaveURL(/\/pt\/$/);
       await expect(page.locator('html')).toHaveAttribute('lang', 'pt-BR');
     });
+    test('keeps the section and the query of a shared link', async ({ page }) => {
+      await page.goto('/?ref=share#download');
+      await expect(page).toHaveURL(/\/pt\/\?ref=share#download$/);
+    });
     test('respects an explicit choice of English', async ({ page }) => {
       await page.goto('/pt/');
       await page.locator('[data-lang-switch] a', { hasText: 'EN' }).click();

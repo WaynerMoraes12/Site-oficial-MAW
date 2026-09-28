@@ -50,3 +50,33 @@ test('the mobile menu offers Download', async ({ page }, info) => {
   await page.locator('[data-nav-toggle]').click();
   await expect(page.locator('#nav-links a[href="#download"]')).toBeVisible();
 });
+
+test('a link to where the reader already is does not pull them back when they scroll', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('.nav .logo').click();
+  await page.mouse.move(200, 400);
+  await page.mouse.wheel(0, 2500);
+  await settle(page);
+  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(2000);
+});
+
+test('moving away during the smooth scroll is not undone when it ends', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('.hero .ctas a[href="#download"]').click();
+  await page.waitForTimeout(150);
+  // a pessoa gira a roda e sai dali; o navegador troca a rolagem suave pela dela
+  await page.mouse.move(200, 400);
+  await page.mouse.wheel(0, -100);
+  await page.evaluate(() => window.scrollTo({ top: Math.max(0, window.scrollY - 2000), behavior: 'instant' }));
+  await settle(page);
+  expect(await topOf(page, '#download')).toBeGreaterThan(200);
+});
+
+test('after jumping to Download with the keyboard, Tab continues inside the download section', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('.hero .ctas a[href="#download"]').focus();
+  await page.keyboard.press('Enter');
+  await settle(page);
+  await page.keyboard.press('Tab');
+  expect(await page.evaluate(() => !!document.activeElement?.closest('#download'))).toBe(true);
+});
