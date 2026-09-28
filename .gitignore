@@ -1,0 +1,15 @@
+# rascunhos do brainstorm e do navegador de testes
+.superpowers/
+.playwright-mcp/
+
+# Node / Astro
+node_modules/
+dist/
+.astro/
+
+# saida do instalador
+installer/output/
+
+# sistema
+Thumbs.db
+.DS_Store
