@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { checkPublishedRelease } from '../../tools/lib/release-check.mjs';
+import { checkPublishedRelease, readReleaseJson } from '../../tools/lib/release-check.mjs';
 
 const site = { version: '1.0.0', releaseBaseUrl: 'https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download' };
 const bytes = Buffer.from('fake installer bytes');
@@ -33,5 +33,15 @@ describe('checkPublishedRelease', () => {
       status: 'ok',
       url: 'https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download/v1.0.0/MAW-Setup-1.0.0.exe',
     });
+  });
+});
+
+describe('readReleaseJson', () => {
+  it('blocks the deploy with a clear message when release.json is broken', () => {
+    expect(() => readReleaseJson('{"file": ')).toThrow(/release\.json/);
+  });
+  it('reads a valid file and treats a missing one as "coming soon"', () => {
+    expect(readReleaseJson(JSON.stringify(release))).toEqual(release);
+    expect(readReleaseJson(undefined)).toBeUndefined();
   });
 });

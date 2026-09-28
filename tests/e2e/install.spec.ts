@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { parseRelease, releaseView } from '../../src/lib/release';
 
 test.beforeEach(async ({ page }) => page.goto('/'));
 
@@ -18,10 +19,12 @@ test('read-before-install shows six plates, SmartScreen first', async ({ page })
 
 test('download button matches the real release state', async ({ page }) => {
   const button = page.locator('#download [data-download]');
-  if (existsSync('src/data/release.json')) {
-    const release = JSON.parse(readFileSync('src/data/release.json', 'utf8'));
-    await expect(button).toHaveAttribute('href', new RegExp(`/v${release.version}/${release.file}$`));
-    await expect(page.locator('#download .hash')).toContainText(release.sha256);
+  // mesma decisão que a página toma (arquivo, versão, hash), não só "o arquivo existe"
+  const text = existsSync('src/data/release.json') ? readFileSync('src/data/release.json', 'utf8') : undefined;
+  const view = releaseView(parseRelease(text), JSON.parse(readFileSync('src/data/site.json', 'utf8')));
+  if (view.state === 'ready') {
+    await expect(button).toHaveAttribute('href', view.url);
+    await expect(page.locator('#download .hash')).toContainText(view.sha256);
   } else {
     await expect(button).toHaveText('Installer coming soon');
     await expect(button).toHaveAttribute('aria-disabled', 'true');

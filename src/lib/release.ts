@@ -10,15 +10,26 @@ export type ReleaseView =
   | { state: 'ready'; url: string; file: string; sizeLabel: string; sha256: string }
   | { state: 'pending' };
 
+// Só o instalador com o nome da própria versão (MAW-Setup-1.0.0.exe): o nome vai direto na URL de download.
 export function isReleaseInfo(raw: unknown): raw is ReleaseInfo {
   if (typeof raw !== 'object' || raw === null) return false;
   const r = raw as Record<string, unknown>;
   return (
-    typeof r.file === 'string' && r.file.endsWith('.exe') &&
+    typeof r.version === 'string' && /^\d+\.\d+\.\d+$/.test(r.version) && r.file === `MAW-Setup-${r.version}.exe` &&
     typeof r.bytes === 'number' && Number.isInteger(r.bytes) && r.bytes > 0 &&
     typeof r.sha256 === 'string' && /^[0-9a-f]{64}$/.test(r.sha256) &&
-    typeof r.version === 'string' && typeof r.builtAt === 'string'
+    typeof r.builtAt === 'string'
   );
+}
+
+// release.json é gerado pelo build do instalador; se vier corrompido, o site mostra "coming soon" em vez de quebrar o build.
+export function parseRelease(text: string | undefined): unknown {
+  if (text === undefined) return undefined;
+  try {
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
 }
 
 export function formatBytes(bytes: number): string {

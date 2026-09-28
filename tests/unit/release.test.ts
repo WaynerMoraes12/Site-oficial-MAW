@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatBytes, isReleaseInfo, releaseView } from '../../src/lib/release';
+import { formatBytes, isReleaseInfo, parseRelease, releaseView } from '../../src/lib/release';
 
 const site = { version: '1.0.0', releaseBaseUrl: 'https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download' };
 const good = {
@@ -46,5 +46,27 @@ describe('isReleaseInfo', () => {
   it('accepts a valid object and rejects null', () => {
     expect(isReleaseInfo(good)).toBe(true);
     expect(isReleaseInfo(null)).toBe(false);
+  });
+});
+
+describe('strict release file', () => {
+  it('only accepts the installer named after its own version', () => {
+    expect(isReleaseInfo({ ...good, file: 'evil.exe' })).toBe(false);
+    expect(isReleaseInfo({ ...good, file: 'MAW-Setup-9.9.9.exe' })).toBe(false);
+    expect(isReleaseInfo({ ...good, file: '../MAW-Setup-1.0.0.exe' })).toBe(false);
+  });
+  it('only accepts a plain x.y.z version', () => {
+    expect(isReleaseInfo({ ...good, version: '1.0.0/../x', file: 'MAW-Setup-1.0.0/../x.exe' })).toBe(false);
+  });
+});
+
+describe('parseRelease', () => {
+  it('shows "coming soon" instead of breaking the build when release.json is not valid JSON', () => {
+    expect(parseRelease('{"file": ')).toBeNull();
+    expect(releaseView(parseRelease('{"file": '), site)).toEqual({ state: 'pending' });
+  });
+  it('reads a valid file and reports a missing one as undefined', () => {
+    expect(parseRelease(JSON.stringify(good))).toEqual(good);
+    expect(parseRelease(undefined)).toBeUndefined();
   });
 });
