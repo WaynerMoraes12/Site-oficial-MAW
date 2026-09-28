@@ -14,10 +14,12 @@
     "test:e2e": "playwright test",
     "check:pt": "node tools/check-portuguese.mjs dist",
     "check:links": "node tools/check-base-links.mjs dist",
-    "check:dist": "npm run check:pt && npm run check:links",
+    "check:dist": "npm run check:pt && npm run check:links && npm run check:tour",
     "og-image": "node tools/og-image.mjs",
     "check:release": "node tools/check-release.mjs",
-    "installer": "node scripts/build-installer.mjs"
+    "installer": "node scripts/build-installer.mjs",
+    "check:tour": "node tools/check-tour.mjs",
+    "tour": "node tools/tour.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
