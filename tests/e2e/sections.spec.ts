@@ -27,3 +27,15 @@ test('backstage shows the measured numbers', async ({ page }) => {
   await expect(page.locator('#backstage .stat .v')).toHaveText(['0.29%', '3,934', '24', '50']);
   await expect(page.locator('#backstage figure.shot')).toHaveCount(2);
 });
+
+test('screen readers read the glitch heading once, not three times', async ({ page }) => {
+  for (const path of ['/', '/pt/', '/es/']) {
+    await page.goto(path);
+    const word = (await page.locator('#ai .glitch').getAttribute('data-t'))!;
+    const snapshot = await page.locator('#ai h2').ariaSnapshot();
+    expect(snapshot.split(word).length - 1, `${path}: ${snapshot}`).toBe(1);
+    // o efeito continua na tela: as duas cópias ainda desenham a palavra
+    const copies = await page.locator('#ai .glitch').evaluate((el) => [getComputedStyle(el, '::before').content, getComputedStyle(el, '::after').content]);
+    for (const c of copies) expect(c).not.toBe('none');
+  }
+});

@@ -144,7 +144,9 @@ section { position: relative; }
 @keyframes rot { to { transform: rotate(360deg); } }
 .h-wide { font-family: var(--f-wide); font-weight: 700; font-size: clamp(34px, 4.6vw, 64px); line-height: 1.05; letter-spacing: .04em; text-transform: uppercase; position: relative; }
 .glitch { position: relative; display: inline-block; }
-.glitch::before, .glitch::after { content: attr(data-t); position: absolute; inset: 0; pointer-events: none; }
+/* as duas cópias do glitch são só visuais: texto alternativo vazio para o leitor de tela não ler 3 vezes
+   (a primeira declaração fica para navegador que não entende a sintaxe com "/") */
+.glitch::before, .glitch::after { content: attr(data-t); content: attr(data-t) / ""; position: absolute; inset: 0; pointer-events: none; }
 .glitch::before { color: #ff4df2; transform: translateX(2px); clip-path: inset(0 0 70% 0); mix-blend-mode: screen; animation: g1 3.2s infinite steps(1); opacity: .75; }
 .glitch::after { color: #6b3cff; transform: translateX(-2px); clip-path: inset(65% 0 0 0); mix-blend-mode: screen; animation: g1 2.7s infinite steps(1) reverse; opacity: .75; }
 @keyframes g1 { 0%,86% { clip-path: inset(0 0 100% 0); } 88% { clip-path: inset(12% 0 60% 0); } 92% { clip-path: inset(55% 0 20% 0); } 96% { clip-path: inset(80% 0 4% 0); } }
