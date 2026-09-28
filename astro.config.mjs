@@ -6,4 +6,6 @@ export default defineConfig({
   site: process.env.SITE_URL ?? 'https://waynermoraes12.github.io',
   base: process.env.BASE_PATH ?? '/',
   integrations: [sitemap()],
+  // CSS embutido no HTML: o arquivo separado bloqueava a primeira pintura (Lighthouse, 1,8 s).
+  build: { inlineStylesheets: 'always' },
 });
