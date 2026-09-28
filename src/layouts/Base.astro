@@ -29,23 +29,28 @@ const ogImage = new URL(withBase('og-image.png'), Astro.site).href;
 const alternates = locales.map((l) => ({ lang: dictionaries[l].meta.htmlLang, href: new URL(localeUrl(l), Astro.site).href }));
 const ogAlternates = locales.filter((l) => l !== locale).map((l) => dictionaries[l].meta.ogLocale);
 
+// Página reaberta pelo Voltar/Avançar (sem cache): a pessoa quer a página de onde veio, não um redirecionamento.
+const isBack = `(function(){try{var n=performance.getEntriesByType('navigation')[0];return !!n&&n.type==='back_forward';}catch(e){return false;}})()`;
+
 // Link interno: liga html.cv-off (seções com tamanho real) e rola na hora; ao fim da rolagem realinha,
 // e quando as fontes dessas seções terminarem de carregar realinha de novo se a pessoa ainda estiver
 // perto do alvo. Sem isso o content-visibility e a troca de fonte tiram a rolagem do alvo.
 // Se a pessoa fez algum gesto (roda, toque, tecla, clique) durante a rolagem, só realinha quem ainda está
 // perto do alvo; depois de pousar, um gesto cancela o realinhamento das fontes. Só espera o scrollend
 // quando alguma rolagem vai acontecer. O foco vai para o alvo: o próximo Tab continua dali, como num link nativo.
-// Link aberto com #seção: no load realinha, a não ser que a pessoa já tenha mexido na página. Clicar de novo
-// na seção em que já está não empilha outro passo no botão Voltar.
+// Link aberto com #seção: no load realinha, a não ser que a pessoa já tenha mexido na página. (No Voltar sem
+// cache o Chromium, sem esse realinhamento, rola sozinho até a seção; com ele, termina onde a pessoa estava.)
+// Clicar de novo na seção em que já está não empilha outro passo no botão Voltar.
 const anchorFix = `(function(){var d=document.documentElement;var gen=0;['wheel','touchstart','keydown','pointerdown'].forEach(function(t){window.addEventListener(t,function(){gen++;},{capture:true,passive:true});});var off=function(){d.classList.add('cv-off');void d.offsetHeight;};var gap=function(el){return el.getBoundingClientRect().top-(parseFloat(getComputedStyle(el).scrollMarginTop)||0);};var fix=function(el,near){var g=gap(el);if(Math.abs(g)>4&&(!near||Math.abs(g)<300))el.scrollIntoView({behavior:'instant',block:'start'});};var go=function(el,how){var my=++gen;if(!el.matches('a[href],button,input,select,textarea,summary,[tabindex]'))el.setAttribute('tabindex','-1');el.focus({preventScroll:true});var want=Math.max(0,Math.min(d.scrollHeight-d.clientHeight,window.scrollY+gap(el)));el.scrollIntoView({behavior:how,block:'start'});var after=function(){var now=gen;fix(el,now!==my);if(document.fonts&&document.fonts.status!=='loaded'){document.fonts.ready.then(function(){requestAnimationFrame(function(){if(gen===now)fix(el,true);});});}};if(how==='smooth'&&'onscrollend' in window&&Math.abs(want-window.scrollY)>1){window.addEventListener('scrollend',after,{once:true});}else{requestAnimationFrame(after);}};var smooth=function(){return window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth';};var id=function(h){try{return decodeURIComponent(h);}catch(e){return h;}};if(location.hash){window.addEventListener('load',function(){if(gen)return;var el=document.getElementById(id(location.hash.slice(1)));if(el){off();go(el,'instant');}});}document.addEventListener('click',function(e){if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;var a=e.target&&e.target.closest?e.target.closest('a[href^="#"]'):null;if(!a)return;var el=document.getElementById(a.getAttribute('href').slice(1));if(!el)return;e.preventDefault();off();go(el,smooth());history[location.hash==='#'+el.id?'replaceState':'pushState'](null,'','#'+el.id);});})();`;
 
 // Seletor de língua: os links levam ?lang=xx. Em qualquer página esse parâmetro vira a preferência gravada
 // (vale até em aba nova ou clique do meio) e sai da barra de endereço. Só na raiz em inglês: quem gravou
-// pt/es vai para ela; quem não escolheu nada abre na língua do navegador (pt → /pt/, es → /es/).
-// Sem localStorage não redireciona, porque não daria para lembrar uma escolha de inglês.
+// pt/es vai para ela; quem não escolheu nada abre na língua do navegador (pt → /pt/, es → /es/); ?lang=pt vai na hora.
+// Não redireciona sem localStorage (não daria para lembrar uma escolha de inglês) nem quando a pessoa volta
+// para a raiz pelo Voltar (senão cairia de novo na página de onde acabou de sair).
 const detect = `(${pickLocale.toString()})(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language])`;
-const rootRedirect = `if(ok&&!c){var l=s||${detect};var u=${JSON.stringify({ pt: localeUrl('pt'), es: localeUrl('es') })};if(u[l])location.replace(u[l]+location.search+location.hash);}`;
-const langScript = `(function(){var c=null,s=null,ok=true;try{var q=new URLSearchParams(location.search);c=q.get('lang');if(q.has('lang')){q.delete('lang');var r=q.toString();history.replaceState(history.state,'',location.pathname+(r?'?'+r:'')+location.hash);}}catch(e){}if(c!=='en'&&c!=='pt'&&c!=='es')c=null;try{if(c)localStorage.setItem('maw-lang',c);s=localStorage.getItem('maw-lang');}catch(e){ok=false;}${locale === 'en' ? rootRedirect : ''}})();`;
+const rootRedirect = `var l=c||(ok&&!${isBack}?s||${detect}:null);var u=${JSON.stringify({ pt: localeUrl('pt'), es: localeUrl('es') })};if(l&&u[l])location.replace(u[l]+location.search+location.hash);`;
+const langScript = `(function(){var c=null,s=null,ok=true;try{var q=new URLSearchParams(location.search);c=q.get('lang');if(q.has('lang')){q.delete('lang');var r=q.toString();history.replaceState(history.state,'',location.pathname+(r?'?'+r:'')+location.hash);}}catch(e){}if(c!=='en'&&c!=='pt'&&c!=='es')c=null;try{if(c)localStorage.setItem('maw-lang',c);s=localStorage.getItem('maw-lang');}catch(e){ok=false;}if(s!=='en'&&s!=='pt'&&s!=='es')s=null;${locale === 'en' ? rootRedirect : ''}})();`;
 ---
 <!doctype html>
 <html lang={t.meta.htmlLang}>

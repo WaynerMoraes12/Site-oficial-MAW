@@ -116,3 +116,17 @@ test('on a slow connection, the reader who already scrolled is not pulled back w
   await settle(page);
   expect(await topOf(page, '#faq')).toBeGreaterThan(300);
 });
+
+test('coming back with the Back button returns to where the reader was, not to the #section', async ({ page }) => {
+  await page.goto('/#tour');
+  await settle(page);
+  await page.mouse.move(200, 400);
+  await page.mouse.wheel(0, 3600);
+  await settle(page);
+  const y = await page.evaluate(() => window.scrollY);
+  await page.goto('/pt/');
+  await page.goBack();
+  await page.waitForLoadState('load');
+  await settle(page);
+  expect(Math.abs((await page.evaluate(() => window.scrollY)) - y)).toBeLessThan(400);
+});

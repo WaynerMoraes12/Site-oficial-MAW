@@ -91,6 +91,11 @@ test.describe('automatic language', () => {
       await expect(page).toHaveURL(/127\.0\.0\.1:4321\/$/);
       await expect(page.locator('html')).toHaveAttribute('lang', 'en');
     });
+    test('an unknown saved value does not turn off detection', async ({ page }) => {
+      await page.addInitScript(() => localStorage.setItem('maw-lang', 'fr'));
+      await page.goto('/');
+      await expect(page).toHaveURL(/\/pt\/$/);
+    });
   });
   test.describe('Brazilian browser, English link opened in a new tab', () => {
     test.use({ locale: 'pt-BR' });
@@ -112,6 +117,18 @@ test.describe('automatic language', () => {
       await page.locator('[data-lang-switch] a', { hasText: 'PT' }).click();
       await expect(page).toHaveURL(/\/pt\/$/);
       await page.goto('/');
+      await expect(page).toHaveURL(/\/pt\/$/);
+    });
+    test('Back after choosing Portuguese returns to the English page', async ({ page }) => {
+      await page.goto('/');
+      await page.locator('[data-lang-switch] a', { hasText: 'PT' }).click();
+      await expect(page).toHaveURL(/\/pt\/$/);
+      await page.goBack();
+      await expect(page).toHaveURL(/127\.0\.0\.1:4321\/$/);
+      await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    });
+    test('?lang=pt typed at the root opens Portuguese right away', async ({ page }) => {
+      await page.goto('/?lang=pt');
       await expect(page).toHaveURL(/\/pt\/$/);
     });
   });
