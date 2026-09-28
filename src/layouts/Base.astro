@@ -37,14 +37,19 @@ const ogAlternates = locales.filter((l) => l !== locale).map((l) => dictionaries
 // quando alguma rolagem vai acontecer. O foco vai para o alvo: o próximo Tab continua dali, como num link nativo.
 const anchorFix = `(function(){var d=document.documentElement;var gen=0;['wheel','touchstart','keydown','pointerdown'].forEach(function(t){window.addEventListener(t,function(){gen++;},{capture:true,passive:true});});var off=function(){d.classList.add('cv-off');void d.offsetHeight;};var gap=function(el){return el.getBoundingClientRect().top-(parseFloat(getComputedStyle(el).scrollMarginTop)||0);};var fix=function(el,near){var g=gap(el);if(Math.abs(g)>4&&(!near||Math.abs(g)<300))el.scrollIntoView({behavior:'instant',block:'start'});};var go=function(el,how){var my=++gen;if(!el.matches('a[href],button,input,select,textarea,summary,[tabindex]'))el.setAttribute('tabindex','-1');el.focus({preventScroll:true});var want=Math.max(0,Math.min(d.scrollHeight-d.clientHeight,window.scrollY+gap(el)));el.scrollIntoView({behavior:how,block:'start'});var after=function(){var now=gen;fix(el,now!==my);if(document.fonts&&document.fonts.status!=='loaded'){document.fonts.ready.then(function(){requestAnimationFrame(function(){if(gen===now)fix(el,true);});});}};if(how==='smooth'&&'onscrollend' in window&&Math.abs(want-window.scrollY)>1){window.addEventListener('scrollend',after,{once:true});}else{requestAnimationFrame(after);}};var smooth=function(){return window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth';};if(location.hash){window.addEventListener('load',function(){var el=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(el){off();go(el,'instant');}});}document.addEventListener('click',function(e){if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;var a=e.target&&e.target.closest?e.target.closest('a[href^="#"]'):null;if(!a)return;var el=document.getElementById(a.getAttribute('href').slice(1));if(!el)return;e.preventDefault();off();go(el,smooth());history.pushState(null,'','#'+el.id);});})();`;
 
-// Só na raiz em inglês: quem ainda não escolheu língua abre na do navegador (pt → /pt/, es → /es/).
-const autoLanguage = `try{if(!localStorage.getItem('maw-lang')){var l=(${pickLocale.toString()})(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language]);var u=${JSON.stringify({ pt: localeUrl('pt'), es: localeUrl('es') })};if(u[l])location.replace(u[l]+location.search+location.hash);}}catch(e){}`;
+// Seletor de língua: os links levam ?lang=xx. Em qualquer página esse parâmetro vira a preferência gravada
+// (vale até em aba nova ou clique do meio) e sai da barra de endereço. Só na raiz em inglês: quem gravou
+// pt/es vai para ela; quem não escolheu nada abre na língua do navegador (pt → /pt/, es → /es/).
+// Sem localStorage não redireciona, porque não daria para lembrar uma escolha de inglês.
+const detect = `(${pickLocale.toString()})(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language])`;
+const rootRedirect = `if(ok&&!c){var l=s||${detect};var u=${JSON.stringify({ pt: localeUrl('pt'), es: localeUrl('es') })};if(u[l])location.replace(u[l]+location.search+location.hash);}`;
+const langScript = `(function(){var c=null,s=null,ok=true;try{var q=new URLSearchParams(location.search);c=q.get('lang');if(q.has('lang')){q.delete('lang');var r=q.toString();history.replaceState(history.state,'',location.pathname+(r?'?'+r:'')+location.hash);}}catch(e){}if(c!=='en'&&c!=='pt'&&c!=='es')c=null;try{if(c)localStorage.setItem('maw-lang',c);s=localStorage.getItem('maw-lang');}catch(e){ok=false;}${locale === 'en' ? rootRedirect : ''}})();`;
 ---
 <!doctype html>
 <html lang={t.meta.htmlLang}>
   <head>
     <meta charset="utf-8" />
-    {locale === 'en' && <script is:inline set:html={autoLanguage} />}
+    <script is:inline set:html={langScript} />
     <script is:inline set:html={anchorFix} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{t.meta.title}</title>
@@ -56,7 +61,9 @@ const autoLanguage = `try{if(!localStorage.getItem('maw-lang')){var l=(${pickLoc
     <link rel="icon" type="image/png" href={withBase('favicon.png')} />
     <link rel="apple-touch-icon" href={withBase('apple-touch-icon.png')} />
     <link rel="sitemap" href={withBase('sitemap-index.xml')} />
+    <link rel="canonical" href={new URL(localeUrl(locale), Astro.site).href} />
     {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
+    <link rel="alternate" hreflang="pt" href={new URL(localeUrl('pt'), Astro.site).href} />
     <link rel="alternate" hreflang="x-default" href={new URL(localeUrl('en'), Astro.site).href} />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={t.meta.title} />

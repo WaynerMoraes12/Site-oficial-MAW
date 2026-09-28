@@ -30,7 +30,7 @@ const links = [
     <div class="lang" data-lang-switch translate="no" role="group" aria-label={t.nav.language}>
       {locales.map((l) => (
         <a
-          href={localeUrl(l)}
+          href={`${localeUrl(l)}?lang=${l}`}
           hreflang={dictionaries[l].meta.htmlLang}
           lang={dictionaries[l].meta.htmlLang}
           data-lang={l}
@@ -55,14 +55,4 @@ const links = [
     });
     nav.querySelectorAll('#nav-links a').forEach((a) => a.addEventListener('click', close));
   }
-  // Escolha explícita de língua vale mais que a detecção automática da raiz.
-  document.querySelectorAll<HTMLAnchorElement>('[data-lang]').forEach((a) =>
-    a.addEventListener('click', () => {
-      try {
-        localStorage.setItem('maw-lang', a.dataset.lang ?? 'en');
-      } catch {
-        // navegação privada sem storage: só não lembra a escolha
-      }
-    }),
-  );
 </script>

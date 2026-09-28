@@ -28,7 +28,16 @@ test('every page announces its translations to search engines', async ({ page })
   for (const path of ['/', '/pt/', '/es/']) {
     await page.goto(path);
     const langs = await page.locator('link[rel="alternate"][hreflang]').evaluateAll((ls) => ls.map((l) => l.getAttribute('hreflang')));
-    expect(langs.sort()).toEqual(['en', 'es', 'pt-BR', 'x-default']);
+    expect(langs.sort()).toEqual(['en', 'es', 'pt', 'pt-BR', 'x-default']);
+  }
+});
+
+test('every page names its own clean address as canonical', async ({ page }) => {
+  for (const path of ['/', '/pt/', '/es/']) {
+    await page.goto(path);
+    const href = await page.locator('link[rel="canonical"]').getAttribute('href');
+    expect(new URL(href!).pathname).toBe(path);
+    expect(new URL(href!).search).toBe('');
   }
 });
 
@@ -59,6 +68,29 @@ test.describe('automatic language', () => {
       await page.goto('/');
       await expect(page).toHaveURL(/127\.0\.0\.1:4321\/$/);
       await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    });
+  });
+  test.describe('Brazilian browser, English link opened in a new tab', () => {
+    test.use({ locale: 'pt-BR' });
+    test('the choice of English still sticks', async ({ page, context }) => {
+      await page.goto('/pt/');
+      const href = await page.locator('[data-lang-switch] a', { hasText: 'EN' }).getAttribute('href');
+      const tab = await context.newPage();
+      await tab.goto(href!);
+      await expect(tab).toHaveURL(/127\.0\.0\.1:4321\/$/);
+      await tab.goto('/');
+      await expect(tab).toHaveURL(/127\.0\.0\.1:4321\/$/);
+      await expect(tab.locator('html')).toHaveAttribute('lang', 'en');
+    });
+  });
+  test.describe('English browser', () => {
+    test.use({ locale: 'en-US' });
+    test('a saved choice of Portuguese opens Portuguese at the root', async ({ page }) => {
+      await page.goto('/');
+      await page.locator('[data-lang-switch] a', { hasText: 'PT' }).click();
+      await expect(page).toHaveURL(/\/pt\/$/);
+      await page.goto('/');
+      await expect(page).toHaveURL(/\/pt\/$/);
     });
   });
   test.describe('Argentinian browser', () => {
