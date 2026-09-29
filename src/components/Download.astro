@@ -13,6 +13,11 @@ const d = t.download;
 
 const release = releaseView(releaseData, site);
 const fileName = `MAW-Setup-${site.version}.exe`;
+// macOS e Linux saem da esteira da MAW só como artefato do CI, sem release: o botão fica "em breve"
+const others = [
+  { id: 'mac', name: 'macOS', text: d.mac },
+  { id: 'linux', name: 'Linux', text: d.linux },
+];
 ---
 <section class="sec dl" id="download">
   <div class="wrap dl-grid">
@@ -25,7 +30,7 @@ const fileName = `MAW-Setup-${site.version}.exe`;
         <div class="body">
           <dl>
             <dt>{d.labels.version}</dt><dd>{site.version}</dd>
-            <dt>{d.labels.platform}</dt><dd>Windows 10/11 · x64</dd>
+            <dt>{d.labels.platform}</dt><dd>Windows · macOS · Linux</dd>
             <dt>{d.labels.file}</dt><dd>{fileName}</dd>
             <dt>{d.labels.license}</dt><dd>GNU GPL v3</dd>
           </dl>
@@ -37,6 +42,7 @@ const fileName = `MAW-Setup-${site.version}.exe`;
       <div class="eyebrow">{d.eyebrow}</div>
       <h2 class="chrome h-rock xl">{d.title1}<br />{d.title2}</h2>
       <p class="lede">{d.lede}</p>
+      <h3 class="os-name"><span translate="no">Windows</span> <small>{d.windows}</small></h3>
       <ol class="steps">
         {d.steps.map((step) => (
           <li><span>{step.before}{step.bold && <b translate={step.keep ? 'no' : undefined}>{fill(step.bold, { file: fileName })}</b>}{step.after}</span></li>
@@ -53,6 +59,15 @@ const fileName = `MAW-Setup-${site.version}.exe`;
           <div class="hash">{d.pendingNote}</div>
         </Fragment>
       )}
+      <div class="os-more">
+        {others.map((os) => (
+          <article class="os-card" data-os={os.id}>
+            <h3 class="os-name"><span translate="no">{os.name}</span> <small>{os.text.req}</small></h3>
+            <ul>{os.text.lines.map((line) => <li>{line}</li>)}</ul>
+            <span class="btn btn-rec" role="link" aria-disabled="true" data-soon>{fill(d.soon, { os: os.name })}</span>
+          </article>
+        ))}
+      </div>
       {site.sourceCodeUrl && <a class="source-link" href={site.sourceCodeUrl}>{d.source}</a>}
     </div>
   </div>

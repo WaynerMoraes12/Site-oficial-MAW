@@ -6,6 +6,8 @@ export interface RichLine { before: string; bold: string; after: string; keep?: 
 export interface Shot { label: string; alt: string }
 export interface Caption { alt: string; caption: string }
 export interface PlateText { title: string; body: string }
+// req: o que o sistema precisa; lines: o que muda em relação ao Windows (a IA, a primeira abertura, o áudio)
+export interface OsCard { req: string; lines: string[] }
 export interface AiText { hud: string; title: string; text: string; alt: string; keyLabels: string[] }
 
 // Todo texto visível do site. Os três idiomas têm exatamente esta forma (teste de paridade).
@@ -40,13 +42,15 @@ export interface Dictionary {
     rows: { item: string; min: string; rec: string }[]; note: string;
   };
   readBefore: {
-    eyebrow: string; title1: string; title2: string; smartscreen: PlateText; windows: PlateText; language: PlateText;
+    eyebrow: string; title1: string; title2: string; unsigned: PlateText; platforms: PlateText; language: PlateText;
     aiNotBundled: PlateText; aiBundled: PlateText; privacy: PlateText; version: PlateText;
   };
+  // Windows tem o instalador (passos + botão); macOS e Linux, um cartão cada com o que muda e o botão "em breve".
   download: {
     eyebrow: string; title1: string; title2: string; lede: string;
     labels: { version: string; platform: string; file: string; license: string };
-    steps: RichLine[]; ready: string; pending: string; pendingNote: string; source: string;
+    windows: string; steps: RichLine[]; ready: string; pending: string; pendingNote: string;
+    mac: OsCard; linux: OsCard; soon: string; source: string;
   };
   tour: {
     eyebrow: string; title: string; years: string; stamps: { live: string; reh: string; next: string };

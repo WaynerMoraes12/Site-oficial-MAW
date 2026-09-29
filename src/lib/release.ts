@@ -43,10 +43,17 @@ export function formatBytes(bytes: number): string {
   return bytes < mb ? `${Math.round(bytes / 1024)} KB` : `${(bytes / mb).toFixed(1)} MB`;
 }
 
-// Espaço em disco medido no build do instalador, arredondado para cima ("10 MB"); null se não houver medida.
-export function diskLabel(raw: unknown, site: { version: string }): string | null {
-  if (!isReleaseInfo(raw) || raw.version !== site.version || raw.installedBytes === undefined) return null;
-  return `${Math.ceil(raw.installedBytes / (1024 * 1024))} MB`;
+// Espaço em disco medido no build do instalador, arredondado para cima ("10 MB", "2.1 GB" / "2,1 GB"). Sem o
+// release.json (o deploy tira enquanto o download não é público), vale a medida que o site guardou do último
+// release (site.json); null se não houver medida.
+export function diskLabel(raw: unknown, site: { version: string; installedBytes?: number }, lang = 'en'): string | null {
+  const fromRelease = isReleaseInfo(raw) && raw.version === site.version ? raw.installedBytes : undefined;
+  const bytes = fromRelease ?? site.installedBytes;
+  if (bytes === undefined) return null;
+  const mb = Math.ceil(bytes / (1024 * 1024));
+  if (mb < 1024) return `${mb} MB`;
+  const gb = Math.ceil((bytes / 1024 ** 3) * 10) / 10;
+  return `${gb.toLocaleString(lang, { minimumFractionDigits: 1, maximumFractionDigits: 1 })} GB`;
 }
 
 // Sem instalador válido desta versão, o site mostra "coming soon" em vez de link quebrado.

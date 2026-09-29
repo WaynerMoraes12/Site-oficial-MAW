@@ -6,14 +6,31 @@ test.beforeEach(async ({ page }) => page.goto('/'));
 
 test('tech rider lists 8 channels and the VC++ runtime note', async ({ page }) => {
   await expect(page.locator('#rider tbody tr')).toHaveCount(8);
-  // espaço em disco vem do build do instalador (release.json); sem ele, a estimativa de 14 MB
+  // espaço em disco vem do build do instalador (release.json, ou o site.json quando o deploy tira o release.json)
   const text = existsSync('src/data/release.json') ? readFileSync('src/data/release.json', 'utf8') : undefined;
   const disk = diskLabel(parseRelease(text), JSON.parse(readFileSync('src/data/site.json', 'utf8'))) ?? '14 MB';
-  await expect(page.locator('#rider tbody tr', { hasText: 'Disk' })).toContainText(`About ${disk} for MAW`);
+  await expect(page.locator('#rider tbody tr', { hasText: 'Disk' })).toContainText(`About ${disk} on Windows, AI included`);
   await expect(page.locator('#rider .rider-note')).toContainText('Visual C++ Redistributable');
 });
 
-test('read-before-install shows six plates, SmartScreen first', async ({ page }) => {
+test('the rider writes the disk size with the decimal comma in Portuguese', async ({ page }) => {
+  await page.goto('/pt/');
+  await expect(page.locator('#rider tbody tr', { hasText: 'Disco' })).toContainText(/Cerca de \d+(,\d)? [GM]B no Windows/);
+});
+
+test('macOS and Linux each get a card with a "coming soon" button that is not a link', async ({ page }) => {
+  await expect(page.locator('#download .os-card')).toHaveCount(2);
+  for (const [id, name] of [['mac', 'macOS'], ['linux', 'Linux']]) {
+    const soon = page.locator(`#download .os-card[data-os="${id}"] [data-soon]`);
+    await expect(soon).toHaveText(`${name} · coming soon`);
+    await expect(soon).toHaveAttribute('aria-disabled', 'true');
+    await expect(soon).not.toHaveAttribute('href', /.+/);
+  }
+  await expect(page.locator('#download .os-card[data-os="mac"]')).toContainText('Open Anyway');
+  await expect(page.locator('#download .os-card[data-os="linux"]')).toContainText('ALSA or JACK');
+});
+
+test('read-before-install shows six plates, the unsigned-app warning first', async ({ page }) => {
   await expect(page.locator('#read-before-install .plate')).toHaveCount(6);
   await expect(page.locator('#read-before-install .plate').first()).toHaveClass(/hot/);
   const site = JSON.parse(readFileSync('src/data/site.json', 'utf8'));

@@ -1,6 +1,6 @@
 # Site oficial da MAW
 
-Site estático (Astro 7) da **MAW — Musical Artificial Workspace**, a DAW para Windows com IA na timeline. O site nasce em inglês (`/`) e tem tradução nossa em português (`/pt/`) e espanhol (`/es/`); na raiz, quem não escolheu idioma abre na língua do navegador. Spec em `docs/superpowers/specs/` (tradução no §10), plano em `docs/superpowers/plans/`.
+Site estático (Astro 7) da **MAW — Musical Artificial Workspace**, a DAW para Windows, macOS e Linux com IA na timeline (o instalador com a IA é o do Windows; macOS e Linux aparecem no site com "em breve" até a esteira da MAW publicar esses pacotes). O site nasce em inglês (`/`) e tem tradução nossa em português (`/pt/`) e espanhol (`/es/`); na raiz, quem não escolheu idioma abre na língua do navegador. Spec em `docs/superpowers/specs/` (tradução no §10), plano em `docs/superpowers/plans/`.
 
 ## Rodar
 

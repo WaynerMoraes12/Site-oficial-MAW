@@ -83,6 +83,17 @@ describe('diskLabel', () => {
     expect(diskLabel({ ...good, installedBytes: 9_565_687 }, site)).toBe('10 MB');
     expect(diskLabel({ ...good, installedBytes: 25 * 1024 * 1024 + 1 }, site)).toBe('26 MB');
   });
+  it('shows gigabytes from 1 GB up, rounded up to a tenth, with the decimal mark of the page', () => {
+    const full = { ...good, installedBytes: 2_231_597_858 };
+    expect(diskLabel(full, site)).toBe('2.1 GB');
+    expect(diskLabel(full, site, 'pt-BR')).toBe('2,1 GB');
+    expect(diskLabel(full, site, 'es')).toBe('2,1 GB');
+    // 1023,6 MB arredonda para 1024 MB: aí já é GB, nunca "1024 MB"
+    expect(diskLabel({ ...good, installedBytes: 1024 ** 3 - 400_000 }, site)).toBe('1.0 GB');
+  });
+  it('falls back to the size the site kept from the last release while release.json is held back', () => {
+    expect(diskLabel(undefined, { ...site, installedBytes: 2_231_597_858 })).toBe('2.1 GB');
+  });
   it('has no value without a valid release of this version that knows its size', () => {
     expect(diskLabel(good, site)).toBeNull();
     expect(diskLabel({ ...good, installedBytes: 9_565_687, version: '0.9.0', file: 'MAW-Setup-0.9.0.exe' }, site)).toBeNull();

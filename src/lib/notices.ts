@@ -9,8 +9,8 @@ export interface Plate {
 // Placas do "Read before installing". A da IA depende de o servidor neural vir no instalador.
 export function readBeforeInstallPlates(neuralServerBundled: boolean, rb: Dictionary['readBefore']): Plate[] {
   return [
-    { ...rb.smartscreen, hot: true },
-    rb.windows,
+    { ...rb.unsigned, hot: true },
+    rb.platforms,
     rb.language,
     neuralServerBundled ? rb.aiBundled : rb.aiNotBundled,
     rb.privacy,

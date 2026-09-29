@@ -5,12 +5,19 @@ import { dictionaries } from '../../src/i18n';
 const rb = dictionaries.en.readBefore;
 
 describe('readBeforeInstallPlates', () => {
-  it('always has six plates and starts with the SmartScreen warning', () => {
+  it('always has six plates and starts with the unsigned-app warning, for Windows and for the Mac', () => {
     for (const flag of [true, false]) {
       const plates = readBeforeInstallPlates(flag, rb);
       expect(plates).toHaveLength(6);
-      expect(plates[0]).toMatchObject({ title: 'SmartScreen will warn you', hot: true });
+      expect(plates[0]).toMatchObject({ title: 'Your system will warn you', hot: true });
+      expect(plates[0].body).toContain('Run anyway');
+      expect(plates[0].body).toContain('Open Anyway');
     }
+  });
+  it('names the three systems right after the warning', () => {
+    expect(readBeforeInstallPlates(true, rb)[1].title).toBe('Windows, macOS and Linux');
+    expect(readBeforeInstallPlates(true, dictionaries.pt.readBefore)[1].title).toBe('Windows, macOS e Linux');
+    expect(readBeforeInstallPlates(true, dictionaries.es.readBefore)[1].title).toBe('Windows, macOS y Linux');
   });
   it('says the AI server is not bundled while the flag is off', () => {
     const titles = readBeforeInstallPlates(false, rb).map((p) => p.title);

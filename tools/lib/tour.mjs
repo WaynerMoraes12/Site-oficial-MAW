@@ -138,5 +138,6 @@ export function snapshotProblems(snapshot, release) {
 // Release da esteira da MAW adotado pelo site: a versão acompanha e o instalador traz o servidor da IA
 // (todo release da esteira é o instalador completo), então o aviso "servidor ainda não vem junto" sai.
 export function adoptMawRelease(site, release) {
-  return { ...site, version: release.version, neuralServerBundled: true };
+  // installedBytes fica no site.json porque o deploy tira o release.json enquanto o download não é público
+  return { ...site, version: release.version, neuralServerBundled: true, installedBytes: release.installedBytes };
 }

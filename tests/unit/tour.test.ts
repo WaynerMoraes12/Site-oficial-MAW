@@ -144,6 +144,11 @@ describe('adoptMawRelease', () => {
     const site = { name: 'MAW', version: '1.0.0', neuralServerBundled: false, releaseBaseUrl: 'x' };
     expect(adoptMawRelease(site, { version: '1.0.3' })).toEqual({ name: 'MAW', version: '1.0.3', neuralServerBundled: true, releaseBaseUrl: 'x' });
   });
+  it('keeps the installed size, which the rider shows even while the deploy holds release.json back', () => {
+    expect(adoptMawRelease({ version: '1.0.0' }, { version: '1.0.3', installedBytes: 2_231_597_858 }).installedBytes).toBe(2_231_597_858);
+    // release sem a medida: o tamanho da versão anterior não vale para esta
+    expect(adoptMawRelease({ version: '1.0.0', installedBytes: 5 }, { version: '1.0.3' }).installedBytes).toBeUndefined();
+  });
 });
 
 describe('classifyStops, work that has not reached main yet', () => {

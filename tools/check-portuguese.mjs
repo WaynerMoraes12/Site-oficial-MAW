@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { findPortuguese } from './lib/portuguese.mjs';
 
 // Exceções do spec: nomes de botões do app, projeto demo e nomes próprios.
-const ALLOW = ['Noite Roxa', 'Centro Universitário Hermínio Ometto', 'Hermínio Ometto', 'EFEITO', 'ASSISTENTE IA', 'Wayner Pires de Moraes', 'Araras'];
+const ALLOW = ['Noite Roxa', 'Centro Universitário Hermínio Ometto', 'Hermínio Ometto', 'EFEITO', 'ASSISTENTE IA', 'Configurar placa de audio', 'Wayner Pires de Moraes', 'Araras'];
 
 // /pt/ e /es/ são as traduções (adendo §10 do spec): só as páginas em inglês são verificadas.
 const TRANSLATIONS = new Set(['pt', 'es']);

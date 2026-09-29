@@ -4,7 +4,8 @@ test.beforeEach(async ({ page }) => page.goto('/'));
 
 test('hero headline is the English tagline', async ({ page }) => {
   await expect(page.locator('.hero h1')).toHaveText(/The DAW that understands\s*the music\s*it records/);
-  await expect(page.locator('.hero .ctas a').first()).toHaveText('Download for Windows');
+  await expect(page.locator('.hero .ctas a').first()).toHaveText('Download MAW');
+  await expect(page.locator('.hero .catalog')).toContainText('WIN · MAC · LINUX');
 });
 
 test('logo images are never filtered, blended or animated', async ({ page }) => {

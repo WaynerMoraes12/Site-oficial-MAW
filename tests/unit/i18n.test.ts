@@ -49,7 +49,7 @@ const leaves = (v: unknown, path = ''): [string, string][] => {
 };
 
 // Caminhos que podem ficar iguais ao inglês, por língua: nomes próprios, marcas, siglas, rótulos do app e datas
-// com o mesmo mês. Chave língua:caminho, não texto: um "Download for Windows" esquecido em outro lugar continua
+// com o mesmo mês. Chave língua:caminho, não texto: um "Download MAW" esquecido em outro lugar continua
 // sendo pego, e o "Roadmap" que vale em português não libera o espanhol.
 const SAME_AS_ENGLISH = new Set([
   'es:hero.ledeBefore', 'es:ticker.items[5]', 'es:ticker.items[6]', 'es:tracklist.sides[0].tracks[5].title',
@@ -110,7 +110,7 @@ describe('dictionaries', () => {
     const pt = structuredClone(dictionaries.pt);
     pt.hero.ctaDownload = dictionaries.en.hero.ctaDownload;
     pt.nav.story = dictionaries.en.nav.story;
-    expect(untranslated('pt', pt)).toEqual(['nav.story: Story', 'hero.ctaDownload: Download for Windows']);
+    expect(untranslated('pt', pt)).toEqual(['nav.story: Story', 'hero.ctaDownload: Download MAW']);
   });
   it('allows a term per language: Portuguese says "Roadmap", Spanish must not', () => {
     const es = structuredClone(dictionaries.es);

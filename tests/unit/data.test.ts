@@ -30,6 +30,13 @@ describe('site data', () => {
   it('names the twelve months for the tour dates in every language', () => {
     for (const locale of locales) expect(dictionaries[locale].tour.months).toHaveLength(12);
   });
+  it('presents MAW for Windows, macOS and Linux in every language', () => {
+    for (const locale of locales) {
+      const t = dictionaries[locale];
+      const texts = [t.meta.description, t.hero.ledeAfter, t.hero.meta, t.download.lede, t.readBefore.platforms.title, t.faq.items[1].a];
+      for (const text of texts) expect(text, locale).toMatch(/Windows[\s\S]*macOS[\s\S]*Linux/);
+    }
+  });
   it('has 8 FAQ entries and 8 rider rows in every language', () => {
     for (const locale of locales) {
       expect(dictionaries[locale].faq.items).toHaveLength(8);
