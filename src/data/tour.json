@@ -1,5 +1,5 @@
 {
-  "installerCommit": "419b4c45d0efa673b2f3688caa1ec652020f1c92",
+  "installerCommit": "62985ee0ca224520f130be672c9d00c646120204",
   "versions": [
     {
       "version": "1.0.0",
@@ -15,17 +15,22 @@
       "version": "1.0.3",
       "mawCommit": "419b4c45d0efa673b2f3688caa1ec652020f1c92",
       "builtAt": "2026-09-30T16:35:11.092Z"
+    },
+    {
+      "version": "1.0.4",
+      "mawCommit": "62985ee0ca224520f130be672c9d00c646120204",
+      "builtAt": "2026-10-02T17:51:44.566Z"
     }
   ],
   "stops": [
     {
-      "id": "version:1.0.3",
+      "id": "version:1.0.4",
       "status": "live",
-      "date": "2026-09-30",
+      "date": "2026-10-02",
       "text": {
-        "en": "Version 1.0.3",
-        "pt": "Versão 1.0.3",
-        "es": "Versión 1.0.3"
+        "en": "Version 1.0.4",
+        "pt": "Versão 1.0.4",
+        "es": "Versión 1.0.4"
       }
     },
     {
@@ -254,6 +259,11 @@
       "en": "41 fixes from the first round of testing",
       "pt": "41 correções da primeira rodada de testes",
       "es": "41 correcciones de la primera ronda de pruebas"
+    },
+    "version:1.0.4": {
+      "en": "Version 1.0.4",
+      "pt": "Versão 1.0.4",
+      "es": "Versión 1.0.4"
     }
   }
 }
