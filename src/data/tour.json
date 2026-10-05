@@ -1,5 +1,5 @@
 {
-  "installerCommit": "62985ee0ca224520f130be672c9d00c646120204",
+  "installerCommit": "fe4182d79b4eeac8b1505c9bf61f610d79b21ace",
   "versions": [
     {
       "version": "1.0.0",
@@ -20,17 +20,22 @@
       "version": "1.0.4",
       "mawCommit": "62985ee0ca224520f130be672c9d00c646120204",
       "builtAt": "2026-10-02T17:51:44.566Z"
+    },
+    {
+      "version": "1.0.5",
+      "mawCommit": "fe4182d79b4eeac8b1505c9bf61f610d79b21ace",
+      "builtAt": "2026-10-04T19:58:18.919Z"
     }
   ],
   "stops": [
     {
-      "id": "version:1.0.4",
+      "id": "version:1.0.5",
       "status": "live",
-      "date": "2026-10-02",
+      "date": "2026-10-04",
       "text": {
-        "en": "Version 1.0.4",
-        "pt": "Versão 1.0.4",
-        "es": "Versión 1.0.4"
+        "en": "Version 1.0.5",
+        "pt": "Versão 1.0.5",
+        "es": "Versión 1.0.5"
       }
     },
     {
@@ -264,6 +269,11 @@
       "en": "Version 1.0.4",
       "pt": "Versão 1.0.4",
       "es": "Versión 1.0.4"
+    },
+    "version:1.0.5": {
+      "en": "Version 1.0.5",
+      "pt": "Versão 1.0.5",
+      "es": "Versión 1.0.5"
     }
   }
 }

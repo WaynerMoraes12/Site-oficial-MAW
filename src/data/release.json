@@ -1,9 +1,9 @@
 {
-  "file": "MAW-Setup-1.0.4.exe",
-  "bytes": 534060909,
-  "sha256": "053033ee4c2502ebcb89e4c46ef62ddbd939ccccfce435cf555754203b257f61",
-  "version": "1.0.4",
-  "builtAt": "2026-10-02T17:51:44.566Z",
-  "installedBytes": 2319391466,
-  "mawCommit": "62985ee0ca224520f130be672c9d00c646120204"
+  "file": "MAW-Setup-1.0.5.exe",
+  "bytes": 534085310,
+  "sha256": "4f2ad18f7f726d9fdac953ecd0a6ffe120ec0fc745a1f1d9d1e74fd6fa43e77d",
+  "version": "1.0.5",
+  "builtAt": "2026-10-04T19:58:18.919Z",
+  "installedBytes": 2319424234,
+  "mawCommit": "fe4182d79b4eeac8b1505c9bf61f610d79b21ace"
 }
