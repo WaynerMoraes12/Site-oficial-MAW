@@ -27,6 +27,7 @@
   --f-mono: 'JetBrains Mono', ui-monospace, monospace;
   --f-seg: 'Share Tech Mono', monospace;
   --f-stencil: 'Big Shoulders Stencil Display', sans-serif;
+  --f-sign: 'Pinyon Script', cursive;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -305,6 +306,24 @@ footer { background: #000; border-top: 1px solid #1a1a20; padding: 60px 0 40px; 
 footer .top { display: flex; justify-content: space-between; align-items: center; gap: 30px; margin-bottom: 30px; flex-wrap: wrap; }
 footer img { height: 44px; }
 footer .legal { max-width: 900px; line-height: 1.6; }
+/* o nome por trás da sigla e a homenagem, em assinatura; o traço de baixo se desenha quando o rodapé entra na tela */
+footer .sign { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 38px 0 34px; margin-bottom: 30px; border-top: 1px solid #1a1a20; border-bottom: 1px solid #1a1a20; }
+.sign-name { font-family: var(--f-wide); font-size: 12px; letter-spacing: .5em; margin-right: -.5em; color: #8e8a9c; }
+.sign-name b { font-weight: 700; color: var(--maw-bright); }
+.sign-memory { margin-top: 14px; font-family: var(--f-sign); font-size: clamp(30px, 9vw, 78px); line-height: 1.3; white-space: nowrap; color: #f3eefc; text-shadow: 0 0 26px rgba(184,77,255,.35); }
+.sign-swash { width: min(360px, 78%); height: auto; margin-top: -8px; overflow: visible; }
+.sign-swash path { fill: none; stroke: url(#swash-ink); stroke-width: 1.4; stroke-linecap: round; }
+/* o traço fica visível por padrão; só o keyframe o esconde, então navegador sem animação por rolagem vê ele pronto.
+   A linha do tempo vai numa regra à parte (mais específica) para o minificador não fundir tudo num atalho
+   "animation: … view()", que navegador que não entende descarta inteiro */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .sign-swash path { stroke-dasharray: 1; animation: swash linear both; }
+    .sign .sign-swash path { animation-timeline: view(); animation-range: entry 0% entry 100%; }
+  }
+}
+@keyframes swash { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@media (max-width: 560px) { .sign-name { font-size: 10px; letter-spacing: .3em; margin-right: -.3em; } }
 
 
 /* ================= ACRÉSCIMOS DA IMPLEMENTAÇÃO ================= */

@@ -1,7 +1,8 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { dictionaries } from '../../src/i18n';
 
-type Stop = { status: 'live' | 'reh' | 'next'; text: Record<'en' | 'pt' | 'es', string> };
+type Stop = { status: 'live' | 'reh' | 'next'; date: string; text: Record<'en' | 'pt' | 'es', string> };
 const tour: { stops: Stop[] } = JSON.parse(readFileSync('src/data/tour.json', 'utf8'));
 
 test.beforeEach(async ({ page }) => page.goto('/'));
@@ -12,13 +13,14 @@ test('the world tour shows every synced stop, in each language, with its stamp a
     pt: { live: 'Na estrada', reh: 'Ensaiando', next: 'Anunciado' },
     es: { live: 'De gira', reh: 'Ensayando', next: 'Anunciado' },
   };
-  const months = { en: 'Sep', pt: 'Set', es: 'Sep' };
+  // a primeira parada muda com a sincronização diária: o mês esperado sai da data dela
+  const [year, month] = tour.stops[0].date.split('-');
   for (const [locale, path] of [['en', '/'], ['pt', '/pt/'], ['es', '/es/']] as const) {
     await page.goto(path);
     await expect(page.locator('#tour .date .what')).toHaveText(tour.stops.map((s) => s.text[locale]));
     await expect(page.locator('#tour .date .stamp')).toHaveText(tour.stops.map((s) => stamps[locale][s.status]));
-    // a versão de setembro de 2026 aparece com o mês na língua da página
-    await expect(page.locator('#tour .date').first().locator('.when')).toHaveText(`${months[locale]} 2026`);
+    // a data da primeira parada aparece com o mês na língua da página
+    await expect(page.locator('#tour .date').first().locator('.when')).toHaveText(`${dictionaries[locale].tour.months[Number(month) - 1]} ${year}`);
   }
 });
 

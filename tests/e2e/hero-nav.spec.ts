@@ -27,6 +27,17 @@ test('ticker repeats items for the loop and hides the copy from screen readers',
   expect(await page.locator('.ticker .track > span[aria-hidden="true"]').count()).toBe(total / 2);
 });
 
+test('footer carries the two credit lines, in this order and in every language', async ({ page }) => {
+  for (const path of ['/', '/pt/', '/es/']) {
+    await page.goto(path);
+    const lines = page.locator('footer .sign span');
+    // a homenagem vai em assinatura (Pinyon Script): em caixa alta a letra cursiva fica ilegível
+    await expect(lines).toHaveText(['MORAES AUDIO WORKSTATION', 'Memory All Wagner']);
+    await expect(page.locator('footer .sign-memory')).toHaveCSS('font-family', /Pinyon Script/);
+    await expect(page.locator('footer .sign')).toHaveAttribute('translate', 'no');
+  }
+});
+
 test('footer states the non-affiliation', async ({ page }) => {
   await expect(page.locator('footer')).toContainText('MAW is not affiliated with any artist or band.');
 });
