@@ -38,6 +38,13 @@ test('footer carries the two credit lines, in this order and in every language',
   }
 });
 
+test('the footer is one piece: no divider lines around the credit lines, and the MAW logo in the corner', async ({ page }) => {
+  const sign = page.locator('footer .sign');
+  await expect(sign).toHaveCSS('border-top-width', '0px');
+  await expect(sign).toHaveCSS('border-bottom-width', '0px');
+  await expect(page.locator('footer .top img[data-logo]')).toBeVisible();
+});
+
 test('footer states the non-affiliation', async ({ page }) => {
   await expect(page.locator('footer')).toContainText('MAW is not affiliated with any artist or band.');
 });
