@@ -352,6 +352,18 @@ footer .sign { display: flex; flex-direction: column; align-items: center; text-
 .source-link { display: inline-block; margin-top: 12px; font-family: var(--f-mono); font-size: 12px; color: var(--maw-bright); text-decoration: underline; }
 .sheet { overflow-x: auto; }
 
+/* capa no computador: cabe inteira na primeira tela e fica no centro entre o menu e a borda de baixo. Os tamanhos
+   acompanham também a altura (svh), para o notebook com zoom de 125% (1536 × 690) não precisar rolar */
+@media (min-width: 981px) {
+  .hero { min-height: calc(100svh - 64px); padding: clamp(16px, 3svh, 48px) 0; }
+  .hero-grid { grid-template-columns: 1.2fr .8fr; gap: clamp(32px, 4vw, 56px); }
+  .catalog { margin-bottom: clamp(10px, 2.4svh, 26px); }
+  .hero h1 { font-size: clamp(40px, min(6.4vw, 10.6svh), 104px); margin-bottom: clamp(10px, 2.4svh, 26px); }
+  .hero .lede { font-size: clamp(15px, 2.3svh, 19px); margin-bottom: clamp(14px, 3.2svh, 34px); }
+  .hero .ctas .btn { padding-block: clamp(10px, 1.6svh, 14px); }
+  .hero .meta { margin-top: clamp(10px, 1.8svh, 18px); }
+  .record { width: min(520px, 100%, 66svh); }
+}
 @media (max-width: 980px) {
   .hero-grid, .dl-grid, .liner-grid, .faq-grid, .contact-grid, .engine .two, .tl-grid { grid-template-columns: 1fr; }
   .side + .side { border-left: 0; border-top: 1px solid #22222a; }
