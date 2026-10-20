@@ -39,6 +39,16 @@ const perSide = trackKeys[0].length;
         </div>
       ))}
     </div>
+    <article class="camera-take" aria-labelledby="camera-title">
+      <h3 id="camera-title">{tl.camera.title}</h3>
+      <p>{tl.camera.body}</p>
+      <ul class="camera-files">
+        {tl.camera.files.map((file) => (
+          <li><h4>{file.title}</h4><p>{file.detail}</p></li>
+        ))}
+      </ul>
+      <p class="camera-note">{tl.camera.note}</p>
+    </article>
     <div class="backcover-foot">
       <div>{fill(tl.footer1, { year: site.year, author: site.author })}<br />{tl.footer2}</div>
       <div class="barcode" aria-hidden="true">
@@ -50,3 +60,15 @@ const perSide = trackKeys[0].length;
     </div>
   </div>
 </section>
+
+<style>
+  .camera-take { border: 1px solid #22222a; border-top: 0; padding: 30px 44px; }
+  .camera-take h3 { color: var(--maw-bright); font-family: var(--f-cond); font-size: 28px; line-height: 1.2; margin-bottom: 12px; }
+  .camera-take > p { max-width: 78ch; color: #bdb9c7; }
+  .camera-files { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; list-style: none; margin: 24px 0; padding: 0; }
+  .camera-files h4 { color: #efecf6; font-family: var(--f-cond); font-size: 21px; margin-bottom: 6px; }
+  .camera-files p { color: #8f8aa2; font-size: 14px; }
+  .camera-take .camera-note { color: #8f8aa2; font-size: 13px; }
+  @media (max-width: 980px) { .camera-files { grid-template-columns: 1fr; gap: 18px; } }
+  @media (max-width: 560px) { .camera-take { padding: 26px 20px; } }
+</style>

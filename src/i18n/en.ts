@@ -26,14 +26,15 @@ export const en: Dictionary = {
   ticker: {
     aria: 'MAW highlights',
     items: [
-      '32 TRACKS AT 0.29% OF THE AUDIO BLOCK',
+      '32 TRACKS AT 0.37% OF THE AUDIO BLOCK',
       'STEMS IN 2, 4 OR 5 PARTS',
       'SPEECH BECOMES MARKERS',
       'SMART MIX FINDS FREQUENCY CLASHES',
-      '3,934 AUTOMATED CHECKS',
+      '10,949 AUTOMATED CHECKS',
       'VST3 + ASIO',
       'WAV · FLAC · OGG · MP3',
       'AUTOTUNE WITH KEY AND SCALE',
+      'CAMERA + PROCESSED AUDIO · 3 FILES',
     ],
   },
   stage: {
@@ -81,6 +82,16 @@ export const en: Dictionary = {
         ],
       },
     ],
+    camera: {
+      title: 'Film your performance with the sound of your mix',
+      body: 'Record the camera alongside the processed master: tracks, buses, VST3 and effects, with the mix you hear in MAW. One take produces three separate files.',
+      files: [
+        { title: 'MP4 ready to post', detail: 'Camera image with processed audio: H.264 video and AAC sound' },
+        { title: 'MP4 with video only', detail: 'The same image without audio, ready for further editing' },
+        { title: '24-bit WAV with effects', detail: 'The processed master at the audio interface sample rate' },
+      ],
+      note: 'Windows, macOS and Linux · FFmpeg 5.1+ and FFprobe required (included in the complete Windows installer). Up to 20 minutes per take. Use headphones and calibrate camera sync with a visible clap.',
+    },
     footer1: 'MAW-001 · ℗ & © {year} {author} · Your music is yours.',
     footer2: 'Recorded, mixed and compiled in Araras, Brazil.',
   },
@@ -140,7 +151,7 @@ export const en: Dictionary = {
     lede: 'No MAW locks on the playback path. Measured, not promised — and you can reproduce it on your own PC.',
     stats: [
       { label: 'of the audio block', sub: '32 tracks · 48 kHz · 512 samples' },
-      { label: 'automated checks', sub: 'in 396 built-in test blocks' },
+      { label: 'automated checks', sub: 'in 853 built-in test blocks' },
       { label: 'bit recording', sub: 'ASIO, several tracks at once' },
       { label: 'undo levels', sub: 'each one named after its action' },
     ],

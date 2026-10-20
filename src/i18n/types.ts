@@ -29,6 +29,7 @@ export interface Dictionary {
   tracklist: {
     eyebrow: string; words: string[];
     sides: { name: string; subtitle: string; tracks: { title: string; detail: string }[] }[];
+    camera: { title: string; body: string; files: { title: string; detail: string }[]; note: string };
     footer1: string; footer2: string;
   };
   ai: {

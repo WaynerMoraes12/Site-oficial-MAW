@@ -24,7 +24,7 @@ test('rack shows the seven built-in effects as pedals', async ({ page }) => {
 });
 
 test('backstage shows the measured numbers', async ({ page }) => {
-  await expect(page.locator('#backstage .stat .v')).toHaveText(['0.29%', '3,934', '24', '50']);
+  await expect(page.locator('#backstage .stat .v')).toHaveText(['0.37%', '10,949', '24', '50']);
   await expect(page.locator('#backstage figure.shot')).toHaveCount(2);
 });
 

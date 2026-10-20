@@ -25,14 +25,15 @@ export const es: Dictionary = {
   ticker: {
     aria: 'Lo mejor de MAW',
     items: [
-      '32 PISTAS CON EL 0,29% DEL BLOQUE DE AUDIO',
+      '32 PISTAS CON EL 0,37% DEL BLOQUE DE AUDIO',
       'STEMS EN 2, 4 O 5 PARTES',
       'LA VOZ SE VUELVE MARCADOR',
       'SMART MIX ENCUENTRA CHOQUES DE FRECUENCIA',
-      '3.934 VERIFICACIONES AUTOMÁTICAS',
+      '10.949 VERIFICACIONES AUTOMÁTICAS',
       'VST3 + ASIO',
       'WAV · FLAC · OGG · MP3',
       'AUTOTUNE CON TONO Y ESCALA',
+      'CÁMARA + AUDIO CON EFECTOS · 3 ARCHIVOS',
     ],
   },
   stage: {
@@ -80,6 +81,16 @@ export const es: Dictionary = {
         ],
       },
     ],
+    camera: {
+      title: 'Filma tu interpretación con el sonido de tu mezcla',
+      body: 'Graba la cámara junto con el master procesado: pistas, buses, VST3 y efectos, con la mezcla que escuchas en MAW. Cada toma genera tres archivos separados.',
+      files: [
+        { title: 'MP4 listo para publicar', detail: 'Imagen de la cámara con audio procesado: video H.264 y sonido AAC' },
+        { title: 'MP4 solo con imagen', detail: 'El mismo video sin audio, para continuar la edición' },
+        { title: 'WAV de 24 bits con efectos', detail: 'El master procesado a la frecuencia de muestreo de la interfaz de audio' },
+      ],
+      note: 'Windows, macOS y Linux · Requiere FFmpeg 5.1+ y FFprobe (incluidos en el instalador completo de Windows). Hasta 20 minutos por toma. Usa audífonos y calibra la sincronía de la cámara con una palmada visible.',
+    },
     footer1: 'MAW-001 · ℗ & © {year} {author} · Tu música es tuya.',
     footer2: 'Grabado, mezclado y compilado en Araras, Brasil.',
   },
@@ -139,7 +150,7 @@ export const es: Dictionary = {
     lede: 'Ningún bloqueo de MAW en la ruta de reproducción. Medido, no prometido — y puedes reproducirlo en tu propio PC.',
     stats: [
       { label: 'del bloque de audio', sub: '32 pistas · 48 kHz · 512 muestras' },
-      { label: 'verificaciones automáticas', sub: 'en 396 bloques de prueba integrados' },
+      { label: 'verificaciones automáticas', sub: 'en 853 bloques de prueba integrados' },
       { label: 'bits de grabación', sub: 'ASIO, varias pistas a la vez' },
       { label: 'niveles de deshacer', sub: 'cada uno con el nombre de su acción' },
     ],

@@ -1,68 +1,74 @@
-# Site oficial da MAW
+# MAW official website
 
-Site estático (Astro 7) da **MAW — Musical Artificial Workspace**, a DAW para Windows, macOS e Linux com IA na timeline (o instalador com a IA é o do Windows; macOS e Linux aparecem no site com "em breve" até a esteira da MAW publicar esses pacotes). O site nasce em inglês (`/`) e tem tradução nossa em português (`/pt/`) e espanhol (`/es/`); na raiz, quem não escolheu idioma abre na língua do navegador. Spec em `docs/superpowers/specs/` (tradução no §10), plano em `docs/superpowers/plans/`.
+Static Astro 7 website for **MAW — Musical Artificial Workspace**, the DAW for Windows, macOS and Linux with AI in the timeline. The Windows installer includes the AI environment; macOS and Linux show “coming soon” until MAW's release pipeline publishes those packages. English is served at `/`, with our Portuguese translation at `/pt/` and Spanish at `/es/`. At the root, visitors who have not chosen a language are redirected according to their browser language. Specifications are in `docs/superpowers/specs/` (translation in §10); implementation plans are in `docs/superpowers/plans/`.
 
-## Rodar
+## Run locally
 
 ```bash
 npm install
 npm run dev          # http://localhost:4321
-npm test             # testes unitários (Vitest)
-npm run test:e2e     # build + preview + Playwright (desktop 1440 e celular 390)
-npm run build && npm run check:dist   # sem português na página em inglês, links locais ok
-python -m unittest discover -s tools/tests   # logo e ícones
+npm test             # unit tests (Vitest)
+npm run test:e2e     # build + preview + Playwright (1440px desktop and 390px mobile)
+npm run build && npm run check:dist   # no Portuguese on the English page; valid local links
+python -m unittest discover -s tools/tests   # logo and icons
 ```
 
-### Testar com o subcaminho do GitHub Pages
+### Test the GitHub Pages base path
 
-No PowerShell:
+In PowerShell:
 
 ```powershell
 $env:BASE_PATH = '/Site-oficial-MAW'; npm run build; npm run check:dist; Remove-Item Env:BASE_PATH
 ```
 
-No Git Bash, desligue a conversão de caminhos, senão `/Site-oficial-MAW` vira `C:/Program Files/Git/Site-oficial-MAW` e o verificador acusa centenas de links quebrados:
+In Git Bash, disable path conversion. Otherwise `/Site-oficial-MAW` becomes `C:/Program Files/Git/Site-oficial-MAW`, and the checker reports hundreds of broken links:
 
 ```bash
 MSYS_NO_PATHCONV=1 BASE_PATH=/Site-oficial-MAW npm run build
 MSYS_NO_PATHCONV=1 BASE_PATH=/Site-oficial-MAW npm run check:dist
 ```
 
-## Onde mudar o conteúdo
+## Where to edit content
 
-| O quê | Arquivo |
-|---|---|
-| Versão, flags (`neuralServerBundled`, `sourceCodeUrl`) | `src/data/site.json` |
-| Redes sociais: preencher `href` e `value` para aparecer | `src/data/channels.ts` |
-| Todo texto visível (inglês, português, espanhol) | `src/i18n/en.ts`, `pt.ts`, `es.ts` (mesmo formato; os testes acusam frase esquecida em inglês) |
-| O que não é texto: atalhos, status do roadmap, números, imagens | `src/data/*.ts` |
-| Prints | `src/assets/screens/` (ver `tools/screenshots/README.md`) |
-| Ícones (aba, apple-touch, instalador) | `python tools/make_icons.py` a partir do ícone oficial do app da MAW |
+| Content | File |
+| --- | --- |
+| Version and flags (`neuralServerBundled`, `sourceCodeUrl`) | `src/data/site.json` |
+| Social channels: fill in `href` and `value` to show them | `src/data/channels.ts` |
+| All visible copy in English, Portuguese and Spanish | `src/i18n/en.ts`, `pt.ts`, `es.ts` (matching structure; tests catch untranslated English) |
+| Non-text data: shortcuts, roadmap status, numbers and images | `src/data/*.ts` |
+| Screenshots | `src/assets/screens/` (see `tools/screenshots/README.md`) |
+| Browser, Apple touch and installer icons | `python tools/make_icons.py`, using MAW's official app icon |
+
+## Measured figures and camera
+
+The ticker and Backstage figures come from MAW's `docs/TCC-artigo.md` at revision `f33b0eb` (19 October 2026): **10,949 passing checks in 853 test blocks**, and an average **0.37% of the audio block budget for 32 tracks at 48 kHz with 512-sample blocks**. The benchmark describes that measured configuration; it is not a performance guarantee for every computer or plugin chain. Numeric display values live in `src/data/backstage.ts`; their labels and ticker text are translated in the three dictionaries.
+
+The camera block in `Tracklist.astro` preserves the existing 16-track list and describes the three files produced by each take: an **MP4 ready to post with processed audio**, an **MP4 with video only**, and a **24-bit WAV with effects at the audio interface sample rate**. It also states the FFmpeg 5.1+/FFprobe requirement, the 20-minute take limit and the need to calibrate sync with a visible clap. The copy is available in English, Portuguese and Spanish; the logo, purple palette and slogan remain unchanged.
 
 ## World Tour (roadmap)
 
-O World Tour não é escrito à mão: `npm run tour` lê o GitHub da MAW e grava `src/data/tour.json` (spec §11).
+World Tour is generated rather than maintained by hand: `npm run tour` reads MAW's GitHub repository and writes `src/data/tour.json` (specification §11).
 
-- **Na estrada**: a versão que está no instalador do site (o `mawCommit` do `release.json`).
-- **Ensaiando**: PR de recurso (`feature/*` ou título `feat…`) mergeado na `main` da MAW depois do instalador, PR de recurso aberto, ou branch `feature/*` com trabalho e sem PR.
-- **Anunciado**: issue aberta na MAW com a etiqueta `roadmap`. Quando um PR mencionar `#número` da issue (ou um branch for criado a partir dela, `73-…`), ela passa para Ensaiando. Um branch `feature/…` sem PR não sabe de qual issue é: cite `#número` no PR.
+- **On the road**: the version included in the website's installer (`mawCommit` in `release.json`).
+- **Rehearsing**: a feature PR (`feature/*` or a `feat…` title) merged into MAW's `main` after that installer, an open feature PR, or a `feature/*` branch with work but no PR.
+- **Announced**: an open MAW issue labelled `roadmap`. A PR that mentions `#number`, or a branch created from the issue (`73-…`), moves it to Rehearsing. A `feature/…` branch without a PR does not identify its related issue: cite `#number` in the PR.
 
-Para parada nova, o Claude CLI deste PC escreve o título curto em EN/PT/ES. Dá para corrigir qualquer texto direto no `src/data/tour.json`: o que já está escrito nunca é sobrescrito. `npm run check:tour` (dentro do `check:dist`) trava o deploy se faltar texto ou se o snapshot não for do instalador atual.
+For each new stop, Claude CLI on this PC writes a short title in EN/PT/ES. Any text can be corrected directly in `src/data/tour.json`; existing translations are never overwritten. `npm run check:tour` (part of `check:dist`) blocks deployment if text is missing or the snapshot does not match the current installer.
 
-Uma tarefa do Agendador do Windows (**MAW Site - World Tour**) roda `scripts/tour-daily.ps1` todo dia às 09:00 (ou quando o PC ligar): sincroniza e, se mudou, commita só o `src/data/tour.json` e dá push no branch atual. Não roda se o `tour.json` ou o `release.json` tiverem mudança ainda não commitada, nem com merge/rebase em andamento. Atenção: o push sobe o branch inteiro, então commits seus ainda não enviados nesse branch vão junto. Log em `%LOCALAPPDATA%\MAW-site\tour-sync.log`. Registrar de novo: `powershell -ExecutionPolicy Bypass -File scripts\register-tour-task.ps1`; remover: `Unregister-ScheduledTask -TaskName 'MAW Site - World Tour' -Confirm:$false`.
+A Windows Task Scheduler task named **MAW Site - World Tour** runs `scripts/tour-daily.ps1` every day at 09:00, or when the PC starts. It synchronizes the snapshot and, if it changes, commits only `src/data/tour.json` and pushes the current branch. It does not run with uncommitted changes to `tour.json` or `release.json`, or during a merge/rebase. A push sends the whole branch, including any other local commits not yet pushed. Logs are in `%LOCALAPPDATA%\MAW-site\tour-sync.log`. Register it again with `powershell -ExecutionPolicy Bypass -File scripts\register-tour-task.ps1`; remove it with `Unregister-ScheduledTask -TaskName 'MAW Site - World Tour' -Confirm:$false`.
 
-## Instalador
+## Installer
 
-O instalador agora é feito pela esteira do repositório da MAW (`.github/workflows/windows-release.yml` e `installer/` de lá): cada PR mergeado na `main` da MAW vira um release `vX.Y.Z` com o instalador completo (com a IA) e um `release.json`. O `npm run tour` (e a tarefa diária) baixa o `release.json` do último release para `src/data/release.json` e acompanha a versão em `src/data/site.json`; o botão de download aponta para os releases da MAW (`releaseBaseUrl`). Enquanto a MAW for privada, esse link não é público e o deploy continua travado pelo `check-release`, como deve. Spec: `docs/superpowers/specs/2026-09-28-esteira-e-atualizacao-design.md`.
+The installer is now built by MAW's repository pipeline (`.github/workflows/windows-release.yml` and its `installer/` directory). Each PR merged into MAW's `main` produces a `vX.Y.Z` release with the complete installer, including AI, and a `release.json`. `npm run tour`, including its scheduled task, downloads the latest release's `release.json` into `src/data/release.json` and tracks its version in `src/data/site.json`. The download button points to MAW's releases (`releaseBaseUrl`). While MAW's repository is private, that link is not public, and `check-release` prevents an inaccessible installer from being offered. Specification: `docs/superpowers/specs/2026-09-28-esteira-e-atualizacao-design.md`.
 
-O `npm run installer` daqui (Inno Setup com o `MAW_APP.exe` local) é o jeito antigo e sai quando a esteira da MAW publicar o primeiro release. Sem `release.json`, o botão de download mostra "Installer coming soon".
+This repository's `npm run installer` command (Inno Setup using a local `MAW_APP.exe`) is the legacy method, to be removed once MAW's pipeline publishes its first release. Without `release.json`, the download button displays “Installer coming soon”.
 
-## Publicar
+## Publish
 
-O site está no GitHub Pages: https://waynermoraes12.github.io/Site-oficial-MAW/ (este repositório é público; o da MAW continua privado). O workflow `.github/workflows/deploy.yml` publica a cada push na `main` — inclusive os da tarefa diária, que sobe o World Tour e o último release da MAW — e também pode ser disparado à mão (Actions → Deploy site to GitHub Pages → Run workflow). Usa `BASE_PATH=/Site-oficial-MAW`.
+The website is hosted on GitHub Pages at https://waynermoraes12.github.io/Site-oficial-MAW/. This repository is public; access to MAW's repository and releases is managed separately. The `.github/workflows/deploy.yml` workflow publishes every push to `main`, including the scheduled task's World Tour and release updates. It can also be started manually through Actions → Deploy site to GitHub Pages → Run workflow. It uses `BASE_PATH=/Site-oficial-MAW`.
 
-O botão de download só aparece se o instalador do `release.json` estiver publicado e igual: `tools/check-release.mjs` baixa o arquivo, confere o SHA-256 e, se não der (hoje, porque os releases da MAW são privados), o deploy tira o `release.json` e o site vai ao ar com "Installer coming soon". Quando a MAW for pública (a decisão da GPL), o download aparece sozinho no deploy seguinte.
+The download button appears only when the installer described by `release.json` is available and matches its metadata. `tools/check-release.mjs` downloads the file and checks its SHA-256. If verification fails, including when MAW's releases are private, deployment removes `release.json` and the website displays “Installer coming soon”. Once MAW's releases become public under the project's licensing decision, the button appears automatically on the next successful deployment.
 
 ## Logo
 
-O logo da MAW nunca é alterado. `python tools/logo_web.py --check` prova que o logo da web tem os mesmos pixels do original.
+MAW's logo is never altered. `python tools/logo_web.py --check` verifies that the web logo contains the same pixels as the original.

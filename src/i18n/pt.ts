@@ -25,14 +25,15 @@ export const pt: Dictionary = {
   ticker: {
     aria: 'Destaques da MAW',
     items: [
-      '32 TRILHAS USANDO 0,29% DO BLOCO DE ÁUDIO',
+      '32 TRILHAS USANDO 0,37% DO BLOCO DE ÁUDIO',
       'STEMS EM 2, 4 OU 5 PARTES',
       'A FALA VIRA MARCADOR',
       'SMART MIX ACHA CONFLITO DE FREQUÊNCIA',
-      '3.934 VERIFICAÇÕES AUTOMÁTICAS',
+      '10.949 VERIFICAÇÕES AUTOMÁTICAS',
       'VST3 + ASIO',
       'WAV · FLAC · OGG · MP3',
       'AUTOTUNE COM TOM E ESCALA',
+      'CÂMERA + ÁUDIO COM EFEITOS · 3 ARQUIVOS',
     ],
   },
   stage: {
@@ -80,6 +81,16 @@ export const pt: Dictionary = {
         ],
       },
     ],
+    camera: {
+      title: 'Filme sua apresentação com o som da sua mixagem',
+      body: 'Grave a câmera junto com o master processado: trilhas, barramentos, VST3 e efeitos, com a mixagem que você ouve na MAW. Cada tomada gera três arquivos separados.',
+      files: [
+        { title: 'MP4 pronto para postar', detail: 'Imagem da câmera com áudio processado: vídeo H.264 e som AAC' },
+        { title: 'MP4 só com a imagem', detail: 'O mesmo vídeo sem áudio, para continuar a edição' },
+        { title: 'WAV de 24 bits com efeitos', detail: 'O master processado na taxa de amostragem da placa de áudio' },
+      ],
+      note: 'Windows, macOS e Linux · Requer FFmpeg 5.1+ e FFprobe (incluídos no instalador completo do Windows). Até 20 minutos por tomada. Use fones e calibre a sincronia da câmera com uma palma visível.',
+    },
     footer1: 'MAW-001 · ℗ & © {year} {author} · A sua música é sua.',
     footer2: 'Gravado, mixado e compilado em Araras, Brasil.',
   },
@@ -139,7 +150,7 @@ export const pt: Dictionary = {
     lede: 'Nenhuma trava da MAW no caminho do playback. Medido, não prometido — e você pode reproduzir no seu próprio PC.',
     stats: [
       { label: 'do bloco de áudio', sub: '32 trilhas · 48 kHz · 512 amostras' },
-      { label: 'verificações automáticas', sub: 'em 396 blocos de teste embutidos' },
+      { label: 'verificações automáticas', sub: 'em 853 blocos de teste embutidos' },
       { label: 'bits na gravação', sub: 'ASIO, várias trilhas ao mesmo tempo' },
       { label: 'níveis de desfazer', sub: 'cada um com o nome da ação' },
     ],
