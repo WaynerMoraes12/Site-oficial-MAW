@@ -1,12 +1,9 @@
-// Paradas do World Tour a partir do estado da MAW no GitHub (spec §11; com um instalador por PR,
-// spec da esteira §6).
-//   Na estrada: a versão mais nova e os recursos que um release já entregou depois da estreia
-//     (mergeados na main entre o commit da estreia, debutUntil, e o do último release, installedUntil).
-//   Ensaiando: trabalho que ainda não chegou a um instalador — recurso mergeado na main depois do último
-//     release, recurso mergeado num branch que a main ainda não tem, PR aberto, branch com trabalho e sem
-//     PR — e o que pegou uma issue do roadmap (PR que cita #N, branch criado pela issue "N-…").
-//   Anunciado: issue aberta com a etiqueta roadmap que nada pegou ainda.
-// Cheio (MAX_STOPS): a versão, o que ensaia e o que foi anunciado ficam; os recursos entregues mais antigos saem.
+// Paradas do World Tour a partir da MAW no GitHub (spec 11).
+// Na estrada: ultima versao e recursos incluidos depois da estreia.
+// Ensaiando: trabalho na main sem instalador, PR aberto ou branch com trabalho.
+// Anunciado: issue aberta do roadmap que nenhum trabalho pegou ainda.
+// Commits diretos e issues concluidas usam ancestralidade, sem confiar no relogio.
+// Cheio (MAX_STOPS): a versao e o trabalho pendente ficam; entregas antigas saem.
 export const MAX_STOPS = 14;
 export const STATUSES = ['live', 'reh', 'next'];
 const LOCALES = ['en', 'pt', 'es'];
@@ -16,7 +13,7 @@ const mentions = (text, n) => new RegExp(`(^|[^\\w&])#${n}(?!\\d)`).test(text ??
 const time = (iso) => (iso ? Date.parse(iso) : Number.NEGATIVE_INFINITY);
 
 export function classifyStops({
-  versions, prs, branches, issues, installedUntil, debutUntil = installedUntil, installerCommit, debutCommit = installerCommit,
+  versions, prs, branches, issues, commits = [], installedUntil, debutUntil = installedUntil, installerCommit, debutCommit = installerCommit,
 }) {
   const newest = [...versions].sort((a, b) => time(a.builtAt) - time(b.builtAt)).at(-1);
   const version = newest
@@ -33,7 +30,13 @@ export function classifyStops({
   const debut = time(debutUntil);
   // PR mergeado na main até um release: o merge dele é o commit do release, ou veio antes. O GitHub marca
   // o merge até 1 s depois do commit de merge, então o commit do próprio release é conferido pelo SHA.
-  const upTo = (p, sha, when) => (sha && p.mergeCommit?.oid === sha) || time(p.mergedAt) <= when;
+  const bySha = new Map(commits.map((c) => [c.sha, c]));
+  const upTo = (p, sha, when) => {
+    if (sha && p.mergeCommit?.oid === sha) return true;
+    const proof = bySha.get(p.mergeCommit?.oid);
+    if (proof) return sha === installerCommit ? proof.installed : proof.beforeDebut;
+    return time(p.mergedAt) <= when;
+  };
 
   const reh = [];
   const delivered = [];
@@ -75,12 +78,34 @@ export function classifyStops({
       source: { kind: 'branch', name: b.name, title: b.lastMessage },
     });
   }
+  // PR, issue e commit podem representar a mesma entrega; o PR conserva seu ID antigo.
+  const representedPrs = new Set(prs.filter((p) => isStop(p) && p.state !== 'CLOSED').map((p) => p.number));
+  const coveredByPr = (c) => (c.prNumbers ?? []).some((n) => representedPrs.has(n)) ||
+    prs.some((p) => representedPrs.has(p.number) && p.mergeCommit?.oid === c.sha);
+  const representedCommits = new Set();
+  for (const issue of issues) {
+    if (issue.state !== 'CLOSED' || issue.stateReason !== 'COMPLETED') continue;
+    const work = (issue.commitShas ?? []).map((sha) => bySha.get(sha));
+    if (!work.length || work.some((c) => !c) || work.every((c) => c.beforeDebut) || work.every(coveredByPr)) continue;
+    const shipped = work.every((c) => c.installed);
+    const at = [...work].sort((a, b) => time(b.committedAt) - time(a.committedAt))[0].committedAt;
+    const source = { kind: 'issue', number: issue.number, title: issue.title, body: issue.body, completed: true };
+    (shipped ? delivered : reh).push({ id: `issue:${issue.number}`, status: shipped ? 'live' : 'reh',
+      date: at.slice(0, 10), sortAt: time(at), source });
+    for (const c of work) representedCommits.add(c.sha);
+  }
+  for (const c of commits) {
+    if (!c.feature || c.beforeDebut || coveredByPr(c) || representedCommits.has(c.sha)) continue;
+    (c.installed ? delivered : reh).push({ id: `commit:${c.sha}`, status: c.installed ? 'live' : 'reh',
+      date: c.committedAt.slice(0, 10), sortAt: time(c.committedAt),
+      source: { kind: 'commit', sha: c.sha, title: c.title, body: c.body } });
+  }
   reh.sort((a, b) => b.sortAt - a.sortAt);
 
   const alive = prs.filter((p) => p.state !== 'CLOSED');
   const pickedUp = (n) => alive.some((p) => picksUp(p, n)) || branches.some((b) => b.name.startsWith(`${n}-`));
   const next = issues
-    .filter((i) => roadmap.includes(i.number) && !pickedUp(i.number))
+    .filter((i) => i.state !== 'CLOSED' && roadmap.includes(i.number) && !pickedUp(i.number))
     .sort((a, b) => time(a.createdAt) - time(b.createdAt))
     .map((i) => ({
       id: `issue:${i.number}`,

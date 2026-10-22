@@ -51,9 +51,11 @@ The Rack draws one pedal per built-in effect, in the order of MAW's EFEITO menu 
 
 World Tour is generated rather than maintained by hand: `npm run tour` reads MAW's GitHub repository and writes `src/data/tour.json` (specification §11).
 
-- **On the road**: the version included in the website's installer (`mawCommit` in `release.json`).
-- **Rehearsing**: a feature PR (`feature/*` or a `feat…` title) merged into MAW's `main` after that installer, an open feature PR, or a `feature/*` branch with work but no PR.
+- **On the road**: the installer version (`mawCommit` in `release.json`) and features delivered after the debut and included in that installer.
+- **Rehearsing**: a feature PR, a direct `feat:` commit on `main`, or completed issue work that has not reached that installer; also open feature PRs and `feature/*` branches with work but no PR.
 - **Announced**: an open MAW issue labelled `roadmap`. A PR that mentions `#number`, or a branch created from the issue (`73-…`), moves it to Rehearsing. A `feature/…` branch without a PR does not identify its related issue: cite `#number` in the PR.
+
+Direct commits and completed issues are read from the last 120 days, with at most 400 main commits, 200 closed issues and 30 issue timelines considered per sync. A closed issue needs a main commit linked by a closing event, a closing keyword, or a completion comment with an unambiguous commit SHA. Closing an issue alone never marks it delivered: every linked commit must be an ancestor of the installer commit. Maintenance-only commits are omitted, and linked PR/issue/commit representations are deduplicated. Existing stop IDs and saved translations remain available. Reaching a collection limit emits a warning; incomplete timelines do not supply completion evidence.
 
 For each new stop, Claude CLI on this PC writes a short title in EN/PT/ES. Any text can be corrected directly in `src/data/tour.json`; existing translations are never overwritten. `npm run check:tour` (part of `check:dist`) blocks deployment if text is missing or the snapshot does not match the current installer.
 

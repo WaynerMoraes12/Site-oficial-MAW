@@ -18,8 +18,13 @@ export function versionText(version) {
 }
 
 export function buildPrompt(source) {
+  const descriptions = {
+    issue: source.completed ? 'implemented work on main (completed GitHub issue; installer inclusion is checked separately)' : 'a planned feature (GitHub issue)',
+    commit: 'a feature commit on main (installer inclusion is checked separately)',
+    branch: 'work in progress (git branch)',
+  };
   const what = [
-    `Source: ${source.kind === 'issue' ? 'a planned feature (GitHub issue)' : source.kind === 'branch' ? 'work in progress (git branch)' : 'a feature pull request'} of MAW, written in Portuguese.`,
+    `Source: ${descriptions[source.kind] ?? 'a feature pull request'} of MAW, written in Portuguese.`,
     `Title: ${source.title ?? source.name ?? ''}`,
     source.body ? `Description (excerpt):\n${String(source.body).slice(0, BODY_LIMIT)}` : '',
   ]

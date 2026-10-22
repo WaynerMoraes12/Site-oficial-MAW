@@ -26,6 +26,12 @@ describe('buildPrompt', () => {
     expect(p).toContain('envios auxiliares, barramentos e grupos');
     expect(p).toContain('Barramento com cadeia');
   });
+  it('describes main commits and completed issues without calling them planned', () => {
+    expect(buildPrompt({ kind: 'commit', title: 'feat: Crunch' })).toContain('feature commit on main');
+    const prompt = buildPrompt({ kind: 'issue', completed: true, title: 'Camera' });
+    expect(prompt).toContain('implemented work on main');
+    expect(prompt).not.toContain('a planned feature');
+  });
   it('keeps long descriptions short', () => {
     const p = buildPrompt({ kind: 'pr', number: 1, title: 't', body: 'y'.repeat(5000) });
     expect(p.length).toBeLessThan(3500);

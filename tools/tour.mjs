@@ -6,6 +6,7 @@ import { dirname, join } from 'node:path';
 import { pageShowsDownload } from './lib/release-check.mjs';
 import { adoptMawRelease, classifyStops, mergeTexts, rememberTexts, snapshotProblems, updateVersions } from './lib/tour.mjs';
 import { buildPrompt, parseTexts, versionText } from './lib/tour-texts.mjs';
+import { collectMainWork } from './lib/tour-github.mjs';
 
 const REPO = 'WaynerMoraes12/MAW';
 const OUT = 'src/data/tour.json';
@@ -95,8 +96,11 @@ const prs = ghJson(
   'pr', 'list', '-R', REPO, '--state', 'all', '--limit', '1000',
   '--json', 'number,title,body,headRefName,baseRefName,state,mergedAt,mergeCommit,createdAt,updatedAt',
 );
-const issues = ghJson('issue', 'list', '-R', REPO, '--state', 'open', '--label', 'roadmap', '--limit', '200', '--json', 'number,title,body,createdAt,labels')
+const openIssues = ghJson('issue', 'list', '-R', REPO, '--state', 'open', '--label', 'roadmap', '--limit', '200', '--json', 'number,title,body,createdAt,labels')
   .map((i) => ({ ...i, labels: i.labels.map((l) => l.name) }));
+const mainWork = collectMainWork({ api: (path) => ghJson('api', path), repo: REPO, installerCommit, debutCommit, prs });
+for (const warning of mainWork.warnings) console.warn(warning);
+const issues = [...new Map([...openIssues, ...mainWork.issues].map((i) => [i.number, i])).values()];
 // branches de recurso e os criados a partir de uma issue ("73-plugin-vst3"): quanto trabalho têm fora da main
 const branches = gh('api', '--paginate', `repos/${REPO}/branches?per_page=100`, '--jq', '.[].name')
   .split(/\r?\n/)
@@ -107,7 +111,7 @@ const branches = gh('api', '--paginate', `repos/${REPO}/branches?per_page=100`, 
     return { name, ahead: c.ahead ?? 0, lastCommitAt: c.at ?? '', lastMessage: (c.message ?? '').split('\n')[0] };
   });
 
-const stops = mergeTexts(classifyStops({ versions, prs, branches, issues, installedUntil, debutUntil, installerCommit, debutCommit }), previous);
+const stops = mergeTexts(classifyStops({ versions, prs, branches, issues, commits: mainWork.commits, installedUntil, debutUntil, installerCommit, debutCommit }), previous);
 const fresh = stops.filter((s) => !s.text);
 for (const stop of fresh) {
   try {
