@@ -29,11 +29,13 @@ export const es: Dictionary = {
       'STEMS EN 2, 4 O 5 PARTES',
       'LA VOZ SE VUELVE MARCADOR',
       'SMART MIX ENCUENTRA CHOQUES DE FRECUENCIA',
-      '10.949 VERIFICACIONES AUTOMÁTICAS',
+      '11.349 VERIFICACIONES AUTOMÁTICAS',
       'VST3 + ASIO',
       'WAV · FLAC · OGG · MP3',
       'AUTOTUNE CON TONO Y ESCALA',
       'CÁMARA + AUDIO CON EFECTOS · 3 ARCHIVOS',
+      'LATENCIA COMPENSADA: LA TOMA QUEDA A TIEMPO',
+      'CRUNCH: AMPLI DE GUITARRA CON GABINETE DE 12"',
     ],
   },
   stage: {
@@ -56,7 +58,7 @@ export const es: Dictionary = {
         name: 'Lado A',
         subtitle: 'GRABAR Y EDITAR',
         tracks: [
-          { title: 'Grabación multipista de 24 bits', detail: 'Varias pistas a la vez por ASIO, con monitoreo de entrada' },
+          { title: 'Grabación multipista de 24 bits', detail: 'Por ASIO, con monitoreo de entrada; la latencia de la interfaz se compensa y la toma queda a tiempo' },
           { title: 'Metrónomo y cuenta previa', detail: 'Pitido, madera o aro, tap tempo, 1 o 2 compases de entrada' },
           { title: 'Cortes, fades y crossfades', detail: 'Un micro-fade automático de 5 ms en cada corte' },
           { title: 'Cuadrícula con imán y tresillos', detail: 'De 1/1 a 1/32, con selección de lazo y ajuste fino' },
@@ -71,7 +73,7 @@ export const es: Dictionary = {
         subtitle: 'MEZCLAR Y ENTREGAR',
         tracks: [
           { title: 'Mezclador con medidores de pico', detail: 'Aviso rojo de clip, paneo, mute, solo, armado y fader master' },
-          { title: 'Rack de efectos + VST3', detail: '7 efectos internos en cadena, con compensación de latencia de plugins' },
+          { title: 'Rack de efectos + VST3', detail: '8 efectos internos, como el amplificador de guitarra Crunch, y compensación de latencia de plugins' },
           { title: 'AutoTune con tono y escala', detail: 'Mayor, menor, pentatónicas y cromática' },
           { title: 'Automatización', detail: 'Volumen, paneo y parámetros de efectos, dibujados directamente en la pista' },
           { title: 'Deshacer con nombre', detail: '50 niveles, incluidos cambios de mezcla y de efectos' },
@@ -134,9 +136,9 @@ export const es: Dictionary = {
   },
   rack: {
     eyebrow: 'El Rack',
-    titleBefore: 'Siete pedales',
+    titleBefore: 'Ocho pedales',
     titleAfter: 'y tus VST3',
-    lede: 'Efectos en cadena, cada uno con BYPASS, panel propio y reordenación ▲▼. Los plugins VST3 entran en el mismo rack, con compensación de latencia.',
+    lede: 'Efectos en cadena, cada uno con BYPASS, panel propio y reordenación ▲▼. Crunch es un amplificador de guitarra: dos etapas de saturación con oversampling 4x, graves, medios, agudos y gabinete de 12 pulgadas hecho con filtros. Los plugins VST3 entran en el mismo rack, con compensación de latencia.',
     boardAria: 'Efectos internos',
     shots: [
       { alt: 'Panel de AutoTune con cantidad, velocidad, tono y escala', caption: 'AUTOTUNE — CANTIDAD, VELOCIDAD, TONO, ESCALA' },
@@ -150,7 +152,7 @@ export const es: Dictionary = {
     lede: 'Ningún bloqueo de MAW en la ruta de reproducción. Medido, no prometido — y puedes reproducirlo en tu propio PC.',
     stats: [
       { label: 'del bloque de audio', sub: '32 pistas · 48 kHz · 512 muestras' },
-      { label: 'verificaciones automáticas', sub: 'en 853 bloques de prueba integrados' },
+      { label: 'verificaciones automáticas', sub: 'en 886 bloques de prueba integrados' },
       { label: 'bits de grabación', sub: 'ASIO, varias pistas a la vez' },
       { label: 'niveles de deshacer', sub: 'cada uno con el nombre de su acción' },
     ],

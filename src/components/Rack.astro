@@ -1,6 +1,7 @@
 ---
 import { Picture } from 'astro:assets';
-import { pedals, rackShots } from '../data/rack';
+import { effectNames, pedals, rackShots } from '../data/rack';
+import Keep from './Keep.astro';
 import type { Dictionary } from '../i18n';
 
 interface Props {
@@ -14,7 +15,7 @@ const r = t.rack;
     <div class="sec-head">
       <div class="eyebrow">{r.eyebrow}</div>
       <h2 class="chrome h-rock">{r.titleBefore} <span class="bolt" aria-hidden="true"></span> {r.titleAfter}</h2>
-      <p class="lede mt">{r.lede}</p>
+      <p class="lede mt"><Keep text={r.lede} terms={effectNames} /></p>
     </div>
     <ul class="board" aria-label={r.boardAria}>
       {pedals.map((p) => (

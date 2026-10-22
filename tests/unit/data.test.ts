@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { channels } from '../../src/data/channels';
 import { visibleChannels } from '../../src/lib/channels';
 import { trackKeys } from '../../src/data/tracklist';
+import { stats } from '../../src/data/backstage';
 import { existsSync, readFileSync } from 'node:fs';
 import tour from '../../src/data/tour.json';
 import { snapshotProblems } from '../../tools/lib/tour.mjs';
@@ -36,6 +37,17 @@ describe('site data', () => {
       const texts = [t.meta.description, t.hero.ledeAfter, t.hero.meta, t.download.lede, t.readBefore.platforms.title, t.faq.items[1].a];
       for (const text of texts) expect(text, locale).toMatch(/Windows[\s\S]*macOS[\s\S]*Linux/);
     }
+  });
+  it('repeats the backstage numbers in the ticker, with the same test blocks in every language', () => {
+    const [load, checks] = stats;
+    for (const locale of locales) {
+      const pick = (s: (typeof stats)[number]) => (locale === 'en' ? s.value : s.valueComma);
+      const items = dictionaries[locale].ticker.items;
+      expect(items.some((item) => item.includes(` ${pick(load)} `)), locale).toBe(true);
+      expect(items.some((item) => item.startsWith(`${pick(checks)} `)), locale).toBe(true);
+    }
+    const blocks = locales.map((locale) => dictionaries[locale].backstage.stats[1].sub.match(/\d+/)?.[0]);
+    expect(new Set(blocks).size, blocks.join(' / ')).toBe(1);
   });
   it('has 8 FAQ entries and 8 rider rows in every language', () => {
     for (const locale of locales) {

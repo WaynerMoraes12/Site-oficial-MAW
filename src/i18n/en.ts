@@ -30,11 +30,13 @@ export const en: Dictionary = {
       'STEMS IN 2, 4 OR 5 PARTS',
       'SPEECH BECOMES MARKERS',
       'SMART MIX FINDS FREQUENCY CLASHES',
-      '10,949 AUTOMATED CHECKS',
+      '11,349 AUTOMATED CHECKS',
       'VST3 + ASIO',
       'WAV · FLAC · OGG · MP3',
       'AUTOTUNE WITH KEY AND SCALE',
       'CAMERA + PROCESSED AUDIO · 3 FILES',
+      'LATENCY COMPENSATED: TAKES LAND ON THE BEAT',
+      'CRUNCH: GUITAR AMP WITH A 12" CABINET',
     ],
   },
   stage: {
@@ -57,7 +59,7 @@ export const en: Dictionary = {
         name: 'Side A',
         subtitle: 'RECORD & EDIT',
         tracks: [
-          { title: '24-bit multitrack recording', detail: 'Several tracks at once through ASIO, with input monitoring' },
+          { title: '24-bit multitrack recording', detail: 'Through ASIO, with input monitoring; interface latency is compensated, so takes land on the beat' },
           { title: 'Metronome & count-in', detail: 'Beep, wood or rim sounds, tap tempo, 1 or 2 bars of count-in' },
           { title: 'Split, fades & crossfades', detail: 'An automatic 5 ms micro-fade on every cut' },
           { title: 'Snap grid with triplets', detail: 'From 1/1 to 1/32, with lasso selection and nudge' },
@@ -72,7 +74,7 @@ export const en: Dictionary = {
         subtitle: 'MIX & DELIVER',
         tracks: [
           { title: 'Mixer with peak meters', detail: 'Red clip latch, pan, mute, solo, arm and a master fader' },
-          { title: 'Effects rack + VST3', detail: '7 built-in effects in a chain, with plugin delay compensation' },
+          { title: 'Effects rack + VST3', detail: '8 built-in effects, such as the Crunch guitar amp, plus plugin delay compensation' },
           { title: 'AutoTune with key & scale', detail: 'Major, minor, pentatonics and chromatic' },
           { title: 'Automation', detail: 'Volume, pan and effect parameters, drawn right on the track' },
           { title: 'Named undo', detail: '50 levels, including mix and effect changes' },
@@ -135,9 +137,9 @@ export const en: Dictionary = {
   },
   rack: {
     eyebrow: 'The Rack',
-    titleBefore: 'Seven pedals',
+    titleBefore: 'Eight pedals',
     titleAfter: 'and your VST3s',
-    lede: 'Effects in a chain, each with BYPASS, its own panel and ▲▼ reordering. VST3 plugins join the same rack, with latency compensation.',
+    lede: 'Effects in a chain, each with BYPASS, its own panel and ▲▼ reordering. Crunch is a guitar amp: two saturation stages with 4x oversampling, bass, mid, treble and a 12-inch cabinet built from filters. VST3 plugins join the same rack, with latency compensation.',
     boardAria: 'Built-in effects',
     shots: [
       { alt: 'AutoTune panel with amount, speed, key and scale controls', caption: 'AUTOTUNE — AMOUNT, SPEED, KEY, SCALE' },
@@ -151,7 +153,7 @@ export const en: Dictionary = {
     lede: 'No MAW locks on the playback path. Measured, not promised — and you can reproduce it on your own PC.',
     stats: [
       { label: 'of the audio block', sub: '32 tracks · 48 kHz · 512 samples' },
-      { label: 'automated checks', sub: 'in 853 built-in test blocks' },
+      { label: 'automated checks', sub: 'in 886 built-in test blocks' },
       { label: 'bit recording', sub: 'ASIO, several tracks at once' },
       { label: 'undo levels', sub: 'each one named after its action' },
     ],

@@ -49,7 +49,7 @@ test('brand names, app buttons and shortcuts are protected from browser translat
   expect(unprotected).toEqual([]);
 });
 
-test('the demo project and the synth presets keep their app names under the browser translator', async ({ page }) => {
+test('the demo project, the synth presets and the Crunch keep their app names under the browser translator', async ({ page }) => {
   for (const path of ['/', '/pt/', '/es/']) {
     await page.goto(path);
     // percorre todo texto visível da página: qualquer ocorrência fora de translate="no" é pega, até no meio de uma frase
@@ -67,8 +67,8 @@ test('the demo project and the synth presets keep their app names under the brow
         }
       }
       return { found, loose };
-    }, ['Noite Roxa', 'Senoide', 'Orgao']);
-    expect(Object.keys(found).sort(), path).toEqual(['Noite Roxa', 'Orgao', 'Senoide']);
+    }, ['Noite Roxa', 'Senoide', 'Orgao', 'Crunch']);
+    expect(Object.keys(found).sort(), path).toEqual(['Crunch', 'Noite Roxa', 'Orgao', 'Senoide']);
     expect(loose, path).toEqual([]);
   }
 });

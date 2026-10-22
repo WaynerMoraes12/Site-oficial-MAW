@@ -17,14 +17,14 @@ test('every AI card says where it runs', async ({ page }) => {
   await expect(page.locator('#ai .card', { hasText: 'Stem separation' }).locator('.runtime')).toHaveText('Needs the MAW Neural Server');
 });
 
-test('rack shows the seven built-in effects as pedals', async ({ page }) => {
+test('rack shows the eight built-in effects as pedals', async ({ page }) => {
   const names = await page.locator('#rack .pedal .name').allTextContents();
-  expect(names.map((n) => n.replace(/\u00ad/g, ''))).toEqual(['Noise Gate', 'Distortion', 'Equalizer', 'Compressor', 'Reverb', 'Delay', 'AutoTune']);
+  expect(names.map((n) => n.replace(/\u00ad/g, ''))).toEqual(['Noise Gate', 'Distortion', 'Crunch', 'Equalizer', 'Compressor', 'Reverb', 'Delay', 'AutoTune']);
   await expect(page.locator('#rack figure.shot')).toHaveCount(3);
 });
 
 test('backstage shows the measured numbers', async ({ page }) => {
-  await expect(page.locator('#backstage .stat .v')).toHaveText(['0.37%', '10,949', '24', '50']);
+  await expect(page.locator('#backstage .stat .v')).toHaveText(['0.37%', '11,349', '24', '50']);
   await expect(page.locator('#backstage figure.shot')).toHaveCount(2);
 });
 
