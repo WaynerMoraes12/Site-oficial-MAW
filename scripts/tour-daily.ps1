@@ -41,7 +41,7 @@ if ((Run 'npm run tour') -ne 0) {
 }
 
 if (git status --porcelain -- $all) {
-  $message = "-m `"$subject`" -m `"Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`""
+  $message = "-m `"$subject`""
   if ((Run "git commit $message -- $($all -join ' ')") -ne 0) {
     Run "git checkout -- $($all -join ' ')" | Out-Null
     Log 'commit falhou; dados desfeitos, amanhã tenta de novo'
