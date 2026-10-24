@@ -59,113 +59,113 @@
       }
     },
     {
-      "id": "pr:71",
-      "status": "live",
-      "date": "2026-09-28",
+      "id": "issue:84",
+      "status": "reh",
+      "date": "2026-10-22",
       "text": {
-        "en": "Time-stretch & pitch shift for every clip",
-        "pt": "Esticar o tempo e mudar o tom de cada clipe",
-        "es": "Estirar el tiempo y cambiar el tono de cada clip"
+        "en": "Recording right on time: audio, MIDI & punch-in",
+        "pt": "Gravação no tempo exato: áudio, MIDI e punch-in",
+        "es": "Grabación sin desfase: audio, MIDI y punch-in"
       }
     },
     {
-      "id": "pr:70",
-      "status": "live",
-      "date": "2026-09-28",
+      "id": "issue:85",
+      "status": "reh",
+      "date": "2026-10-22",
       "text": {
-        "en": "MAW runs natively on Linux",
-        "pt": "A MAW roda nativamente no Linux",
-        "es": "MAW funciona de forma nativa en Linux"
+        "en": "Lyric transcription with voice filter",
+        "pt": "Transcrição de letra com filtro de voz",
+        "es": "Transcripción de letra con filtro de voz"
       }
     },
     {
-      "id": "pr:67",
-      "status": "live",
-      "date": "2026-09-25",
+      "id": "issue:82",
+      "status": "reh",
+      "date": "2026-10-22",
       "text": {
-        "en": "Tempo map: BPM & time signature changes",
-        "pt": "Mapa de andamento: mudanças de BPM e compasso",
-        "es": "Mapa de tempo: cambios de BPM y de compás"
+        "en": "Recordings land on time: latency compensation",
+        "pt": "Gravações no tempo: compensação de latência",
+        "es": "Grabaciones a tiempo: compensación de latencia"
       }
     },
     {
-      "id": "pr:66",
-      "status": "live",
-      "date": "2026-09-25",
+      "id": "issue:81",
+      "status": "reh",
+      "date": "2026-10-22",
       "text": {
-        "en": "CC & pitch bend lanes in the piano roll",
-        "pt": "Faixas de CC e pitch bend no piano roll",
-        "es": "Carriles de CC y pitch bend en el piano roll"
+        "en": "Faster camera, auto input & twin webcams",
+        "pt": "Câmera ágil, IN automático e webcams gêmeas",
+        "es": "Cámara ágil, IN automático y webcams gemelas"
       }
     },
     {
-      "id": "pr:65",
-      "status": "live",
-      "date": "2026-09-25",
+      "id": "issue:83",
+      "status": "reh",
+      "date": "2026-10-21",
       "text": {
-        "en": "Freeze tracks to free up your CPU",
-        "pt": "Congelar trilhas para aliviar a CPU",
-        "es": "Congelar pistas para liberar la CPU"
+        "en": "Crunch guitar amp for direct recording",
+        "pt": "Amplificador Crunch: guitarra direto na placa",
+        "es": "Amplificador Crunch para grabar guitarra directa"
       }
     },
     {
-      "id": "pr:64",
-      "status": "live",
-      "date": "2026-09-24",
+      "id": "commit:19a431317e8e181fcd4246029a47c01acded229b",
+      "status": "reh",
+      "date": "2026-10-19",
       "text": {
-        "en": "Loop recording, takes & comping",
-        "pt": "Gravação em ciclo, tomadas e montagem",
-        "es": "Grabación en bucle, tomas y comping"
+        "en": "Per-camera sync & auto input monitoring",
+        "pt": "Sincronia por câmera e monitoração automática",
+        "es": "Sincronía por cámara y monitoreo automático"
       }
     },
     {
-      "id": "pr:63",
-      "status": "live",
-      "date": "2026-09-24",
+      "id": "commit:6ce2a656639116e2dd160170ab6fc063beec077a",
+      "status": "reh",
+      "date": "2026-10-19",
       "text": {
-        "en": "MIDI learn for mixer, transport & effects",
-        "pt": "MIDI learn para mesa, transporte e efeitos",
-        "es": "MIDI learn para mezclador, transporte y efectos"
+        "en": "Camera capture on Windows, macOS & Linux",
+        "pt": "Captura de câmera no Windows, macOS e Linux",
+        "es": "Captura de cámara en Windows, macOS y Linux"
       }
     },
     {
-      "id": "pr:62",
-      "status": "live",
-      "date": "2026-09-24",
+      "id": "commit:bd1ed488d88c915a5cc58fcd4e90be399ee2bbe6",
+      "status": "reh",
+      "date": "2026-10-19",
       "text": {
-        "en": "Sidechain for the compressor & noise gate",
-        "pt": "Sidechain no compressor e no noise gate",
-        "es": "Sidechain en el compresor y el noise gate"
+        "en": "Post-ready MP4 camera video, always in sync",
+        "pt": "Vídeo MP4 pronto para postar, em sincronia",
+        "es": "Video MP4 listo para publicar, en sincronía"
       }
     },
     {
-      "id": "pr:61",
-      "status": "live",
-      "date": "2026-09-24",
+      "id": "commit:54300edd24393568ef1d25df72d588db851a1f04",
+      "status": "reh",
+      "date": "2026-10-19",
       "text": {
-        "en": "Sampler, drum kits & step sequencer",
-        "pt": "Sampler, kit de bateria e sequenciador de passos",
-        "es": "Sampler, kit de batería y secuenciador de pasos"
+        "en": "Camera capture on macOS & Linux",
+        "pt": "Captura de câmera no macOS e no Linux",
+        "es": "Captura de cámara en macOS y Linux"
       }
     },
     {
-      "id": "pr:60",
-      "status": "live",
-      "date": "2026-09-24",
+      "id": "commit:1853319dbddcc93ef959fdea8ea4fa83a23ade89",
+      "status": "reh",
+      "date": "2026-10-19",
       "text": {
-        "en": "Aux sends, buses & track groups",
-        "pt": "Envios auxiliares, barramentos e grupos",
-        "es": "Envíos auxiliares, buses y grupos"
+        "en": "Camera capture on Linux and macOS",
+        "pt": "Captura de câmera no Linux e no macOS",
+        "es": "Captura de cámara en Linux y macOS"
       }
     },
     {
-      "id": "pr:58",
-      "status": "live",
-      "date": "2026-09-23",
+      "id": "commit:e48c91761cc61ce350fb9cfe16f03c3ee3da6fa3",
+      "status": "reh",
+      "date": "2026-10-19",
       "text": {
-        "en": "Tuner for guitar, bass, ukulele & more",
-        "pt": "Afinador para guitarra, baixo, ukulele e mais",
-        "es": "Afinador para guitarra, bajo, ukulele y más"
+        "en": "Camera capture with processed audio (Windows)",
+        "pt": "Captura de câmera com áudio processado (Windows)",
+        "es": "Captura de cámara con audio procesado (Windows)"
       }
     }
   ],
@@ -274,6 +274,61 @@
       "en": "Version 1.0.5",
       "pt": "Versão 1.0.5",
       "es": "Versión 1.0.5"
+    },
+    "issue:84": {
+      "en": "Recording right on time: audio, MIDI & punch-in",
+      "pt": "Gravação no tempo exato: áudio, MIDI e punch-in",
+      "es": "Grabación sin desfase: audio, MIDI y punch-in"
+    },
+    "issue:85": {
+      "en": "Lyric transcription with voice filter",
+      "pt": "Transcrição de letra com filtro de voz",
+      "es": "Transcripción de letra con filtro de voz"
+    },
+    "issue:82": {
+      "en": "Recordings land on time: latency compensation",
+      "pt": "Gravações no tempo: compensação de latência",
+      "es": "Grabaciones a tiempo: compensación de latencia"
+    },
+    "issue:81": {
+      "en": "Faster camera, auto input & twin webcams",
+      "pt": "Câmera ágil, IN automático e webcams gêmeas",
+      "es": "Cámara ágil, IN automático y webcams gemelas"
+    },
+    "issue:83": {
+      "en": "Crunch guitar amp for direct recording",
+      "pt": "Amplificador Crunch: guitarra direto na placa",
+      "es": "Amplificador Crunch para grabar guitarra directa"
+    },
+    "commit:19a431317e8e181fcd4246029a47c01acded229b": {
+      "en": "Per-camera sync & auto input monitoring",
+      "pt": "Sincronia por câmera e monitoração automática",
+      "es": "Sincronía por cámara y monitoreo automático"
+    },
+    "commit:6ce2a656639116e2dd160170ab6fc063beec077a": {
+      "en": "Camera capture on Windows, macOS & Linux",
+      "pt": "Captura de câmera no Windows, macOS e Linux",
+      "es": "Captura de cámara en Windows, macOS y Linux"
+    },
+    "commit:bd1ed488d88c915a5cc58fcd4e90be399ee2bbe6": {
+      "en": "Post-ready MP4 camera video, always in sync",
+      "pt": "Vídeo MP4 pronto para postar, em sincronia",
+      "es": "Video MP4 listo para publicar, en sincronía"
+    },
+    "commit:54300edd24393568ef1d25df72d588db851a1f04": {
+      "en": "Camera capture on macOS & Linux",
+      "pt": "Captura de câmera no macOS e no Linux",
+      "es": "Captura de cámara en macOS y Linux"
+    },
+    "commit:1853319dbddcc93ef959fdea8ea4fa83a23ade89": {
+      "en": "Camera capture on Linux and macOS",
+      "pt": "Captura de câmera no Linux e no macOS",
+      "es": "Captura de cámara en Linux y macOS"
+    },
+    "commit:e48c91761cc61ce350fb9cfe16f03c3ee3da6fa3": {
+      "en": "Camera capture with processed audio (Windows)",
+      "pt": "Captura de câmera com áudio processado (Windows)",
+      "es": "Captura de cámara con audio procesado (Windows)"
     }
   }
 }
