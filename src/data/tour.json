@@ -49,13 +49,13 @@
       }
     },
     {
-      "id": "pr:74",
-      "status": "live",
-      "date": "2026-09-28",
+      "id": "issue:86",
+      "status": "reh",
+      "date": "2026-10-25",
       "text": {
-        "en": "Automatic updates with the AI included",
-        "pt": "Atualização automática com a IA inclusa",
-        "es": "Actualización automática con la IA incluida"
+        "en": "Smooth camera preview without hiding the editor",
+        "pt": "Prévia da câmera fluida sem cobrir o editor",
+        "es": "Vista de cámara fluida sin cubrir el editor"
       }
     },
     {
@@ -329,6 +329,11 @@
       "en": "Camera capture with processed audio (Windows)",
       "pt": "Captura de câmera com áudio processado (Windows)",
       "es": "Captura de cámara con audio procesado (Windows)"
+    },
+    "issue:86": {
+      "en": "Smooth camera preview without hiding the editor",
+      "pt": "Prévia da câmera fluida sem cobrir o editor",
+      "es": "Vista de cámara fluida sin cubrir el editor"
     }
   }
 }
