@@ -30,7 +30,7 @@ export const en: Dictionary = {
       'STEMS IN 2, 4 OR 5 PARTS',
       'SPEECH BECOMES MARKERS',
       'SMART MIX FINDS FREQUENCY CLASHES',
-      '11,349 AUTOMATED CHECKS',
+      '11,564 AUTOMATED CHECKS',
       'VST3 + ASIO',
       'WAV · FLAC · OGG · MP3',
       'AUTOTUNE WITH KEY AND SCALE',
@@ -153,7 +153,7 @@ export const en: Dictionary = {
     lede: 'No MAW locks on the playback path. Measured, not promised — and you can reproduce it on your own PC.',
     stats: [
       { label: 'of the audio block', sub: '32 tracks · 48 kHz · 512 samples' },
-      { label: 'automated checks', sub: 'in 886 built-in test blocks' },
+      { label: 'automated checks', sub: 'in 907 built-in test blocks' },
       { label: 'bit recording', sub: 'ASIO, several tracks at once' },
       { label: 'undo levels', sub: 'each one named after its action' },
     ],

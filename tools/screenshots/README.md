@@ -6,6 +6,9 @@ Refaz os prints de `src/assets/screens/` com o projeto demo "Noite Roxa".
 
 1. `python tools/screenshots/make_demo.py`: gera o áudio sintetizado e `Noite Roxa.maw`, em `Music\MAW Demo` (um WAV por clipe, offset 0).
 2. Abrir a MAW de Release. `tools/screenshots/maw.ps1` tem as ações `launch`, `click -X -Y`, `keys`, `scroll`, `capture -Out` e `kill`. As coordenadas são físicas e valem para uma tela 1920×1080 com escala de 125%.
+   - `-Exe` aponta para outro build (ex.: um worktree com a `main` mais nova: `git worktree add --detach C:\Users\User\MAW_prints origin/main` e compilar Release x64 lá).
+   - `windows` lista as janelas abertas da MAW; `capturewin -Title 'AutoTune' -Out x.png` fotografa uma janela (efeito, Smart Mix, Conselheiro…) recortada pela moldura dela, sem caixa fixa.
+   - **Não bloqueie a tela (Windows+L)**: bloqueada, o Windows não deixa capturar nem mexer o mouse e os prints saem pretos. Desligar só o monitor não atrapalha.
 3. Carregar o projeto (MENU → Load Project), ajustar o zoom (MENU → Ajustar zoom ao projeto) e capturar as telas:
    - arranjo tocando o refrão
    - mixer

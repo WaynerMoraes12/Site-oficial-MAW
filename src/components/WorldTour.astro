@@ -1,5 +1,9 @@
 ---
 import { tourStops, type TourStop } from '../data/tour';
+import { synthPresets } from '../data/tracklist';
+import { effectNames } from '../data/rack';
+import { demoProject } from '../data/stage';
+import Keep from './Keep.astro';
 import type { Dictionary, Locale } from '../i18n';
 
 interface Props {
@@ -8,6 +12,8 @@ interface Props {
 }
 const { t, locale } = Astro.props;
 const tour = t.tour;
+// os textos das paradas vêm da sincronização diária e citam o app ("Crunch guitar amp…"): o tradutor não mexe nesses nomes
+const appNames = [...synthPresets, ...effectNames, demoProject];
 // na estrada: mês e ano da versão; ensaiando e anunciado: o rótulo de cada um
 const when = (stop: TourStop) =>
   stop.status === 'live'
@@ -25,7 +31,7 @@ const when = (stop: TourStop) =>
       {tourStops.map((stop) => (
         <li class="date">
           <span class="when">{when(stop)}</span>
-          <span class="what">{stop.text[locale]}</span>
+          <span class="what"><Keep text={stop.text[locale]} terms={appNames} /></span>
           <span class={`stamp ${stop.status}`}>{tour.stamps[stop.status]}</span>
         </li>
       ))}

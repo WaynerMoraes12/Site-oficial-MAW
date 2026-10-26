@@ -29,7 +29,7 @@ export const es: Dictionary = {
       'STEMS EN 2, 4 O 5 PARTES',
       'LA VOZ SE VUELVE MARCADOR',
       'SMART MIX ENCUENTRA CHOQUES DE FRECUENCIA',
-      '11.349 VERIFICACIONES AUTOMÁTICAS',
+      '11.564 VERIFICACIONES AUTOMÁTICAS',
       'VST3 + ASIO',
       'WAV · FLAC · OGG · MP3',
       'AUTOTUNE CON TONO Y ESCALA',
@@ -152,7 +152,7 @@ export const es: Dictionary = {
     lede: 'Ningún bloqueo de MAW en la ruta de reproducción. Medido, no prometido — y puedes reproducirlo en tu propio PC.',
     stats: [
       { label: 'del bloque de audio', sub: '32 pistas · 48 kHz · 512 muestras' },
-      { label: 'verificaciones automáticas', sub: 'en 886 bloques de prueba integrados' },
+      { label: 'verificaciones automáticas', sub: 'en 907 bloques de prueba integrados' },
       { label: 'bits de grabación', sub: 'ASIO, varias pistas a la vez' },
       { label: 'niveles de deshacer', sub: 'cada uno con el nombre de su acción' },
     ],

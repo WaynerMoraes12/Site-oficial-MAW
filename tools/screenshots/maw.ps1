@@ -1,6 +1,10 @@
 param(
-    [Parameter(Mandatory = $true)][ValidateSet('launch', 'capture', 'click', 'rclick', 'dblclick', 'move', 'keys', 'key', 'info', 'kill', 'drag', 'scroll')][string]$Action,
+    [Parameter(Mandatory = $true)][ValidateSet('launch', 'capture', 'capturewin', 'windows', 'click', 'rclick', 'dblclick', 'move', 'keys', 'key', 'info', 'kill', 'drag', 'scroll')][string]$Action,
     [string]$Out,
+    # capturewin: título (ou parte) de uma janela da MAW, recortada pela moldura visível dela
+    [string]$Title,
+    # outro build da MAW (por exemplo um worktree com a main mais nova)
+    [string]$Exe = 'C:\Users\User\MAW\Builds\VisualStudio2022\x64\Release\App\MAW_APP.exe',
     [int]$X, [int]$Y, [int]$X2, [int]$Y2,
     [string]$Keys,
     [int]$Delta = -120,
@@ -12,8 +16,30 @@ Add-Type -AssemblyName System.Windows.Forms
 if (-not ([System.Management.Automation.PSTypeName]'MawWin2').Type) {
 Add-Type @"
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 public static class MawWin2 {
+    public delegate bool EnumProc(IntPtr h, IntPtr l);
+    [DllImport("user32.dll")] public static extern bool EnumWindows(EnumProc cb, IntPtr l);
+    [DllImport("user32.dll")] public static extern bool IsWindowVisible(IntPtr h);
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)] public static extern int GetWindowText(IntPtr h, StringBuilder s, int n);
+    [DllImport("dwmapi.dll")] public static extern int DwmGetWindowAttribute(IntPtr h, int a, out RECT r, int size);
+    // janelas visíveis do processo, com título (a principal, os efeitos, os diálogos)
+    public static List<KeyValuePair<IntPtr, string>> WindowsOf(uint pid) {
+        var found = new List<KeyValuePair<IntPtr, string>>();
+        EnumWindows((h, l) => {
+            uint p; GetWindowThreadProcessId(h, out p);
+            if (p == pid && IsWindowVisible(h)) {
+                var sb = new StringBuilder(256); GetWindowText(h, sb, 256);
+                if (sb.Length > 0) found.Add(new KeyValuePair<IntPtr, string>(h, sb.ToString()));
+            }
+            return true;
+        }, IntPtr.Zero);
+        return found;
+    }
+    // moldura visível (sem a borda invisível de redimensionar do Windows 10/11)
+    public static RECT VisibleRect(IntPtr h) { RECT r; DwmGetWindowAttribute(h, 9, out r, Marshal.SizeOf(typeof(RECT))); return r; }
     [DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
     [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr h);
     [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr h, int c);
@@ -29,7 +55,7 @@ public static class MawWin2 {
 }
 [MawWin2]::SetProcessDPIAware() | Out-Null
 
-$exe = 'C:\Users\User\MAW\Builds\VisualStudio2022\x64\Release\App\MAW_APP.exe'
+$exe = $Exe
 
 function Get-MawProc { Get-Process MAW_APP -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne 0 } | Select-Object -First 1 }
 
@@ -81,6 +107,32 @@ switch ($Action) {
         $bmp.Save($Out, [System.Drawing.Imaging.ImageFormat]::Png)
         $bmp.Dispose()
         "saved $Out ($($b.Width)x$($b.Height))"
+    }
+    'windows' {
+        $p = Get-MawProc
+        if (-not $p) { throw 'MAW nao esta aberta' }
+        foreach ($w in [MawWin2]::WindowsOf([uint32]$p.Id)) {
+            $r = [MawWin2]::VisibleRect($w.Key)
+            "hwnd=$($w.Key) rect=$($r.L),$($r.T),$($r.R),$($r.B) title='$($w.Value)'"
+        }
+    }
+    'capturewin' {
+        $p = Get-MawProc
+        if (-not $p) { throw 'MAW nao esta aberta' }
+        $win = [MawWin2]::WindowsOf([uint32]$p.Id) | Where-Object { $_.Value -like "*$Title*" } | Select-Object -First 1
+        if (-not $win) { throw "nenhuma janela da MAW com '$Title'" }
+        [System.Windows.Forms.SendKeys]::SendWait('%')
+        [MawWin2]::SetForegroundWindow($win.Key) | Out-Null
+        Start-Sleep -Milliseconds $WaitMs
+        $r = [MawWin2]::VisibleRect($win.Key)
+        $w = $r.R - $r.L; $h = $r.B - $r.T
+        $bmp = New-Object System.Drawing.Bitmap $w, $h
+        $g = [System.Drawing.Graphics]::FromImage($bmp)
+        $g.CopyFromScreen($r.L, $r.T, 0, 0, $bmp.Size)
+        $g.Dispose()
+        $bmp.Save($Out, [System.Drawing.Imaging.ImageFormat]::Png)
+        $bmp.Dispose()
+        "saved $Out (${w}x${h}) '$($win.Value)'"
     }
     'move' { [MawWin2]::SetCursorPos($X, $Y) | Out-Null; 'ok' }
     'click' { Focus-Maw | Out-Null; [MawWin2]::SetCursorPos($X, $Y) | Out-Null; Start-Sleep -Milliseconds 80; Mouse 0x0002 0x0004; Start-Sleep -Milliseconds $WaitMs; 'ok' }

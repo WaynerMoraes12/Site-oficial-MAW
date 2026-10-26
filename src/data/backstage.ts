@@ -6,7 +6,7 @@ import tests from '../assets/screens/det-testes.png';
 // Rótulos em src/i18n (backstage.stats).
 export const stats: { value: string; valueComma: string; purple?: boolean }[] = [
   { value: '0.37%', valueComma: '0,37%' },
-  { value: '11,349', valueComma: '11.349', purple: true },
+  { value: '11,564', valueComma: '11.564', purple: true },
   { value: '24', valueComma: '24' },
   { value: '50', valueComma: '50', purple: true },
 ];
