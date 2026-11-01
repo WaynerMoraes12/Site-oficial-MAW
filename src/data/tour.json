@@ -1,5 +1,5 @@
 {
-  "installerCommit": "fe4182d79b4eeac8b1505c9bf61f610d79b21ace",
+  "installerCommit": "38062382621cda7d776508228e28df2dc1d7c32a",
   "versions": [
     {
       "version": "1.0.0",
@@ -25,17 +25,142 @@
       "version": "1.0.5",
       "mawCommit": "fe4182d79b4eeac8b1505c9bf61f610d79b21ace",
       "builtAt": "2026-10-04T19:58:18.919Z"
+    },
+    {
+      "version": "1.0.6",
+      "mawCommit": "38062382621cda7d776508228e28df2dc1d7c32a",
+      "builtAt": "2026-11-01T18:45:54.236Z"
     }
   ],
   "stops": [
     {
-      "id": "version:1.0.5",
+      "id": "version:1.0.6",
       "status": "live",
-      "date": "2026-10-04",
+      "date": "2026-11-01",
       "text": {
-        "en": "Version 1.0.5",
-        "pt": "Versão 1.0.5",
-        "es": "Versión 1.0.5"
+        "en": "Version 1.0.6",
+        "pt": "Versão 1.0.6",
+        "es": "Versión 1.0.6"
+      }
+    },
+    {
+      "id": "issue:86",
+      "status": "live",
+      "date": "2026-10-25",
+      "text": {
+        "en": "Smooth camera preview without hiding the editor",
+        "pt": "Prévia da câmera fluida sem cobrir o editor",
+        "es": "Vista de cámara fluida sin cubrir el editor"
+      }
+    },
+    {
+      "id": "issue:84",
+      "status": "live",
+      "date": "2026-10-22",
+      "text": {
+        "en": "Recording right on time: audio, MIDI & punch-in",
+        "pt": "Gravação no tempo exato: áudio, MIDI e punch-in",
+        "es": "Grabación sin desfase: audio, MIDI y punch-in"
+      }
+    },
+    {
+      "id": "issue:85",
+      "status": "live",
+      "date": "2026-10-22",
+      "text": {
+        "en": "Lyric transcription with voice filter",
+        "pt": "Transcrição de letra com filtro de voz",
+        "es": "Transcripción de letra con filtro de voz"
+      }
+    },
+    {
+      "id": "issue:82",
+      "status": "live",
+      "date": "2026-10-22",
+      "text": {
+        "en": "Recordings land on time: latency compensation",
+        "pt": "Gravações no tempo: compensação de latência",
+        "es": "Grabaciones a tiempo: compensación de latencia"
+      }
+    },
+    {
+      "id": "issue:81",
+      "status": "live",
+      "date": "2026-10-22",
+      "text": {
+        "en": "Faster camera, auto input & twin webcams",
+        "pt": "Câmera ágil, IN automático e webcams gêmeas",
+        "es": "Cámara ágil, IN automático y webcams gemelas"
+      }
+    },
+    {
+      "id": "issue:83",
+      "status": "live",
+      "date": "2026-10-21",
+      "text": {
+        "en": "Crunch guitar amp for direct recording",
+        "pt": "Amplificador Crunch: guitarra direto na placa",
+        "es": "Amplificador Crunch para grabar guitarra directa"
+      }
+    },
+    {
+      "id": "commit:19a431317e8e181fcd4246029a47c01acded229b",
+      "status": "live",
+      "date": "2026-10-19",
+      "text": {
+        "en": "Per-camera sync & auto input monitoring",
+        "pt": "Sincronia por câmera e monitoração automática",
+        "es": "Sincronía por cámara y monitoreo automático"
+      }
+    },
+    {
+      "id": "commit:6ce2a656639116e2dd160170ab6fc063beec077a",
+      "status": "live",
+      "date": "2026-10-19",
+      "text": {
+        "en": "Camera capture on Windows, macOS & Linux",
+        "pt": "Captura de câmera no Windows, macOS e Linux",
+        "es": "Captura de cámara en Windows, macOS y Linux"
+      }
+    },
+    {
+      "id": "commit:bd1ed488d88c915a5cc58fcd4e90be399ee2bbe6",
+      "status": "live",
+      "date": "2026-10-19",
+      "text": {
+        "en": "Post-ready MP4 camera video, always in sync",
+        "pt": "Vídeo MP4 pronto para postar, em sincronia",
+        "es": "Video MP4 listo para publicar, en sincronía"
+      }
+    },
+    {
+      "id": "commit:54300edd24393568ef1d25df72d588db851a1f04",
+      "status": "live",
+      "date": "2026-10-19",
+      "text": {
+        "en": "Camera capture on macOS & Linux",
+        "pt": "Captura de câmera no macOS e no Linux",
+        "es": "Captura de cámara en macOS y Linux"
+      }
+    },
+    {
+      "id": "commit:1853319dbddcc93ef959fdea8ea4fa83a23ade89",
+      "status": "live",
+      "date": "2026-10-19",
+      "text": {
+        "en": "Camera capture on Linux and macOS",
+        "pt": "Captura de câmera no Linux e no macOS",
+        "es": "Captura de cámara en Linux y macOS"
+      }
+    },
+    {
+      "id": "commit:e48c91761cc61ce350fb9cfe16f03c3ee3da6fa3",
+      "status": "live",
+      "date": "2026-10-19",
+      "text": {
+        "en": "Camera capture with processed audio (Windows)",
+        "pt": "Captura de câmera com áudio processado (Windows)",
+        "es": "Captura de cámara con audio procesado (Windows)"
       }
     },
     {
@@ -46,126 +171,6 @@
         "en": "41 fixes from the first round of testing",
         "pt": "41 correções da primeira rodada de testes",
         "es": "41 correcciones de la primera ronda de pruebas"
-      }
-    },
-    {
-      "id": "issue:86",
-      "status": "reh",
-      "date": "2026-10-25",
-      "text": {
-        "en": "Smooth camera preview without hiding the editor",
-        "pt": "Prévia da câmera fluida sem cobrir o editor",
-        "es": "Vista de cámara fluida sin cubrir el editor"
-      }
-    },
-    {
-      "id": "issue:84",
-      "status": "reh",
-      "date": "2026-10-22",
-      "text": {
-        "en": "Recording right on time: audio, MIDI & punch-in",
-        "pt": "Gravação no tempo exato: áudio, MIDI e punch-in",
-        "es": "Grabación sin desfase: audio, MIDI y punch-in"
-      }
-    },
-    {
-      "id": "issue:85",
-      "status": "reh",
-      "date": "2026-10-22",
-      "text": {
-        "en": "Lyric transcription with voice filter",
-        "pt": "Transcrição de letra com filtro de voz",
-        "es": "Transcripción de letra con filtro de voz"
-      }
-    },
-    {
-      "id": "issue:82",
-      "status": "reh",
-      "date": "2026-10-22",
-      "text": {
-        "en": "Recordings land on time: latency compensation",
-        "pt": "Gravações no tempo: compensação de latência",
-        "es": "Grabaciones a tiempo: compensación de latencia"
-      }
-    },
-    {
-      "id": "issue:81",
-      "status": "reh",
-      "date": "2026-10-22",
-      "text": {
-        "en": "Faster camera, auto input & twin webcams",
-        "pt": "Câmera ágil, IN automático e webcams gêmeas",
-        "es": "Cámara ágil, IN automático y webcams gemelas"
-      }
-    },
-    {
-      "id": "issue:83",
-      "status": "reh",
-      "date": "2026-10-21",
-      "text": {
-        "en": "Crunch guitar amp for direct recording",
-        "pt": "Amplificador Crunch: guitarra direto na placa",
-        "es": "Amplificador Crunch para grabar guitarra directa"
-      }
-    },
-    {
-      "id": "commit:19a431317e8e181fcd4246029a47c01acded229b",
-      "status": "reh",
-      "date": "2026-10-19",
-      "text": {
-        "en": "Per-camera sync & auto input monitoring",
-        "pt": "Sincronia por câmera e monitoração automática",
-        "es": "Sincronía por cámara y monitoreo automático"
-      }
-    },
-    {
-      "id": "commit:6ce2a656639116e2dd160170ab6fc063beec077a",
-      "status": "reh",
-      "date": "2026-10-19",
-      "text": {
-        "en": "Camera capture on Windows, macOS & Linux",
-        "pt": "Captura de câmera no Windows, macOS e Linux",
-        "es": "Captura de cámara en Windows, macOS y Linux"
-      }
-    },
-    {
-      "id": "commit:bd1ed488d88c915a5cc58fcd4e90be399ee2bbe6",
-      "status": "reh",
-      "date": "2026-10-19",
-      "text": {
-        "en": "Post-ready MP4 camera video, always in sync",
-        "pt": "Vídeo MP4 pronto para postar, em sincronia",
-        "es": "Video MP4 listo para publicar, en sincronía"
-      }
-    },
-    {
-      "id": "commit:54300edd24393568ef1d25df72d588db851a1f04",
-      "status": "reh",
-      "date": "2026-10-19",
-      "text": {
-        "en": "Camera capture on macOS & Linux",
-        "pt": "Captura de câmera no macOS e no Linux",
-        "es": "Captura de cámara en macOS y Linux"
-      }
-    },
-    {
-      "id": "commit:1853319dbddcc93ef959fdea8ea4fa83a23ade89",
-      "status": "reh",
-      "date": "2026-10-19",
-      "text": {
-        "en": "Camera capture on Linux and macOS",
-        "pt": "Captura de câmera no Linux e no macOS",
-        "es": "Captura de cámara en Linux y macOS"
-      }
-    },
-    {
-      "id": "commit:e48c91761cc61ce350fb9cfe16f03c3ee3da6fa3",
-      "status": "reh",
-      "date": "2026-10-19",
-      "text": {
-        "en": "Camera capture with processed audio (Windows)",
-        "pt": "Captura de câmera com áudio processado (Windows)",
-        "es": "Captura de cámara con audio procesado (Windows)"
       }
     }
   ],
@@ -334,6 +339,11 @@
       "en": "Smooth camera preview without hiding the editor",
       "pt": "Prévia da câmera fluida sem cobrir o editor",
       "es": "Vista de cámara fluida sin cubrir el editor"
+    },
+    "version:1.0.6": {
+      "en": "Version 1.0.6",
+      "pt": "Versão 1.0.6",
+      "es": "Versión 1.0.6"
     }
   }
 }
