@@ -6,7 +6,10 @@ export function localRefs(html) {
   for (const m of html.matchAll(/\ssrcset="([^"]+)"/g)) {
     for (const part of m[1].split(',')) refs.push(part.trim().split(/\s+/)[0]);
   }
-  for (const m of html.matchAll(/url\(\s*(?:&quot;|["'])?([^"')\s]+?)(?:&quot;|["'])?\s*\)/g)) refs.push(m[1]);
+  // imagem embutida (data:) tem os próprios url(#id) lá dentro, que apontam para dentro da imagem, não para o site;
+  // ela não tem espaço nem aspas (vão codificados) e termina na aspa que fecha o url()
+  const css = html.replace(/data:[^\s"']*?(?=&quot;|["'])/g, 'data:');
+  for (const m of css.matchAll(/url\(\s*(?:&quot;|["'])?([^"')\s]+?)(?:&quot;|["'])?\s*\)/g)) refs.push(m[1]);
   // fora: outros esquemas (https:, mailto:, data:...), protocolo relativo e âncoras da própria página
   return refs.filter((r) => r && !/^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i.test(r));
 }

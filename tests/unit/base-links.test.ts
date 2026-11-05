@@ -39,6 +39,11 @@ describe('brokenRefs', () => {
   it('flags missing files under the base', () => {
     expect(brokenRefs('<a href="/Site-oficial-MAW/press/x.zip">', '/Site-oficial-MAW/', exists([]))).toEqual(['/Site-oficial-MAW/press/x.zip']);
   });
+  it('ignores the url() references inside an embedded data: image (they point inside the image, not to the site)', () => {
+    const cloth = 'data:image/svg+xml,%3Csvg%3E%3Cg%20clip-path%3D%22url(%23t)%22%3E%3Crect%20fill%3D%22url(%23b)%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E';
+    const html = `<div style="--cloth:url(&quot;${cloth}&quot;)"></div><img src="/_astro/gone.png">`;
+    expect(brokenRefs(html, '/Site-oficial-MAW/', exists([]))).toEqual(['/_astro/gone.png']);
+  });
   it('maps the base itself to index.html', () => {
     expect(brokenRefs('<a href="/Site-oficial-MAW/">', '/Site-oficial-MAW', exists(['index.html']))).toEqual([]);
   });

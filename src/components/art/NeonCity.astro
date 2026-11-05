@@ -1,0 +1,84 @@
+---
+// Cenário do World Tour: céu do fim de tarde num futuro de neon, um relógio gigante nascendo atrás dos prédios
+// e carros voando. Só cenário: desenhado no build (semente fixa), escondido do leitor de tela.
+import { skyline } from '../../lib/scenery';
+
+// 2400 de largura com a parte do meio (0..1440) no centro: telas largas veem mais cidade em vez de cortar o relógio
+const far = skyline(21, { width: 2400, height: 570, minTop: 380, maxTop: 490 });
+const near = skyline(8, { width: 2400, height: 640, minTop: 475, maxTop: 585 });
+// dois minutos para a meia-noite
+const hand = (deg: number, len: number) => {
+  const a = (deg * Math.PI) / 180;
+  return `M0 0L${Math.round(Math.sin(a) * len)} ${Math.round(-Math.cos(a) * len)}`;
+};
+const ticks = Array.from({ length: 60 }, (_, i) => {
+  const a = (i * Math.PI) / 30;
+  const big = i % 5 === 0;
+  const r0 = big ? 178 : 192;
+  const f = (v: number) => Math.round(v * 10) / 10;
+  return { big, d: `M${f(Math.sin(a) * r0)} ${f(-Math.cos(a) * r0)}L${f(Math.sin(a) * 206)} ${f(-Math.cos(a) * 206)}` };
+});
+const numerals = ['XII', 'I', 'II', 'III', 'IIII', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'].map((n, i) => {
+  const a = (i * Math.PI) / 6;
+  return { n, x: Math.round(Math.sin(a) * 150), y: Math.round(-Math.cos(a) * 150) };
+});
+---
+<div class="art-city" aria-hidden="true">
+  <svg viewBox="-480 0 2400 640" preserveAspectRatio="xMidYMax slice" focusable="false">
+    <defs>
+      <linearGradient id="city-sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#000" />
+        <stop offset=".36" stop-color="#0b0624" />
+        <stop offset=".52" stop-color="#2b0b52" />
+        <stop offset=".62" stop-color="#6d1762" />
+        <stop offset=".7" stop-color="#c23268" />
+        <stop offset=".77" stop-color="#ff7b3a" />
+        <stop offset="1" stop-color="#ff9a4a" />
+      </linearGradient>
+      <linearGradient id="city-far" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#3a1257" />
+        <stop offset="1" stop-color="#14061f" />
+      </linearGradient>
+      <linearGradient id="city-fade" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#000" stop-opacity="0" />
+        <stop offset="1" stop-color="#000" />
+      </linearGradient>
+      <radialGradient id="city-clock-face">
+        <stop offset=".55" stop-color="#5ce1ff" stop-opacity="0" />
+        <stop offset=".93" stop-color="#5ce1ff" stop-opacity=".1" />
+        <stop offset="1" stop-color="#5ce1ff" stop-opacity="0" />
+      </radialGradient>
+      <filter id="city-neon" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="5" result="glow" />
+        <feMerge><feMergeNode in="glow" /><feMergeNode in="SourceGraphic" /></feMerge>
+      </filter>
+    </defs>
+    <rect x="-480" y="0" width="2400" height="640" fill="url(#city-sky)" />
+    <g class="city-clock" transform="translate(720 400)">
+      <circle r="230" fill="url(#city-clock-face)" />
+      <g filter="url(#city-neon)">
+        <circle r="214" class="clock-ring" />
+        <circle r="168" class="clock-ring thin" />
+        {ticks.map((t) => <path d={t.d} class={t.big ? 'clock-tick big' : 'clock-tick'} />)}
+        {numerals.map((n) => <text x={n.x} y={n.y} class="clock-num">{n.n}</text>)}
+        <path d={hand(359, 112)} class="clock-hand hour" />
+        <path d={hand(348, 172)} class="clock-hand minute" />
+        <circle r="7" class="clock-hub" />
+      </g>
+      <g class="clock-second"><path d="M0 24V-196" /></g>
+    </g>
+    <g transform="translate(-480 0)">
+      <path d={far.towers} fill="url(#city-far)" />
+      <path d={far.neon} class="city-neon far" />
+    </g>
+    <g transform="translate(-480 0)">
+      <path d={near.towers} fill="#05020a" />
+      <path d={near.windows[0]} class="city-win w0" />
+      <path d={near.windows[1]} class="city-win w1" />
+      <path d={near.windows[2]} class="city-win w2" />
+      <path d={near.neon} class="city-neon" />
+    </g>
+    <rect x="-480" y="540" width="2400" height="100" fill="url(#city-fade)" />
+  </svg>
+  <div class="city-cars"><i class="car c1"></i><i class="car c2"></i><i class="car c3"></i></div>
+</div>

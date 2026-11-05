@@ -1,0 +1,22 @@
+---
+// Cenário das dúvidas: noite azul, lua cheia, uma árvore seca e retorcida atravessando a lua, neblina rente ao chão
+// e um par de olhos que acende no escuro. Desenhado no build (semente fixa), escondido do leitor de tela.
+import { gnarledTree } from '../../lib/scenery';
+
+const big = gnarledTree(13, 600, 760);
+const back = gnarledTree(41, 420, 560);
+---
+<div class="art-forest" aria-hidden="true">
+  <div class="moon"></div>
+  <svg class="tree tree-back" viewBox="0 0 420 560" preserveAspectRatio="xMidYMax meet" focusable="false">
+    {back.map((l) => <path d={l.d} stroke-width={l.width} />)}
+  </svg>
+  <svg class="tree tree-main" viewBox="0 0 600 760" preserveAspectRatio="xMidYMax meet" focusable="false">
+    {big.map((l) => <path d={l.d} stroke-width={l.width} />)}
+  </svg>
+  <div class="fog f1"></div>
+  <div class="fog f2"></div>
+  <div class="fog f3"></div>
+  <div class="eyes e1"><i></i><i></i></div>
+  <div class="eyes e2"><i></i><i></i></div>
+</div>

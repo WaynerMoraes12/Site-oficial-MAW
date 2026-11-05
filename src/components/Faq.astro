@@ -1,5 +1,6 @@
 ---
 import type { Dictionary } from '../i18n';
+import NightForest from './art/NightForest.astro';
 
 interface Props {
   t: Dictionary;
@@ -7,6 +8,7 @@ interface Props {
 const { t } = Astro.props;
 ---
 <section class="sec faq" id="faq">
+  <NightForest />
   <div class="wrap faq-grid">
     <div>
       <div class="eyebrow">{t.faq.eyebrow}</div>

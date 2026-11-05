@@ -4,6 +4,7 @@ import { synthPresets } from '../data/tracklist';
 import { effectNames } from '../data/rack';
 import { demoProject } from '../data/stage';
 import Keep from './Keep.astro';
+import NeonCity from './art/NeonCity.astro';
 import type { Dictionary, Locale } from '../i18n';
 
 interface Props {
@@ -23,6 +24,7 @@ const when = (stop: TourStop) =>
       : tour.whenNext;
 ---
 <section class="sec tour" id="tour">
+  <NeonCity />
   <div class="wrap">
     <div class="eyebrow">{tour.eyebrow}</div>
     <h2 class="h-tour chrome" translate="no">{tour.title}</h2>

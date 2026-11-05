@@ -1,0 +1,56 @@
+---
+// Cenário dos bastidores: a bandeira de batalha rasgada, furada e chamuscada, tremulando no mastro no meio da
+// fumaça, com brasas subindo. Desenhada no build (semente fixa), escondida do leitor de tela.
+// Tremular: o pano é um SVG desenhado uma vez só (imagem de fundo) e fatiado em 30 faixas que sobem e descem com
+// atraso, cada vez mais longe do mastro. Só transform e opacity mudam: o navegador não redesenha o pano a cada quadro.
+import { embers, rng } from '../../lib/scenery';
+
+const W = 600;
+const H = 300;
+const strips = Array.from({ length: 30 }, (_, k) => k);
+
+const r = rng(1854);
+const torn: string[] = ['M0 0', 'L430 0'];
+for (let x = 450; x <= W; x += 18) torn.push(`L${x} ${Math.round(r() * 12)}`);
+for (let y = 14; y < H; y += 14) {
+  const notch = r() < 0.22 ? 40 + r() * 50 : r() * 26;
+  torn.push(`L${Math.round(W - notch)} ${y}`);
+}
+for (let x = W; x >= 450; x -= 18) torn.push(`L${x} ${Math.round(H - r() * 14)}`);
+torn.push('L430 300', 'L0 300Z');
+
+const holes = Array.from({ length: 6 }, () => `<circle cx="${Math.round(170 + r() * 380)}" cy="${Math.round(30 + r() * 240)}" r="${Math.round(4 + r() * 6)}"/>`);
+const scorch = Array.from({ length: 5 }, () => `<circle cx="${Math.round(300 + r() * 300)}" cy="${Math.round(r() * H)}" r="${Math.round(40 + r() * 70)}" fill="url(#b)"/>`);
+
+const cloth =
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">` +
+  `<defs><clipPath id="t"><path d="${torn.join('')}"/></clipPath>` +
+  `<clipPath id="h"><path d="M300 150h300v150zv150h-300zh-300v-150zv-150h300z"/></clipPath>` +
+  `<mask id="m" maskUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#fff"/><g fill="#000">${holes.join('')}</g></mask>` +
+  `<radialGradient id="b"><stop offset="0" stop-color="#140904" stop-opacity=".85"/><stop offset="1" stop-color="#140904" stop-opacity="0"/></radialGradient>` +
+  `<radialGradient id="a" cx=".35" cy=".45" r=".75"><stop offset=".45" stop-opacity="0"/><stop offset="1" stop-color="#0a0503" stop-opacity=".6"/></radialGradient></defs>` +
+  `<g clip-path="url(#t)" mask="url(#m)">` +
+  `<rect width="${W}" height="${H}" fill="#1d2a57"/>` +
+  `<path d="M0 0L600 300M600 0L0 300" stroke="#d6cdb8" stroke-width="60"/>` +
+  `<path d="M0 0L600 300M600 0L0 300" stroke="#8c1b23" stroke-width="40" clip-path="url(#h)"/>` +
+  `<path d="M300 0v300M0 150h600" stroke="#d6cdb8" stroke-width="100"/>` +
+  `<path d="M300 0v300M0 150h600" stroke="#8c1b23" stroke-width="60"/>` +
+  `${scorch.join('')}<rect width="${W}" height="${H}" fill="url(#a)"/></g></svg>`;
+const clothUrl = `url("data:image/svg+xml,${encodeURIComponent(cloth)}")`;
+const sparks = embers(1854, 26);
+---
+<div class="art-flag" aria-hidden="true">
+  <div class="smoke-b s1"></div>
+  <div class="smoke-b s2"></div>
+  <div class="flag" style={`--cloth:${clothUrl}`}>
+    <span class="flag-pole"></span>
+    <div class="flag-cloth">
+      {strips.map((k) => <i style={`--k:${k}`}></i>)}
+    </div>
+  </div>
+  <div class="embers">
+    {sparks.map((e) => (
+      <i style={`left:${e.left}%;width:${e.size}px;height:${e.size}px;animation-duration:${e.duration}s;animation-delay:${e.delay}s;--drift:${e.drift}px`}></i>
+    ))}
+  </div>
+</div>

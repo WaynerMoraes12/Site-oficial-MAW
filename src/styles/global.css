@@ -189,7 +189,6 @@ section { position: relative; }
 .shot figcaption { font-family: var(--f-mono); font-size: 11.5px; color: #8a849c; margin-top: 10px; letter-spacing: .04em; }
 
 /* ================= BASTIDORES (motor) ================= */
-.engine { background: #000; }
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid #22222a; border-radius: 10px; overflow: hidden; margin-bottom: 30px; }
 .stat { padding: 30px 26px; background: #07070a; }
 .stat + .stat { border-left: 1px solid #22222a; }
@@ -291,13 +290,115 @@ table.input { width: 100%; border-collapse: collapse; font-family: var(--f-mono)
 .credit dd small { display: block; font-weight: 400; font-size: 14px; color: #5a514a; }
 
 /* ================= FAQ ================= */
-.faq { background: #0a0a0d; }
 .faq-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 60px; }
 details { border-bottom: 1px solid #25252d; padding: 20px 0; }
 summary { cursor: pointer; list-style: none; font-family: var(--f-cond); font-weight: 600; font-size: 22px; letter-spacing: .02em; display: flex; justify-content: space-between; gap: 20px; }
 summary::after { content: '+'; color: var(--maw-bright); font-family: var(--f-mono); }
 details[open] summary::after { content: '–'; }
 details p { color: #aaa5ba; margin-top: 10px; max-width: 640px; }
+
+/* ================= CENÁRIOS DE DISCO =================
+   Cidade de neon com o relógio nascendo (World Tour), floresta à noite com a lua (dúvidas) e a bandeira de batalha
+   na fumaça (bastidores). Só cenário: atrás do texto, sem clique, parado para quem pede menos movimento. */
+.tour, .faq, .engine { overflow: hidden; }
+.tour > .wrap, .faq > .wrap, .engine > .wrap { position: relative; z-index: 1; }
+.art-city, .art-forest, .art-flag { position: absolute; z-index: 0; pointer-events: none; }
+
+/* World Tour: o futuro de neon */
+.tour { --city-h: clamp(430px, 46vw, 660px); }
+.art-city { top: 0; left: 0; right: 0; height: var(--city-h); }
+.art-city svg { display: block; width: 100%; height: 100%; }
+.tour .dates { margin-top: max(56px, calc(var(--city-h) - 380px)); }
+.tour .years { color: #ffb36b; text-shadow: 0 0 18px rgba(255,123,58,.6); }
+.city-clock { opacity: .62; }
+.clock-ring { fill: none; stroke: #5ce1ff; stroke-width: 3; opacity: .8; }
+.clock-ring.thin { stroke-width: 1.2; opacity: .45; }
+.clock-tick { stroke: #5ce1ff; stroke-width: 2; opacity: .55; }
+.clock-tick.big { stroke-width: 4; opacity: .95; }
+.clock-num { fill: #a9f3ff; font-family: var(--f-wide); font-size: 19px; text-anchor: middle; dominant-baseline: central; letter-spacing: .04em; opacity: .75; }
+.clock-hand { stroke: #ff9a4a; stroke-linecap: round; }
+.clock-hand.hour { stroke-width: 9; }
+.clock-hand.minute { stroke-width: 6; }
+.clock-hub { fill: #ff9a4a; }
+.clock-second path { stroke: #ff4fd8; stroke-width: 2; }
+.clock-second { animation: clock-sweep 60s steps(60) infinite; }
+@keyframes clock-sweep { to { transform: rotate(360deg); } }
+.city-win { fill: #ffc27a; }
+.city-win.w0 { opacity: .95; }
+.city-win.w1 { fill: #8be9ff; opacity: .6; }
+.city-win.w2 { opacity: .32; }
+.city-neon { fill: none; stroke: #ff4fd8; stroke-width: 2; opacity: .85; }
+.city-neon.far { stroke: #5ce1ff; stroke-width: 1.5; opacity: .45; }
+/* carros voando: camadas próprias por cima do SVG parado, para a cidade não ser redesenhada a cada quadro */
+.city-cars { position: absolute; inset: 0; overflow: hidden; }
+.car { position: absolute; left: 0; width: 70px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent, rgba(255,154,74,.6) 85%, #fff3d6); animation: car-fly linear infinite; }
+.car.c2 { width: 54px; background: linear-gradient(90deg, transparent, rgba(92,225,255,.6) 85%, #fff3d6); }
+.car.c1 { top: 55%; animation-duration: 24s; }
+.car.c2 { top: 47%; animation-duration: 31s; animation-delay: -12s; }
+.car.c3 { top: 63%; width: 62px; animation-duration: 19s; animation-delay: -7s; }
+@keyframes car-fly { from { transform: translate(-90px, 0); } to { transform: translate(calc(100vw + 20px), -28px); } }
+
+/* Dúvidas: a noite, a lua e a árvore */
+.faq { background: radial-gradient(720px 520px at 18% 24%, rgba(110,140,230,.17), transparent 70%), linear-gradient(180deg, #02030a 0%, #06102a 58%, #03060f 100%); }
+.faq h2 { color: #eef2ff; text-shadow: 0 0 30px rgba(140,170,255,.5); }
+.faq .eyebrow { color: #a9bcff; }
+.art-forest { inset: 0; }
+/* a lua fica abaixo do título (lua branca atrás de letra branca não se lê), atravessada pelos galhos */
+.moon { position: absolute; left: clamp(24px, 6vw, 110px); bottom: clamp(130px, 21%, 230px); width: clamp(150px, 17vw, 250px); aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 64% 36%, rgba(150,165,205,.34) 0 7%, transparent 8%), radial-gradient(circle at 34% 62%, rgba(150,165,205,.3) 0 11%, transparent 12%), radial-gradient(circle at 60% 72%, rgba(150,165,205,.24) 0 6%, transparent 7%), radial-gradient(circle at 40% 36%, #f6f8ff, #d6def5 55%, #a6b5dc);
+  box-shadow: 0 0 60px 18px rgba(180,200,255,.28), 0 0 190px 70px rgba(110,140,255,.15); }
+.tree { position: absolute; bottom: 0; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.tree path { stroke: #010207; }
+.tree-main { left: clamp(-140px, -5vw, -24px); height: min(97%, 860px); aspect-ratio: 600 / 760; }
+.tree-back { right: -50px; height: min(70%, 600px); aspect-ratio: 420 / 560; }
+.tree-back path { stroke: #0b1631; }
+.fog { position: absolute; left: -20%; width: 140%; height: 230px; bottom: -50px; background: radial-gradient(ellipse 28% 50% at 25% 60%, rgba(150,170,220,.17), transparent 70%), radial-gradient(ellipse 34% 46% at 70% 56%, rgba(150,170,220,.12), transparent 70%); animation: fog-drift 46s ease-in-out infinite alternate; }
+.fog.f2 { bottom: 30px; opacity: .65; animation-duration: 63s; animation-direction: alternate-reverse; }
+.fog.f3 { bottom: -100px; height: 270px; animation-duration: 38s; }
+@keyframes fog-drift { from { transform: translateX(-6%); } to { transform: translateX(6%); } }
+.eyes { position: absolute; display: flex; gap: 10px; opacity: 0; animation: eyes-glow 13s ease-in-out infinite; }
+.eyes i { width: 11px; height: 5px; border-radius: 50%; background: #fff3b0; box-shadow: 0 0 6px 2px rgba(255,214,90,.85), 0 0 20px 7px rgba(255,170,40,.35); transform: skewY(8deg); }
+.eyes i + i { transform: skewY(-8deg); }
+.eyes.e1 { left: 27%; bottom: 190px; }
+.eyes.e2 { left: 3%; bottom: 70px; scale: .7; animation-duration: 17s; animation-delay: -7s; }
+@keyframes eyes-glow { 0%, 60%, 100% { opacity: 0; } 66%, 72%, 76%, 88% { opacity: .95; } 74% { opacity: .1; } }
+
+/* Bastidores: a bandeira de batalha na fumaça */
+.engine { background: radial-gradient(620px 420px at 84% 130px, rgba(176,0,30,.25), transparent 70%), radial-gradient(900px 380px at 12% 100%, rgba(176,70,20,.15), transparent 70%), #000; }
+.engine h2 { text-shadow: 0 0 30px rgba(200,20,40,.5); }
+.engine .eyebrow { color: #ff6b78; }
+.art-flag { inset: 0; }
+/* o pano (--cloth) é desenhado uma vez; cada uma das 30 faixas mostra a sua fatia (posição k/29) e só se move */
+.flag { position: absolute; top: 20px; right: max(-30px, calc((100% - 1240px) / 2 - 30px)); width: clamp(250px, 32vw, 470px); aspect-ratio: 670 / 440; opacity: .6; transform: rotate(-6deg); }
+.flag-pole { position: absolute; left: 4.6%; top: 6.8%; bottom: 0; width: max(4px, 1.3%); border-radius: 3px; background: linear-gradient(90deg, #22170e, #4d3a28 50%, #1d130b); }
+.flag-pole::before { content: ''; position: absolute; left: 50%; top: -13px; translate: -50% 0; border: 6px solid transparent; border-top: 0; border-bottom: 14px solid #9a8a64; }
+.flag-cloth { position: absolute; left: 5.97%; top: 13.64%; width: 89.55%; height: 68.18%; display: flex; }
+.flag-cloth i { position: relative; flex: 1 0 0; background: var(--cloth) no-repeat; background-size: 3000% 100%; background-position: calc(var(--k) * 100% / 29) 0; animation: flag-wave 2.8s ease-in-out infinite; animation-delay: calc(var(--k) * -.1s); }
+/* a sombra que corre pelas dobras: sem máscara (máscara anima a 2 fps em CPU fraca); nos rasgos ela cai sobre o
+   fundo quase preto e não aparece */
+.flag-cloth i::after { content: ''; position: absolute; inset: 0; background: #000; opacity: .1; animation: flag-shade 2.8s ease-in-out infinite; animation-delay: calc(var(--k) * -.1s - .7s); }
+@keyframes flag-wave { 0%, 100% { transform: translateY(calc(var(--k) * -.14%)); } 50% { transform: translateY(calc(var(--k) * .14%)); } }
+@keyframes flag-shade { 0%, 100% { opacity: .02; } 50% { opacity: .42; } }
+.smoke-b { position: absolute; width: 70%; height: 60%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(165,155,145,.14), transparent 65%); animation: smoke-roll 34s ease-in-out infinite alternate; }
+.smoke-b.s1 { right: -15%; top: 4%; }
+.smoke-b.s2 { left: -20%; bottom: -12%; width: 80%; background: radial-gradient(ellipse at center, rgba(140,90,65,.13), transparent 65%); animation-duration: 47s; animation-direction: alternate-reverse; }
+@keyframes smoke-roll { from { transform: translate(-4%, 2%) scale(1); } to { transform: translate(5%, -3%) scale(1.12); } }
+.embers { position: absolute; left: 0; right: 0; top: 0; height: 62%; }
+.embers i { position: absolute; bottom: 0; border-radius: 50%; background: #ffd08a; box-shadow: 0 0 7px 3px rgba(255,120,40,.8), 0 0 16px 6px rgba(255,70,20,.3); opacity: 0; animation: ember-rise linear infinite; }
+@keyframes ember-rise { 0% { transform: translate(0, 0); opacity: 0; } 12% { opacity: .9; } 75% { opacity: .5; } 100% { transform: translate(var(--drift), -440px); opacity: 0; } }
+
+@media (max-width: 560px) {
+  .tour { --city-h: 400px; }
+  .tour .dates { margin-top: calc(var(--city-h) - 280px); }
+  /* no celular o título ocupa a largura toda: lua pequena no canto, acima dele */
+  .moon { top: 12px; bottom: auto; left: auto; right: 22px; width: 92px; }
+  .eyes.e1 { left: auto; right: 18%; bottom: 120px; }
+  .tree-main { height: min(62%, 620px); }
+  .tree-back { display: none; }
+  .flag { width: 230px; top: 8px; right: -46px; opacity: .42; }
+}
+/* sem movimento: os carros voando ficariam parados num canto do céu */
+@media (prefers-reduced-motion: reduce) { .city-cars, .embers { display: none; } }
 
 /* ================= CANAIS + IMPRENSA ================= */
 .contact { background: #000; }

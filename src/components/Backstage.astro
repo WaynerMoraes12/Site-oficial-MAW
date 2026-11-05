@@ -2,6 +2,7 @@
 import { Picture } from 'astro:assets';
 import { backstageShots, stats } from '../data/backstage';
 import type { Dictionary, Locale } from '../i18n';
+import BattleFlag from './art/BattleFlag.astro';
 
 interface Props {
   t: Dictionary;
@@ -11,6 +12,7 @@ const { t, locale } = Astro.props;
 const b = t.backstage;
 ---
 <section class="sec engine" id="backstage">
+  <BattleFlag />
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">{b.eyebrow}</div>
