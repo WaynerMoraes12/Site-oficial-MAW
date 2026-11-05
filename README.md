@@ -37,11 +37,12 @@ MSYS_NO_PATHCONV=1 BASE_PATH=/Site-oficial-MAW npm run check:dist
 | All visible copy in English, Portuguese and Spanish | `src/i18n/en.ts`, `pt.ts`, `es.ts` (matching structure; tests catch untranslated English) |
 | Non-text data: shortcuts, roadmap status, numbers and images | `src/data/*.ts` |
 | Screenshots | `src/assets/screens/` (see `tools/screenshots/README.md`) |
+| Album-art scenes behind sections (neon city in the World Tour, night forest in the FAQ, battle flag in Backstage) | `src/components/art/`; the tree, the buildings and the embers are drawn at build time with a fixed seed in `src/lib/scenery.ts` |
 | Browser, Apple touch and installer icons | `python tools/make_icons.py`, using MAW's official app icon |
 
 ## Measured figures, camera and pedals
 
-The ticker and Backstage figures follow MAW's `docs/TCC-artigo.md` at `de1a226` (22 October 2026): **11,349 passing checks in 886 test blocks** on Windows, and an average **0.37% of the audio block budget for 32 tracks at 48 kHz with 512-sample blocks**. The Windows count is taken without FFmpeg; with FFmpeg and FFprobe available, the blocks that call them check more, and the same 886 blocks reach 11,389 checks. On Linux the suite has 884 blocks and 11,320 checks. The benchmark describes that measured configuration; it is not a performance guarantee for every computer or plugin chain. The values live in `src/data/backstage.ts`, and the ticker and Backstage texts of the three dictionaries repeat them; `tests/unit/data.test.ts` fails when they disagree.
+The ticker and Backstage figures follow MAW's `README.md` at `497127b` (24 October 2026), confirmed by running that build's `--run-tests` on Windows: **11,564 passing checks in 907 test blocks**, and an average **0.37% of the audio block budget for 32 tracks at 48 kHz with 512-sample blocks**. The Windows count is taken without FFmpeg on the PATH; with FFmpeg and FFprobe available, the mp3 and camera blocks check 42 more things. On Linux the suite has 905 blocks and 11,537 checks. The benchmark describes that measured configuration; it is not a performance guarantee for every computer or plugin chain. The values live in `src/data/backstage.ts`, and the ticker and Backstage texts of the three dictionaries repeat them; `tests/unit/data.test.ts` fails when they disagree.
 
 The camera take sits below the two sides of the tracklist (`Tracklist.astro`, `tracklist.camera` in the dictionaries) and follows MAW's `Source/Video/README.md`: three files per take (an MP4 ready to post with the processed audio, the same video without audio, and a 24-bit WAV at the interface's sample rate), FFmpeg 5.1+ with FFprobe, up to 20 minutes per take, and sync calibrated with a visible clap.
 
