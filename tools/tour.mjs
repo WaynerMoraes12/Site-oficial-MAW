@@ -3,7 +3,7 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { pageShowsDownload } from './lib/release-check.mjs';
+import { mergePlatforms, pageShowsDownload } from './lib/release-check.mjs';
 import { adoptMawRelease, classifyStops, mergeTexts, rememberTexts, snapshotProblems, updateVersions } from './lib/tour.mjs';
 import { buildPrompt, parseTexts, versionText } from './lib/tour-texts.mjs';
 import { collectMainWork } from './lib/tour-github.mjs';
@@ -74,8 +74,25 @@ const writeJsonIfChanged = (path, value) => {
   if (!existsSync(path) || readFileSync(path, 'utf8').replace(/\r\n/g, '\n') !== text) writeFileSync(path, text);
 };
 
+// O site só adota a versão quando a cópia pública dela existe (npm run publish-release): senão o deploy não
+// acharia o instalador e o download que já funciona sumiria do ar. Junta os pacotes de macOS, Linux e o
+// código-fonte que o release público já tiver (platforms.json).
+async function withPublicCopy(json) {
+  const base = `${readJson('src/data/site.json').releaseBaseUrl}/v${json.version}`;
+  try {
+    const head = await fetch(`${base}/${json.file}`, { headers: { Range: 'bytes=0-0' }, redirect: 'follow' });
+    if (!head.ok) return null;
+    const platforms = await fetch(`${base}/platforms.json`, { redirect: 'follow' });
+    return mergePlatforms(json, platforms.ok ? await platforms.json() : undefined);
+  } catch {
+    return null;
+  }
+}
+
 let release = readJson('src/data/release.json');
-const mawRelease = latestMawRelease();
+const latest = latestMawRelease();
+const mawRelease = latest && (await withPublicCopy(latest));
+if (latest && !mawRelease) console.log(`release da MAW ${latest.version} ainda sem cópia pública: rode npm run publish-release (o site fica na versão atual)`);
 if (mawRelease) {
   release = mawRelease;
   writeJsonIfChanged('src/data/release.json', mawRelease);

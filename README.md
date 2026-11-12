@@ -1,6 +1,6 @@
 # MAW official website
 
-Static Astro 7 website for **MAW — Musical Artificial Workspace**, the DAW for Windows, macOS and Linux with AI in the timeline. The Windows installer includes the AI environment; macOS and Linux show “coming soon” until MAW's release pipeline publishes those packages. English is served at `/`, with our Portuguese translation at `/pt/` and Spanish at `/es/`. At the root, visitors who have not chosen a language are redirected according to their browser language. Specifications are in `docs/superpowers/specs/` (translation in §10); implementation plans are in `docs/superpowers/plans/`.
+Static Astro 7 website for **MAW — Musical Artificial Workspace**, the DAW for Windows, macOS and Linux with AI in the timeline. The Windows installer includes the AI environment; the macOS and Linux packages are built in this repository from the published source. English is served at `/`, with our Portuguese translation at `/pt/` and Spanish at `/es/`. At the root, visitors who have not chosen a language are redirected according to their browser language. Specifications are in `docs/superpowers/specs/` (translation in §10); implementation plans are in `docs/superpowers/plans/`.
 
 ## Run locally
 
@@ -62,17 +62,21 @@ For each new stop, Claude CLI on this PC writes a short title in EN/PT/ES. Any t
 
 A Windows Task Scheduler task named **MAW Site - World Tour** runs `scripts/tour-daily.ps1` every day at 09:00, or when the PC starts. It synchronizes the snapshot and, if anything changed, commits only the files the sync writes (`src/data/tour.json`, `release.json` and `site.json`); whenever a World Tour commit is waiting, it pushes the current branch. It skips the run when those files have uncommitted changes, or during a merge, rebase, cherry-pick or revert. The push sends the whole branch, so local commits not yet pushed are published with it. Logs are in `%LOCALAPPDATA%\MAW-site\tour-sync.log`. Register it again with `powershell -ExecutionPolicy Bypass -File scripts\register-tour-task.ps1`; remove it with `Unregister-ScheduledTask -TaskName 'MAW Site - World Tour' -Confirm:$false`.
 
-## Installer
+## Installer and downloads
 
-The installer is now built by MAW's repository pipeline (`.github/workflows/windows-release.yml` and its `installer/` directory). Each push to MAW's `main` produces a `vX.Y.Z` release with the complete installer, including AI, and a `release.json`. `npm run tour`, including its scheduled task, downloads the latest release's `release.json` into `src/data/release.json` and tracks its version in `src/data/site.json`. The download button points to MAW's releases (`releaseBaseUrl`). While MAW's repository is private, that link is not public, and `check-release` prevents an inaccessible installer from being offered. Specification: `docs/superpowers/specs/2026-09-28-esteira-e-atualizacao-design.md`.
+MAW's repository stays private. Its pipeline (`.github/workflows/windows-release.yml` there) builds the complete Windows installer, with the AI, on every merge and publishes a private `vX.Y.Z` release with a `release.json`. The downloads offered on the site come from **this** repository's releases, which are public:
 
-This repository's `npm run installer` command (Inno Setup using a local `MAW_APP.exe`) is the legacy method, to be removed once MAW's pipeline publishes its first release. Without `release.json`, the download button displays “Installer coming soon”.
+1. `npm run publish-release [X.Y.Z]` (also run by the daily task before the World Tour sync) copies MAW's latest release here: every file of the private release, plus `MAW-X.Y.Z-source.zip` — a `git archive` of that commit without `entregas/`, the TCC files and `docs/superpowers/` (`tools/lib/publish.mjs`) — and `platforms.json`. It runs on this PC with the local `gh` login, resumes where it stopped (slow connections), and only publishes after every upload is checked. It needs no token and no paid GitHub minutes.
+2. It then starts **Build macOS e Linux** (`.github/workflows/build-mac-linux.yml`): this public repository builds the universal `MAW.app` and the Linux x86-64 package from the published source zip (checked by its SHA-256), stamps the version, runs MAW's suite, attaches `MAW-X.Y.Z-macos-universal.zip` and `MAW-X.Y.Z-linux-x86_64.tar.gz` to the release, adds them to `platforms.json` and starts the deploy. Public repositories pay no Actions minutes, Mac included.
+3. `npm run tour` adopts a new MAW version only when its public copy exists, so a failed copy never takes the working download off the site.
+
+On Mac and Linux the AI server is set up separately (guide in the package's `README.md`); stem separation does not work on Apple-chip Macs yet. Specification: `docs/superpowers/specs/2026-11-12-download-tres-sistemas-design.md`.
 
 ## Publish
 
-The website is hosted on GitHub Pages at https://waynermoraes12.github.io/Site-oficial-MAW/. This repository is public; access to MAW's repository and releases is managed separately. The `.github/workflows/deploy.yml` workflow publishes every push to `main`, including the scheduled task's World Tour and release updates. It can also be started manually through Actions → Deploy site to GitHub Pages → Run workflow. It uses `BASE_PATH=/Site-oficial-MAW`.
+The website is hosted on GitHub Pages at https://waynermoraes12.github.io/Site-oficial-MAW/. The `.github/workflows/deploy.yml` workflow publishes every push to `main`, including the scheduled task's updates, and every run started by the macOS/Linux build. It can also be started manually through Actions → Deploy site to GitHub Pages → Run workflow. It uses `BASE_PATH=/Site-oficial-MAW`.
 
-The download button appears only when the installer described by `release.json` is available and matches its metadata. `tools/check-release.mjs` downloads the file and checks its SHA-256. If verification fails, including when MAW's releases are private, deployment removes `release.json` and the website displays “Installer coming soon”. Once MAW's releases become public under the project's licensing decision, the button appears automatically on the next successful deployment.
+Before building, `tools/check-release.mjs` reads the release's `platforms.json`, downloads every file the page will link (Windows installer, macOS and Linux packages, source zip) and checks each SHA-256. Without a verified Windows installer the whole site shows “Installer coming soon”; a macOS or Linux package that is missing or different shows “coming soon” only for that system.
 
 ## Logo
 

@@ -210,24 +210,27 @@ export const pt: Dictionary = {
       { before: 'Siga o instalador: ele cria o atalho no Menu Iniciar, o desinstalador e instala o runtime do Visual C++ se estiver faltando.', bold: '', after: '' },
       { before: 'Abra a MAW e escolha sua interface de áudio em ', bold: 'MENU → Configurar placa de audio (ASIO)', after: '.', keep: true },
     ],
-    ready: 'Baixar MAW {version} · Windows',
+    ready: 'Baixar MAW {version} · {os}',
     pending: 'Instalador em breve',
     pendingNote: 'O instalador está sendo prensado. Volte daqui a pouco.',
     mac: {
       req: '11 ou mais novo · chip Apple ou Intel',
       lines: [
-        'Um MAW.app universal. Ainda não tem assinatura da Apple: na primeira vez, vá em Ajustes do Sistema → Privacidade e Segurança → Abrir Mesmo Assim.',
-        'O servidor da IA (Python 3.10) é instalado à parte. Nos Macs com chip Apple, a separação de stems ainda não funciona; a transcrição e o Conselheiro funcionam.',
+        'Descompacte e arraste o MAW.app para Aplicativos. Um app universal para chip Apple e Intel.',
+        'Ainda não tem assinatura da Apple: na primeira vez, vá em Ajustes do Sistema → Privacidade e Segurança → Abrir Mesmo Assim.',
+        'A IA (stems, transcrição) precisa do Python 3.10, instalado à parte: o guia está no README.md, dentro do zip. Nos Macs com chip Apple, a separação de stems ainda não funciona.',
       ],
     },
     linux: {
-      req: 'x86-64 · testado no Ubuntu 24.04',
+      req: 'x86-64 · Ubuntu 24.04 ou mais novo',
       lines: [
-        'Áudio por ALSA ou JACK (o PipeWire atende os dois). Plugins VST3 em ~/.vst3, /usr/lib/vst3 e /usr/local/lib/vst3.',
-        'Precisa do ffmpeg. O servidor da IA (Python 3.10) é instalado à parte.',
+        'Extraia e rode ./MAW de dentro da pasta MAW-linux.',
+        'Áudio por ALSA ou JACK (o PipeWire atende os dois). Instale o ffmpeg (sudo apt install ffmpeg) para MP3 e para a IA.',
+        'A IA (stems, transcrição) precisa do Python 3.10, instalado à parte: o guia está no README.md, dentro do pacote.',
       ],
     },
     soon: '{os} · em breve',
+    yours: 'Seu sistema',
     source: 'Código-fonte (GNU GPL v3)',
   },
   tour: {

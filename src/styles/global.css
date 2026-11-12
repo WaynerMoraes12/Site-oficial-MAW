@@ -252,10 +252,16 @@ table.input { width: 100%; border-collapse: collapse; font-family: var(--f-mono)
 .os-more { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 44px; }
 .os-card { display: flex; flex-direction: column; gap: 14px; min-width: 0; padding: 22px 22px 20px; border: 1px solid #2a2a33; border-radius: 10px; background: linear-gradient(180deg, rgba(30,30,36,.85), rgba(14,14,17,.9)); }
 .os-card .os-name { flex-direction: column; align-items: flex-start; gap: 6px; margin-top: 0; font-size: 26px; }
-.os-card ul { list-style: none; display: grid; gap: 10px; font-size: 14.5px; line-height: 1.5; color: #bdb8cc; }
-.os-card li { position: relative; padding-left: 16px; overflow-wrap: anywhere; }
-.os-card li::before { content: ''; position: absolute; left: 0; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--maw-bright); }
+.os-card ol { list-style: none; counter-reset: s; display: grid; gap: 10px; font-size: 14.5px; line-height: 1.5; color: #bdb8cc; }
+.os-card li { position: relative; counter-increment: s; padding-left: 28px; overflow-wrap: anywhere; }
+.os-card li::before { content: counter(s, decimal-leading-zero); position: absolute; left: 0; top: .1em; font-family: var(--f-seg); font-size: 15px; color: var(--maw-bright); }
 .os-card .btn { margin-top: auto; align-self: flex-start; padding: 10px 16px; font-size: 13px; }
+.os-card .hash { margin-top: 0; font-size: 11px; }
+/* o sistema de quem visita (detectado no navegador): borda acesa e o selo "seu sistema" */
+.os-yours { display: none; align-self: center; font-family: var(--f-cond); font-weight: 700; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: #fff; background: var(--maw); border-radius: 3px; padding: 3px 8px; }
+#download[data-yours="win"] .os-main[data-os="win"] .os-yours, #download[data-yours="mac"] .os-card[data-os="mac"] .os-yours, #download[data-yours="linux"] .os-card[data-os="linux"] .os-yours { display: inline-block; }
+.os-card .os-name .os-yours { align-self: flex-start; }
+#download[data-yours="mac"] .os-card[data-os="mac"], #download[data-yours="linux"] .os-card[data-os="linux"] { border-color: var(--maw-bright); box-shadow: 0 0 0 1px var(--maw-bright), 0 20px 50px -20px rgba(157,0,255,.7); }
 @media (max-width: 560px) { .os-more { grid-template-columns: minmax(0, 1fr); } }
 
 /* ================= TOUR (roadmap) ================= */

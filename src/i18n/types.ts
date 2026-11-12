@@ -6,7 +6,7 @@ export interface RichLine { before: string; bold: string; after: string; keep?: 
 export interface Shot { label: string; alt: string }
 export interface Caption { alt: string; caption: string }
 export interface PlateText { title: string; body: string }
-// req: o que o sistema precisa; lines: o que muda em relação ao Windows (a IA, a primeira abertura, o áudio)
+// req: o que o sistema precisa; lines: o passo a passo daquele sistema (abrir, primeira abertura, áudio, a IA à parte)
 export interface OsCard { req: string; lines: string[] }
 export interface AiText { hud: string; title: string; text: string; alt: string; keyLabels: string[] }
 
@@ -46,12 +46,13 @@ export interface Dictionary {
     eyebrow: string; title1: string; title2: string; unsigned: PlateText; platforms: PlateText; language: PlateText;
     aiNotBundled: PlateText; aiBundled: PlateText; privacy: PlateText; version: PlateText;
   };
-  // Windows tem o instalador (passos + botão); macOS e Linux, um cartão cada com o que muda e o botão "em breve".
+  // Windows tem o instalador (passos + botão); macOS e Linux, um cartão cada com o passo a passo e o botão (ou
+  // "em breve" enquanto o pacote daquele sistema não está publicado). ready recebe {version} e {os}.
   download: {
     eyebrow: string; title1: string; title2: string; lede: string;
     labels: { version: string; platform: string; file: string; license: string };
     windows: string; steps: RichLine[]; ready: string; pending: string; pendingNote: string;
-    mac: OsCard; linux: OsCard; soon: string; source: string;
+    mac: OsCard; linux: OsCard; soon: string; yours: string; source: string;
   };
   tour: {
     eyebrow: string; title: string; years: string; stamps: { live: string; reh: string; next: string };

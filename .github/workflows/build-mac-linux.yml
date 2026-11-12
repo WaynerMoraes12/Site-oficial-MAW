@@ -1,0 +1,163 @@
+# Compila a MAW para macOS e Linux a partir do código-fonte publicado no release deste repositório (o zip que
+# acompanha cada versão por causa da GPL) e anexa os pacotes ao mesmo release. Este repositório é público: os
+# minutos do GitHub Actions são de graça, inclusive os de Mac (no repositório da MAW, privado, cada minuto de Mac
+# conta como dez). Disparado pelo npm run publish-release ou à mão (Actions > Build macOS e Linux > Run workflow).
+#
+# Mac: um MAW.app universal (chip Apple e Intel, macOS 11+), com o server_mapp.py e o modelo de 2 partes em
+# Contents/Resources (onde a MAW com versão procura), assinado de novo sem certificado (ad-hoc) depois disso.
+# Linux: o programa com o server_mapp.py e o modelo ao lado, compilado no Ubuntu 24.04.
+# Os dois levam o README da MAW (o guia da IA, que é instalada à parte nesses sistemas) e as licenças.
+name: Build macOS e Linux
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Versão já publicada nos releases deste repositório (X.Y.Z)
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-mac-linux-${{ inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - key: linux
+            os: ubuntu-24.04
+          - key: macos
+            os: macos-14
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    env:
+      V: ${{ inputs.version }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Código-fonte publicado (conferido pelo SHA-256 do platforms.json)
+        run: |
+          echo "$V" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "versão inválida: $V"; exit 1; }
+          gh release download "v$V" -R "$GITHUB_REPOSITORY" -p "MAW-$V-source.zip" -p platforms.json -D pub
+          want=$(python3 -c "import json; print(json.load(open('pub/platforms.json'))['source']['sha256'])")
+          got=$( (sha256sum "pub/MAW-$V-source.zip" 2>/dev/null || shasum -a 256 "pub/MAW-$V-source.zip") | cut -d' ' -f1)
+          [ "$want" = "$got" ] || { echo "o zip do código-fonte não bate com o platforms.json"; exit 1; }
+          unzip -q "pub/MAW-$V-source.zip"
+          mv "MAW-$V" maw
+          printf '#pragma once\n// Gravado pelo build de macOS e Linux do site.\n#define MAW_VERSION "%s"\n' "$V" > maw/Source/MawVersion.h
+
+      - name: Dependências da JUCE (Linux)
+        if: matrix.key == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libasound2-dev libjack-jackd2-dev libcurl4-openssl-dev \
+            libfreetype-dev libfontconfig1-dev libx11-dev libxcomposite-dev libxcursor-dev libxext-dev \
+            libxinerama-dev libxrandr-dev libxrender-dev xvfb xauth ffmpeg
+
+      - name: Cache da JUCE baixada
+        uses: actions/cache@v4
+        with:
+          path: maw/build/_deps
+          key: juce-${{ hashFiles('maw/CMakeLists.txt') }}-${{ runner.os }}
+
+      - name: Configurar e compilar
+        working-directory: maw
+        run: |
+          if [ "${{ matrix.key }}" = linux ]; then
+            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          else
+            cmake -S . -B build -DCMAKE_BUILD_TYPE=Release "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
+          fi
+          cmake --build build -j 4
+
+      # a suite abre componentes: no Linux precisa de uma tela, mesmo que falsa
+      - name: Suíte da MAW
+        working-directory: maw
+        run: |
+          if [ "${{ matrix.key }}" = linux ]; then
+            xvfb-run -a build/MAW_APP_artefacts/Release/MAW --run-tests
+          else
+            build/MAW_APP_artefacts/Release/MAW.app/Contents/MacOS/MAW --run-tests
+          fi
+
+      - name: Empacotar
+        working-directory: maw
+        run: |
+          docs="README.md LICENSE LICENSE-THIRD-PARTY.md requirements.txt"
+          if [ "${{ matrix.key }}" = linux ]; then
+            mkdir -p pacote/MAW-linux/pretrained_models
+            cp build/MAW_APP_artefacts/Release/MAW server_mapp.py $docs pacote/MAW-linux/
+            cp -R pretrained_models/2stems pacote/MAW-linux/pretrained_models/
+            tar czf "../MAW-$V-linux-x86_64.tar.gz" -C pacote MAW-linux
+          else
+            app=build/MAW_APP_artefacts/Release/MAW.app
+            lipo -info "$app/Contents/MacOS/MAW"
+            mkdir -p "$app/Contents/Resources/pretrained_models"
+            cp server_mapp.py requirements.txt "$app/Contents/Resources/"
+            cp -R pretrained_models/2stems "$app/Contents/Resources/pretrained_models/"
+            # o pacote mudou depois do link: assina de novo sem certificado, senão o macOS recusa abrir
+            codesign --force --deep --sign - "$app"
+            codesign --verify --deep --strict "$app"
+            mkdir -p pacote/MAW-macos
+            cp -R "$app" pacote/MAW-macos/
+            cp $docs pacote/MAW-macos/
+            ditto -c -k --keepParent pacote/MAW-macos "../MAW-$V-macos-universal.zip"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pkg-${{ matrix.key }}
+          path: MAW-${{ inputs.version }}-*
+          retention-days: 1
+
+  # anexa o que saiu (se só um sistema compilou, o outro continua "em breve" no site) e publica o site de novo
+  publish:
+    needs: build
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: write
+    env:
+      V: ${{ inputs.version }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: pkg-*
+          merge-multiple: true
+          path: pkgs
+
+      - name: Anexa os pacotes e atualiza o platforms.json
+        run: |
+          shopt -s nullglob
+          files=(pkgs/*)
+          [ ${#files[@]} -gt 0 ] || { echo "nenhum pacote saiu do build"; exit 1; }
+          gh release download "v$V" -R "$GITHUB_REPOSITORY" -p platforms.json -D cur --clobber
+          python3 - "$V" pkgs cur/platforms.json <<'PY'
+          import hashlib, json, os, sys
+          version, folder, index = sys.argv[1:]
+          data = json.load(open(index))
+          names = {f"MAW-{version}-macos-universal.zip": "macos", f"MAW-{version}-linux-x86_64.tar.gz": "linux"}
+          for name in sorted(os.listdir(folder)):
+              key = names.get(name)
+              if not key:
+                  continue
+              path = os.path.join(folder, name)
+              data[key] = {"file": name, "bytes": os.path.getsize(path), "sha256": hashlib.sha256(open(path, "rb").read()).hexdigest()}
+              print(f"{key}: {name} {data[key]['bytes']} bytes")
+          json.dump(data, open(index, "w"), indent=2)
+          PY
+          gh release upload "v$V" "${files[@]}" cur/platforms.json -R "$GITHUB_REPOSITORY" --clobber
+          for f in "${files[@]}"; do
+            name=$(basename "$f")
+            size=$(gh release view "v$V" -R "$GITHUB_REPOSITORY" --json assets --jq ".assets[] | select(.name == \"$name\") | .size")
+            [ "$size" = "$(stat -c %s "$f")" ] || { echo "$name não subiu inteiro"; exit 1; }
+          done
+
+      - name: Publica o site de novo (o deploy confere os pacotes novos pelo SHA-256)
+        run: gh workflow run deploy.yml -R "$GITHUB_REPOSITORY" --ref main

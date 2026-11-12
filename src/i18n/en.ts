@@ -211,24 +211,27 @@ export const en: Dictionary = {
       { before: "Follow the installer: it adds a Start Menu shortcut, an uninstaller and the Visual C++ runtime if it's missing.", bold: '', after: '' },
       { before: 'Open MAW and pick your audio interface at ', bold: 'MENU → Configurar placa de audio (ASIO)', after: '.', keep: true },
     ],
-    ready: 'Download MAW {version} · Windows',
+    ready: 'Download MAW {version} · {os}',
     pending: 'Installer coming soon',
     pendingNote: 'The installer is being pressed. Check back soon.',
     mac: {
       req: '11 or newer · Apple chip or Intel',
       lines: [
-        "One universal MAW.app. It isn't signed by Apple yet: on first open, go to System Settings → Privacy & Security → Open Anyway.",
-        "The AI server (Python 3.10) is installed separately. On Apple-chip Macs, stem separation isn't available yet; transcription and the Advisor work.",
+        'Unzip it and drag MAW.app to Applications. One universal app for Apple chips and Intel.',
+        "It isn't signed by Apple yet: on first open, go to System Settings → Privacy & Security → Open Anyway.",
+        "The AI (stems, transcription) needs Python 3.10, set up separately: the guide is in README.md, inside the zip. On Apple-chip Macs, stem separation isn't available yet.",
       ],
     },
     linux: {
-      req: 'x86-64 · tested on Ubuntu 24.04',
+      req: 'x86-64 · Ubuntu 24.04 or newer',
       lines: [
-        'Audio through ALSA or JACK (PipeWire serves both). VST3 plugins from ~/.vst3, /usr/lib/vst3 and /usr/local/lib/vst3.',
-        'Needs ffmpeg. The AI server (Python 3.10) is installed separately.',
+        'Extract it and run ./MAW from the MAW-linux folder.',
+        'Audio through ALSA or JACK (PipeWire serves both). Install ffmpeg (sudo apt install ffmpeg) for MP3 and the AI.',
+        'The AI (stems, transcription) needs Python 3.10, set up separately: the guide is in README.md, inside the package.',
       ],
     },
     soon: '{os} · coming soon',
+    yours: 'Your system',
     source: 'Source code (GNU GPL v3)',
   },
   tour: {

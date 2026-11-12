@@ -27,16 +27,58 @@ export function pageShowsDownload(release, site) {
   );
 }
 
+// Os outros arquivos do release público (pacote do macOS, do Linux e o zip do código-fonte), descritos no
+// platforms.json do release. Mesma regra da página (src/lib/release.ts: isPackageInfo); um teste confere.
+export const PACKAGES = ['source', 'macos', 'linux'];
+const packageFile = (key, version) =>
+  key === 'macos' ? `MAW-${version}-macos-universal.zip` : key === 'linux' ? `MAW-${version}-linux-x86_64.tar.gz` : `MAW-${version}-source.zip`;
+
+export function validPackage(key, p, version) {
+  return (
+    typeof p === 'object' && p !== null &&
+    p.file === packageFile(key, version) &&
+    Number.isInteger(p.bytes) && p.bytes > 0 &&
+    typeof p.sha256 === 'string' && /^[0-9a-f]{64}$/.test(p.sha256)
+  );
+}
+
+// junta ao release.json os pacotes do platforms.json da mesma versão (o que não for válido fica de fora)
+export function mergePlatforms(release, platforms) {
+  if (!platforms || platforms.version !== release?.version) return release;
+  const out = { ...release };
+  for (const key of PACKAGES) if (validPackage(key, platforms[key], release.version)) out[key] = platforms[key];
+  return out;
+}
+
+async function sameFile(url, sha256, fetchImpl) {
+  const res = await fetchImpl(url, { redirect: 'follow' });
+  if (!res.ok) return `HTTP ${res.status}`;
+  const sha = createHash('sha256').update(Buffer.from(await res.arrayBuffer())).digest('hex');
+  return sha === sha256 ? null : `SHA-256 ${sha} ≠ ${sha256}`;
+}
+
+// O instalador do Windows decide se o site mostra download (sem ele, o deploy para); cada pacote a mais que não
+// estiver publicado ou não bater o SHA-256 sai do release.json, e só aquele sistema fica "em breve".
 export async function checkPublishedRelease({ release, site, fetchImpl = fetch }) {
   if (!release) return { status: 'pending' };
   if (!pageShowsDownload(release, site)) {
     throw new Error('release.json existe, mas a página mostraria "coming soon" (versão, arquivo ou hash não batem com o site.json): gere de novo com npm run installer');
   }
-  const url = `${site.releaseBaseUrl}/v${release.version}/${release.file}`;
-  const res = await fetchImpl(url, { redirect: 'follow' });
-  if (!res.ok) throw new Error(`release não publicado: HTTP ${res.status} em ${url}`);
-  const body = Buffer.from(await res.arrayBuffer());
-  const sha = createHash('sha256').update(body).digest('hex');
-  if (sha !== release.sha256) throw new Error(`o arquivo publicado não bate com o release.json (SHA-256 ${sha} ≠ ${release.sha256})`);
-  return { status: 'ok', url };
+  const base = `${site.releaseBaseUrl}/v${release.version}`;
+  const url = `${base}/${release.file}`;
+  const problem = await sameFile(url, release.sha256, fetchImpl);
+  if (problem?.startsWith('HTTP')) throw new Error(`release não publicado: ${problem} em ${url}`);
+  if (problem) throw new Error(`o arquivo publicado não bate com o release.json (${problem})`);
+  const verified = { ...release };
+  const dropped = [];
+  for (const key of PACKAGES) {
+    if (!(key in verified)) continue;
+    const p = verified[key];
+    const why = validPackage(key, p, release.version) ? await sameFile(`${base}/${p.file}`, p.sha256, fetchImpl) : 'descrição inválida';
+    if (why) {
+      delete verified[key];
+      dropped.push({ key, reason: why });
+    }
+  }
+  return { status: 'ok', url, release: verified, dropped };
 }

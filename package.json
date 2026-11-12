@@ -19,7 +19,8 @@
     "check:release": "node tools/check-release.mjs",
     "installer": "node scripts/build-installer.mjs",
     "check:tour": "node tools/check-tour.mjs",
-    "tour": "node tools/tour.mjs"
+    "tour": "node tools/tour.mjs",
+    "publish-release": "node tools/publish-release.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

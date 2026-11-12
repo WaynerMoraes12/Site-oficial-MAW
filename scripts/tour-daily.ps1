@@ -33,6 +33,10 @@ if (git status --porcelain -- src/data/tour.json) { Log 'src/data/tour.json tem 
 # instalador novo ainda não commitado: o tour seria de um instalador que o GitHub não tem
 if (git status --porcelain -- $synced) { Log 'dados do site (release.json ou site.json) com mudanças não commitadas; pulei até serem commitados'; exit 0 }
 
+# versão nova da MAW: primeiro a cópia pública (instalador + código-fonte nos releases deste repositório; retoma de
+# onde parou). Se falhar, o tour não adota a versão nova e o site continua no download que já funciona.
+if ((Run 'npm run publish-release') -ne 0) { Log 'npm run publish-release falhou; o site fica na versão já publicada' }
+
 if ((Run 'npm run tour') -ne 0) {
   # snapshot incompleto (ex.: o Claude não respondeu): desfaz, amanhã tenta de novo
   Run "git checkout -- $($all -join ' ')" | Out-Null

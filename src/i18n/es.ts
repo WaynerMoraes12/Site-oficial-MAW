@@ -210,24 +210,27 @@ export const es: Dictionary = {
       { before: 'Sigue el instalador: crea el acceso directo en el menú Inicio, el desinstalador y agrega el runtime de Visual C++ si falta.', bold: '', after: '' },
       { before: 'Abre MAW y elige tu interfaz de audio en ', bold: 'MENU → Configurar placa de audio (ASIO)', after: '.', keep: true },
     ],
-    ready: 'Descargar MAW {version} · Windows',
+    ready: 'Descargar MAW {version} · {os}',
     pending: 'Instalador muy pronto',
     pendingNote: 'El instalador se está prensando. Vuelve pronto.',
     mac: {
       req: '11 o posterior · chip Apple o Intel',
       lines: [
-        'Un MAW.app universal. Todavía no está firmado por Apple: la primera vez, ve a Ajustes del Sistema → Privacidad y seguridad → Abrir igualmente.',
-        'El servidor de IA (Python 3.10) se instala aparte. En los Mac con chip Apple, la separación de stems todavía no está disponible; la transcripción y el Consejero funcionan.',
+        'Descomprímelo y arrastra MAW.app a Aplicaciones. Una app universal para chip Apple e Intel.',
+        'Todavía no está firmado por Apple: la primera vez, ve a Ajustes del Sistema → Privacidad y seguridad → Abrir igualmente.',
+        'La IA (stems, transcripción) necesita Python 3.10, que se instala aparte: la guía está en README.md, dentro del zip. En los Mac con chip Apple, la separación de stems todavía no está disponible.',
       ],
     },
     linux: {
-      req: 'x86-64 · probado en Ubuntu 24.04',
+      req: 'x86-64 · Ubuntu 24.04 o posterior',
       lines: [
-        'Audio por ALSA o JACK (PipeWire sirve para ambos). Plugins VST3 en ~/.vst3, /usr/lib/vst3 y /usr/local/lib/vst3.',
-        'Necesita ffmpeg. El servidor de IA (Python 3.10) se instala aparte.',
+        'Extráelo y ejecuta ./MAW desde la carpeta MAW-linux.',
+        'Audio por ALSA o JACK (PipeWire sirve para ambos). Instala ffmpeg (sudo apt install ffmpeg) para MP3 y para la IA.',
+        'La IA (stems, transcripción) necesita Python 3.10, que se instala aparte: la guía está en README.md, dentro del paquete.',
       ],
     },
     soon: '{os} · muy pronto',
+    yours: 'Tu sistema',
     source: 'Código fuente (GNU GPL v3)',
   },
   tour: {

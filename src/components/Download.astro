@@ -1,7 +1,7 @@
 ---
 import logo from '../assets/brand/maw-logo-web.png';
 import site from '../data/site.json';
-import { releaseView } from '../lib/release';
+import { extraDownloads, releaseView } from '../lib/release';
 import { releaseData } from '../data/release';
 import { fill, type Dictionary } from '../i18n';
 
@@ -12,12 +12,17 @@ const { t } = Astro.props;
 const d = t.download;
 
 const release = releaseView(releaseData, site);
+const extra = extraDownloads(releaseData, site);
 const fileName = `MAW-Setup-${site.version}.exe`;
-// macOS e Linux saem da esteira da MAW só como artefato do CI, sem release: o botão fica "em breve"
+// macOS e Linux: compilados neste repositório (público) a partir do código-fonte publicado; o pacote que ainda não
+// estiver no release (ou não bater o SHA-256 no deploy) fica "em breve" só naquele sistema
 const others = [
-  { id: 'mac', name: 'macOS', text: d.mac },
-  { id: 'linux', name: 'Linux', text: d.linux },
+  { id: 'mac', name: 'macOS', text: d.mac, pkg: extra.macos },
+  { id: 'linux', name: 'Linux', text: d.linux, pkg: extra.linux },
 ];
+const sourceUrl = extra.source?.url ?? site.sourceCodeUrl;
+// o sistema de quem visita ganha destaque; sem JavaScript, nada muda
+const detectOs = `(function(){try{var p=(navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||'',u=navigator.userAgent||'',s=p+' '+u;var os=/Android|iPhone|iPad/i.test(u)?'':/Win/i.test(s)?'win':/Mac/i.test(s)?'mac':/Linux|X11/i.test(s)?'linux':'';if(os)document.getElementById('download').setAttribute('data-yours',os);}catch(e){}})();`;
 ---
 <section class="sec dl" id="download">
   <div class="wrap dl-grid">
@@ -42,33 +47,43 @@ const others = [
       <div class="eyebrow">{d.eyebrow}</div>
       <h2 class="chrome h-rock xl">{d.title1}<br />{d.title2}</h2>
       <p class="lede">{d.lede}</p>
-      <h3 class="os-name"><span translate="no">Windows</span> <small>{d.windows}</small></h3>
-      <ol class="steps">
-        {d.steps.map((step) => (
-          <li><span>{step.before}{step.bold && <b translate={step.keep ? 'no' : undefined}>{fill(step.bold, { file: fileName })}</b>}{step.after}</span></li>
-        ))}
-      </ol>
-      {release.state === 'ready' ? (
-        <Fragment>
-          <a class="btn btn-rec" href={release.url} data-download>{fill(d.ready, { version: site.version })}</a>
-          <div class="hash" translate="no">SHA-256: {release.sha256} · {release.sizeLabel}</div>
-        </Fragment>
-      ) : (
-        <Fragment>
-          <span class="btn btn-rec" role="link" aria-disabled="true" data-download>{d.pending}</span>
-          <div class="hash">{d.pendingNote}</div>
-        </Fragment>
-      )}
+      <div class="os-main" data-os="win">
+        <h3 class="os-name"><span translate="no">Windows</span> <small>{d.windows}</small> <span class="os-yours">{d.yours}</span></h3>
+        <ol class="steps">
+          {d.steps.map((step) => (
+            <li><span>{step.before}{step.bold && <b translate={step.keep ? 'no' : undefined}>{fill(step.bold, { file: fileName })}</b>}{step.after}</span></li>
+          ))}
+        </ol>
+        {release.state === 'ready' ? (
+          <Fragment>
+            <a class="btn btn-rec" href={release.url} data-download>{fill(d.ready, { version: site.version, os: 'Windows' })}</a>
+            <div class="hash" translate="no">SHA-256: {release.sha256} · {release.sizeLabel}</div>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <span class="btn btn-rec" role="link" aria-disabled="true" data-download>{d.pending}</span>
+            <div class="hash">{d.pendingNote}</div>
+          </Fragment>
+        )}
+      </div>
       <div class="os-more">
         {others.map((os) => (
           <article class="os-card" data-os={os.id}>
-            <h3 class="os-name"><span translate="no">{os.name}</span> <small>{os.text.req}</small></h3>
-            <ul>{os.text.lines.map((line) => <li>{line}</li>)}</ul>
-            <span class="btn btn-rec" role="link" aria-disabled="true" data-soon>{fill(d.soon, { os: os.name })}</span>
+            <h3 class="os-name"><span translate="no">{os.name}</span> <small>{os.text.req}</small> <span class="os-yours">{d.yours}</span></h3>
+            <ol>{os.text.lines.map((line) => <li>{line}</li>)}</ol>
+            {os.pkg ? (
+              <Fragment>
+                <a class="btn btn-rec" href={os.pkg.url} data-download>{fill(d.ready, { version: site.version, os: os.name })}</a>
+                <div class="hash" translate="no">SHA-256: {os.pkg.sha256} · {os.pkg.sizeLabel}</div>
+              </Fragment>
+            ) : (
+              <span class="btn btn-rec" role="link" aria-disabled="true" data-download>{fill(d.soon, { os: os.name })}</span>
+            )}
           </article>
         ))}
       </div>
-      {site.sourceCodeUrl && <a class="source-link" href={site.sourceCodeUrl}>{d.source}</a>}
+      {sourceUrl && <a class="source-link" href={sourceUrl}>{d.source}</a>}
     </div>
   </div>
+  <script is:inline set:html={detectOs}></script>
 </section>

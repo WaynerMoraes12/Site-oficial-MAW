@@ -56,6 +56,48 @@ export function diskLabel(raw: unknown, site: { version: string; installedBytes?
   return `${gb.toLocaleString(lang, { minimumFractionDigits: 1, maximumFractionDigits: 1 })} GB`;
 }
 
+// Os outros arquivos do release público: o pacote do macOS, o do Linux (compilados neste repositório a partir do
+// código-fonte publicado) e o zip do código-fonte. Vêm do platforms.json do release; cada um tem o nome da versão.
+export type Package = 'macos' | 'linux' | 'source';
+export interface PackageInfo {
+  file: string;
+  bytes: number;
+  sha256: string;
+}
+export interface DownloadLink {
+  url: string;
+  file: string;
+  sizeLabel: string;
+  sha256: string;
+}
+
+export const packageFile = (key: Package, version: string): string =>
+  key === 'macos' ? `MAW-${version}-macos-universal.zip` : key === 'linux' ? `MAW-${version}-linux-x86_64.tar.gz` : `MAW-${version}-source.zip`;
+
+// Mesma regra do deploy (tools/lib/release-check.mjs: validPackage). Um teste confere que as duas concordam.
+export function isPackageInfo(key: Package, raw: unknown, version: string): raw is PackageInfo {
+  if (typeof raw !== 'object' || raw === null) return false;
+  const p = raw as Record<string, unknown>;
+  return (
+    p.file === packageFile(key, version) &&
+    typeof p.bytes === 'number' && Number.isInteger(p.bytes) && p.bytes > 0 &&
+    typeof p.sha256 === 'string' && /^[0-9a-f]{64}$/.test(p.sha256)
+  );
+}
+
+// Só com o instalador do Windows desta versão pronto; o pacote que falta (ou não confere) fica "em breve".
+export function extraDownloads(raw: unknown, site: { version: string; releaseBaseUrl: string }): Partial<Record<Package, DownloadLink>> {
+  if (releaseView(raw, site).state !== 'ready') return {};
+  const r = raw as Record<string, unknown>;
+  const out: Partial<Record<Package, DownloadLink>> = {};
+  for (const key of ['macos', 'linux', 'source'] as const) {
+    const p = r[key];
+    if (!isPackageInfo(key, p, site.version)) continue;
+    out[key] = { url: `${site.releaseBaseUrl}/v${site.version}/${p.file}`, file: p.file, sizeLabel: formatBytes(p.bytes), sha256: p.sha256 };
+  }
+  return out;
+}
+
 // Sem instalador válido desta versão, o site mostra "coming soon" em vez de link quebrado.
 export function releaseView(raw: unknown, site: { version: string; releaseBaseUrl: string }): ReleaseView {
   if (!isReleaseInfo(raw) || raw.version !== site.version) return { state: 'pending' };

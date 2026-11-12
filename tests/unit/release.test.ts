@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { diskLabel, formatBytes, isReleaseInfo, parseRelease, releaseView } from '../../src/lib/release';
+import { diskLabel, extraDownloads, formatBytes, isReleaseInfo, parseRelease, releaseView } from '../../src/lib/release';
 
 const site = { version: '1.0.0', releaseBaseUrl: 'https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download' };
 const good = {
@@ -75,6 +75,27 @@ describe('parseRelease', () => {
   it('reads a valid file and reports a missing one as undefined', () => {
     expect(parseRelease(JSON.stringify(good))).toEqual(good);
     expect(parseRelease(undefined)).toBeUndefined();
+  });
+});
+
+describe('extraDownloads', () => {
+  const mac = { file: 'MAW-1.0.0-macos-universal.zip', bytes: 104_857_600, sha256: 'b'.repeat(64) };
+  const linux = { file: 'MAW-1.0.0-linux-x86_64.tar.gz', bytes: 80_000_000, sha256: 'c'.repeat(64) };
+  const source = { file: 'MAW-1.0.0-source.zip', bytes: 150_000_000, sha256: 'd'.repeat(64) };
+  it('links the macOS, Linux and source packages of a ready release, from the same release folder', () => {
+    const extra = extraDownloads({ ...good, macos: mac, linux, source }, site);
+    expect(extra.macos).toEqual({ url: `${site.releaseBaseUrl}/v1.0.0/${mac.file}`, file: mac.file, sizeLabel: '100.0 MB', sha256: mac.sha256 });
+    expect(extra.linux?.url).toBe(`${site.releaseBaseUrl}/v1.0.0/${linux.file}`);
+    expect(extra.source?.url).toBe(`${site.releaseBaseUrl}/v1.0.0/${source.file}`);
+  });
+  it('offers no package while the Windows release itself is not ready', () => {
+    expect(extraDownloads({ ...good, version: '0.9.0', file: 'MAW-Setup-0.9.0.exe', macos: mac }, site)).toEqual({});
+    expect(extraDownloads(undefined, site)).toEqual({});
+  });
+  it('skips a package that is not the one of this version', () => {
+    expect(extraDownloads({ ...good, macos: { ...mac, file: 'MAW-0.9.0-macos-universal.zip' }, linux }, site)).toEqual({
+      linux: expect.objectContaining({ file: linux.file }),
+    });
   });
 });
 
