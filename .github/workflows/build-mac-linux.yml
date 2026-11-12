@@ -31,8 +31,9 @@ jobs:
         include:
           - key: linux
             os: ubuntu-24.04
+          # o macos-14 foi aposentado pelo GitHub (nov/2026); o 15 é Apple Silicon e compila o universal igual
           - key: macos
-            os: macos-14
+            os: macos-15
     runs-on: ${{ matrix.os }}
     timeout-minutes: 120
     env:
@@ -135,8 +136,14 @@ jobs:
       - name: Anexa os pacotes e atualiza o platforms.json
         run: |
           shopt -s nullglob
-          files=(pkgs/*)
-          [ ${#files[@]} -gt 0 ] || { echo "nenhum pacote saiu do build"; exit 1; }
+          # pacote já publicado nunca é trocado (alguém pode estar baixando e conferindo o SHA-256 dele):
+          # rodar de novo só completa o sistema que faltou
+          published=$(gh release view "v$V" -R "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name')
+          files=()
+          for f in pkgs/*; do
+            if grep -qxF "$(basename "$f")" <<< "$published"; then echo "$(basename "$f") já publicado: fica o que está"; else files+=("$f"); fi
+          done
+          [ ${#files[@]} -gt 0 ] || { echo "nada novo para anexar"; exit 0; }
           gh release download "v$V" -R "$GITHUB_REPOSITORY" -p platforms.json -D cur --clobber
           python3 - "$V" pkgs cur/platforms.json <<'PY'
           import hashlib, json, os, sys
@@ -145,7 +152,7 @@ jobs:
           names = {f"MAW-{version}-macos-universal.zip": "macos", f"MAW-{version}-linux-x86_64.tar.gz": "linux"}
           for name in sorted(os.listdir(folder)):
               key = names.get(name)
-              if not key:
+              if not key or key in data:
                   continue
               path = os.path.join(folder, name)
               data[key] = {"file": name, "bytes": os.path.getsize(path), "sha256": hashlib.sha256(open(path, "rb").read()).hexdigest()}

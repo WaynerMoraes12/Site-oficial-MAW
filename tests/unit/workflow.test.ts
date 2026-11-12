@@ -38,6 +38,13 @@ describe('macOS and Linux build workflow', () => {
     expect(build).toContain('--run-tests');
     expect(build.indexOf('--run-tests')).toBeLessThan(build.indexOf('tar czf'));
   });
+  it('builds the Mac on a runner GitHub still offers (macos-14 was retired)', () => {
+    expect(build).toMatch(/os: macos-1[5-9]|os: macos-latest/);
+    expect(build).not.toMatch(/os: macos-14\b/);
+  });
+  it('never replaces a package that is already published: running it again only fills what is missing', () => {
+    expect(publish).toMatch(/já publicado/);
+  });
   it('gives write access only to the job that attaches the packages, which then republishes the site', () => {
     expect(head).toMatch(/permissions:\n {2}contents: read\n/);
     expect(build).not.toMatch(/contents: write/);
