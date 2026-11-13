@@ -1,5 +1,5 @@
 {
-  "installerCommit": "4ca2cab4075d3b113ba5d0848de477f51162ad97",
+  "installerCommit": "2639f2e80b9bf7c1358467f0405869df1e8b533c",
   "versions": [
     {
       "version": "1.0.0",
@@ -35,17 +35,32 @@
       "version": "1.0.7",
       "mawCommit": "4ca2cab4075d3b113ba5d0848de477f51162ad97",
       "builtAt": "2026-11-05T12:20:46.294Z"
+    },
+    {
+      "version": "1.0.9",
+      "mawCommit": "2639f2e80b9bf7c1358467f0405869df1e8b533c",
+      "builtAt": "2026-11-13T00:55:17.824Z"
     }
   ],
   "stops": [
     {
-      "id": "version:1.0.7",
+      "id": "version:1.0.9",
       "status": "live",
-      "date": "2026-11-05",
+      "date": "2026-11-13",
       "text": {
-        "en": "Version 1.0.7",
-        "pt": "Versão 1.0.7",
-        "es": "Versión 1.0.7"
+        "en": "Version 1.0.9",
+        "pt": "Versão 1.0.9",
+        "es": "Versión 1.0.9"
+      }
+    },
+    {
+      "id": "issue:89",
+      "status": "live",
+      "date": "2026-11-13",
+      "text": {
+        "en": "Stability fix & private crash reports",
+        "pt": "Estabilidade e relatórios de travamento privados",
+        "es": "Estabilidad y reportes de fallas privados"
       }
     },
     {
@@ -166,16 +181,6 @@
         "en": "Camera capture with processed audio (Windows)",
         "pt": "Captura de câmera com áudio processado (Windows)",
         "es": "Captura de cámara con audio procesado (Windows)"
-      }
-    },
-    {
-      "id": "pr:75",
-      "status": "live",
-      "date": "2026-09-29",
-      "text": {
-        "en": "41 fixes from the first round of testing",
-        "pt": "41 correções da primeira rodada de testes",
-        "es": "41 correcciones de la primera ronda de pruebas"
       }
     }
   ],
@@ -354,6 +359,16 @@
       "en": "Version 1.0.7",
       "pt": "Versão 1.0.7",
       "es": "Versión 1.0.7"
+    },
+    "version:1.0.9": {
+      "en": "Version 1.0.9",
+      "pt": "Versão 1.0.9",
+      "es": "Versión 1.0.9"
+    },
+    "issue:89": {
+      "en": "Stability fix & private crash reports",
+      "pt": "Estabilidade e relatórios de travamento privados",
+      "es": "Estabilidad y reportes de fallas privados"
     }
   }
 }

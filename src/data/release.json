@@ -1,45 +1,50 @@
 {
-  "file": "MAW-Setup-1.0.7.exe",
-  "bytes": 506127805,
-  "sha256": "933701a3e9d52eaba2eb68fb04962347489af3827d9a930dd55f2298650c3660",
-  "version": "1.0.7",
-  "builtAt": "2026-11-05T12:20:46.294Z",
-  "installedBytes": 2198388668,
-  "mawCommit": "4ca2cab4075d3b113ba5d0848de477f51162ad97",
+  "file": "MAW-Setup-1.0.9.exe",
+  "bytes": 507348391,
+  "sha256": "f0a3b5ef58b8c0d7e08125c28007b5037ea4799b88dbc72f8004a9074dba3803",
+  "version": "1.0.9",
+  "builtAt": "2026-11-13T00:55:17.824Z",
+  "installedBytes": 2203561605,
+  "mawCommit": "2639f2e80b9bf7c1358467f0405869df1e8b533c",
   "ffmpeg": {
     "buildId": "maw-ffmpeg-7.1.1-x264-31e19f9-lame-3.100-r2",
     "source": {
       "file": "MAW-FFmpeg-7.1.1-source.zip",
-      "sha256": "27b5096e8c7126a35c00e39dc699c01a6bace1be7f3780a96705f007b9ebf068",
-      "url": "https://github.com/WaynerMoraes12/MAW/releases/download/v1.0.7/MAW-FFmpeg-7.1.1-source.zip"
+      "sha256": "2ac9ac50a2324ea53a98e63c12afd9accf1aab53f5011cabedab2d8e96532fd4",
+      "url": "https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download/v1.0.9/MAW-FFmpeg-7.1.1-source.zip"
     },
     "bundle": {
       "file": "MAW-FFmpeg-7.1.1-win64.zip",
-      "sha256": "3b7e533e56fffb9d0300878f56d23eece4a6e0e3a2b4b449b30f7ce6d4b43c6c"
+      "sha256": "288a8f8e823f2333d2875859e2a8f217f0dfb71303b12c3ac4a5312db871f703"
     },
     "manifest": {
       "file": "MAW-FFmpeg-build-manifest.json",
-      "sha256": "ed35b73e5d4b8a6781df0cc53043887c5fae01c42e247010192a1d85b823ad85"
+      "sha256": "4b4e100cd73937d7be1dd3e27a9c08e5c6713b141e192857d27468a70e923594"
     }
   },
   "pyav": {
     "schema": 1,
-    "releaseVersion": "1.0.7",
+    "releaseVersion": "1.0.9",
     "buildId": "pyav-17.1.0-cp310-win_amd64-ffmpeg-8.1.1-2-r1",
     "source": {
-      "file": "MAW-1.0.7-pyav-corresponding-source.zip",
-      "sha256": "9f2f941d365d62e3faa4f22ec08b32e1e05c54cc66964d265a58eb71ba90ef12",
-      "url": "https://github.com/WaynerMoraes12/MAW/releases/download/v1.0.7/MAW-1.0.7-pyav-corresponding-source.zip"
+      "file": "MAW-1.0.9-pyav-corresponding-source.zip",
+      "sha256": "299029f8b3e7e55e1de92a167b54adefbbc0b4a794c92ade40602ce74924eba5",
+      "url": "https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download/v1.0.9/MAW-1.0.9-pyav-corresponding-source.zip"
     },
     "manifest": {
-      "file": "MAW-1.0.7-pyav-source-manifest.json",
-      "sha256": "f361ed4a5948c7b6c8f0ef2bb4ce5021dcb0eb05fc22f05cb0aba8a4df82c804",
-      "url": "https://github.com/WaynerMoraes12/MAW/releases/download/v1.0.7/MAW-1.0.7-pyav-source-manifest.json"
+      "file": "MAW-1.0.9-pyav-source-manifest.json",
+      "sha256": "2d211124d04f56abadf25af21c7a9522026b64ab202488bd28284ea3d927dc69",
+      "url": "https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download/v1.0.9/MAW-1.0.9-pyav-source-manifest.json"
     },
     "index": {
-      "file": "MAW-1.0.7-pyav-artifacts.json",
-      "sha256": "aafb8b881fab470fb59928fd8055867a1095111b5ad7e35ef057d4d11e08ed4c",
-      "url": "https://github.com/WaynerMoraes12/MAW/releases/download/v1.0.7/MAW-1.0.7-pyav-artifacts.json"
+      "file": "MAW-1.0.9-pyav-artifacts.json",
+      "sha256": "374f6ebf5b0dfe92bfdc210381575158dabefea0aa35f401e7e3931675524ad4",
+      "url": "https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download/v1.0.9/MAW-1.0.9-pyav-artifacts.json"
     }
+  },
+  "source": {
+    "file": "MAW-1.0.9-source.zip",
+    "bytes": 158185669,
+    "sha256": "a2652789665cab716543c6857d0011ecd6a032556049215712dd7bcef9c9ed26"
   }
 }
