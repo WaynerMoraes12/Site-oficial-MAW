@@ -1,5 +1,5 @@
 {
-  "installerCommit": "2639f2e80b9bf7c1358467f0405869df1e8b533c",
+  "installerCommit": "1a9e6742fdc8f37c90a61a03bff47b1ce7082d69",
   "versions": [
     {
       "version": "1.0.0",
@@ -40,17 +40,62 @@
       "version": "1.0.9",
       "mawCommit": "2639f2e80b9bf7c1358467f0405869df1e8b533c",
       "builtAt": "2026-11-13T00:55:17.824Z"
+    },
+    {
+      "version": "1.0.13",
+      "mawCommit": "1a9e6742fdc8f37c90a61a03bff47b1ce7082d69",
+      "builtAt": "2026-11-13T22:04:11.286Z"
     }
   ],
   "stops": [
     {
-      "id": "version:1.0.9",
+      "id": "version:1.0.13",
       "status": "live",
       "date": "2026-11-13",
       "text": {
-        "en": "Version 1.0.9",
-        "pt": "Versão 1.0.9",
-        "es": "Versión 1.0.9"
+        "en": "Version 1.0.13",
+        "pt": "Versão 1.0.13",
+        "es": "Versión 1.0.13"
+      }
+    },
+    {
+      "id": "issue:93",
+      "status": "live",
+      "date": "2026-11-13",
+      "text": {
+        "en": "VST3 windows reopen & MIDI learn on buses",
+        "pt": "Janelas VST3 reabrem e MIDI learn em barramentos",
+        "es": "Ventanas VST3 reabren y MIDI learn en buses"
+      }
+    },
+    {
+      "id": "issue:92",
+      "status": "live",
+      "date": "2026-11-13",
+      "text": {
+        "en": "Loops on the beat, even with plugin latency",
+        "pt": "Loops no tempo, mesmo com latência de plugin",
+        "es": "Loops a tiempo, incluso con latencia de plugins"
+      }
+    },
+    {
+      "id": "issue:91",
+      "status": "live",
+      "date": "2026-11-13",
+      "text": {
+        "en": "Latency compensation across buses & sends",
+        "pt": "Compensação de latência em barramentos e envios",
+        "es": "Compensación de latencia en buses y envíos"
+      }
+    },
+    {
+      "id": "issue:90",
+      "status": "live",
+      "date": "2026-11-13",
+      "text": {
+        "en": "Versioned projects that keep the master plugin",
+        "pt": "Projetos versionados com o plugin do master",
+        "es": "Proyectos versionados con el plugin del master"
       }
     },
     {
@@ -141,46 +186,6 @@
         "en": "Camera capture on Windows, macOS & Linux",
         "pt": "Captura de câmera no Windows, macOS e Linux",
         "es": "Captura de cámara en Windows, macOS y Linux"
-      }
-    },
-    {
-      "id": "commit:bd1ed488d88c915a5cc58fcd4e90be399ee2bbe6",
-      "status": "live",
-      "date": "2026-10-19",
-      "text": {
-        "en": "Post-ready MP4 camera video, always in sync",
-        "pt": "Vídeo MP4 pronto para postar, em sincronia",
-        "es": "Video MP4 listo para publicar, en sincronía"
-      }
-    },
-    {
-      "id": "commit:54300edd24393568ef1d25df72d588db851a1f04",
-      "status": "live",
-      "date": "2026-10-19",
-      "text": {
-        "en": "Camera capture on macOS & Linux",
-        "pt": "Captura de câmera no macOS e no Linux",
-        "es": "Captura de cámara en macOS y Linux"
-      }
-    },
-    {
-      "id": "commit:1853319dbddcc93ef959fdea8ea4fa83a23ade89",
-      "status": "live",
-      "date": "2026-10-19",
-      "text": {
-        "en": "Camera capture on Linux and macOS",
-        "pt": "Captura de câmera no Linux e no macOS",
-        "es": "Captura de cámara en Linux y macOS"
-      }
-    },
-    {
-      "id": "commit:e48c91761cc61ce350fb9cfe16f03c3ee3da6fa3",
-      "status": "live",
-      "date": "2026-10-19",
-      "text": {
-        "en": "Camera capture with processed audio (Windows)",
-        "pt": "Captura de câmera com áudio processado (Windows)",
-        "es": "Captura de cámara con audio procesado (Windows)"
       }
     }
   ],
@@ -369,6 +374,31 @@
       "en": "Stability fix & private crash reports",
       "pt": "Estabilidade e relatórios de travamento privados",
       "es": "Estabilidad y reportes de fallas privados"
+    },
+    "version:1.0.13": {
+      "en": "Version 1.0.13",
+      "pt": "Versão 1.0.13",
+      "es": "Versión 1.0.13"
+    },
+    "issue:93": {
+      "en": "VST3 windows reopen & MIDI learn on buses",
+      "pt": "Janelas VST3 reabrem e MIDI learn em barramentos",
+      "es": "Ventanas VST3 reabren y MIDI learn en buses"
+    },
+    "issue:92": {
+      "en": "Loops on the beat, even with plugin latency",
+      "pt": "Loops no tempo, mesmo com latência de plugin",
+      "es": "Loops a tiempo, incluso con latencia de plugins"
+    },
+    "issue:91": {
+      "en": "Latency compensation across buses & sends",
+      "pt": "Compensação de latência em barramentos e envios",
+      "es": "Compensación de latencia en buses y envíos"
+    },
+    "issue:90": {
+      "en": "Versioned projects that keep the master plugin",
+      "pt": "Projetos versionados com o plugin do master",
+      "es": "Proyectos versionados con el plugin del master"
     }
   }
 }
