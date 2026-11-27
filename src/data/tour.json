@@ -1,5 +1,5 @@
 {
-  "installerCommit": "1a9e6742fdc8f37c90a61a03bff47b1ce7082d69",
+  "installerCommit": "b75d49f1f5fa068b3f7372f289897c2014cad477",
   "versions": [
     {
       "version": "1.0.0",
@@ -45,147 +45,152 @@
       "version": "1.0.13",
       "mawCommit": "1a9e6742fdc8f37c90a61a03bff47b1ce7082d69",
       "builtAt": "2026-11-13T22:04:11.286Z"
+    },
+    {
+      "version": "1.0.27",
+      "mawCommit": "b75d49f1f5fa068b3f7372f289897c2014cad477",
+      "builtAt": "2026-11-17T18:55:05.123Z"
     }
   ],
   "stops": [
     {
-      "id": "version:1.0.13",
+      "id": "version:1.0.27",
       "status": "live",
-      "date": "2026-11-13",
+      "date": "2026-11-17",
       "text": {
-        "en": "Version 1.0.13",
-        "pt": "Versão 1.0.13",
-        "es": "Versión 1.0.13"
+        "en": "Version 1.0.27",
+        "pt": "Versão 1.0.27",
+        "es": "Versión 1.0.27"
       }
     },
     {
-      "id": "issue:93",
-      "status": "live",
-      "date": "2026-11-13",
+      "id": "issue:73",
+      "status": "reh",
+      "date": "2026-11-27",
       "text": {
-        "en": "VST3 windows reopen & MIDI learn on buses",
-        "pt": "Janelas VST3 reabrem e MIDI learn em barramentos",
-        "es": "Ventanas VST3 reabren y MIDI learn en buses"
+        "en": "MAW as a VST3 plugin inside other DAWs",
+        "pt": "A MAW como plugin VST3 em outras DAWs",
+        "es": "MAW como plugin VST3 dentro de otras DAW"
       }
     },
     {
-      "id": "issue:92",
-      "status": "live",
-      "date": "2026-11-13",
+      "id": "issue:149",
+      "status": "reh",
+      "date": "2026-11-27",
       "text": {
-        "en": "Loops on the beat, even with plugin latency",
-        "pt": "Loops no tempo, mesmo com latência de plugin",
-        "es": "Loops a tiempo, incluso con latencia de plugins"
+        "en": "Low-latency mode for recording",
+        "pt": "Modo de baixa latência para gravar",
+        "es": "Modo de baja latencia para grabar"
       }
     },
     {
-      "id": "issue:91",
-      "status": "live",
-      "date": "2026-11-13",
+      "id": "issue:148",
+      "status": "reh",
+      "date": "2026-11-27",
       "text": {
-        "en": "Latency compensation across buses & sends",
-        "pt": "Compensação de latência em barramentos e envios",
-        "es": "Compensación de latencia en buses y envíos"
+        "en": "Comping: BPM, audio-to-MIDI & take lane menu",
+        "pt": "Comping: BPM, áudio para MIDI e menu da tomada",
+        "es": "Comping: BPM, audio a MIDI y menú de la toma"
       }
     },
     {
-      "id": "issue:90",
-      "status": "live",
-      "date": "2026-11-13",
+      "id": "issue:147",
+      "status": "reh",
+      "date": "2026-11-27",
       "text": {
-        "en": "Versioned projects that keep the master plugin",
-        "pt": "Projetos versionados com o plugin do master",
-        "es": "Proyectos versionados con el plugin del master"
+        "en": "Release sheet in each distributor's format",
+        "pt": "Ficha de lançamento para cada distribuidora",
+        "es": "Ficha de lanzamiento para cada distribuidora"
       }
     },
     {
-      "id": "issue:89",
-      "status": "live",
-      "date": "2026-11-13",
+      "id": "issue:146",
+      "status": "reh",
+      "date": "2026-11-27",
       "text": {
-        "en": "Stability fix & private crash reports",
-        "pt": "Estabilidade e relatórios de travamento privados",
-        "es": "Estabilidad y reportes de fallas privados"
+        "en": "Royalty statements straight from Excel (.xlsx)",
+        "pt": "Extratos de royalties direto do Excel (.xlsx)",
+        "es": "Estados de regalías directo desde Excel (.xlsx)"
       }
     },
     {
-      "id": "issue:86",
-      "status": "live",
-      "date": "2026-10-25",
+      "id": "issue:145",
+      "status": "reh",
+      "date": "2026-11-27",
       "text": {
-        "en": "Smooth camera preview without hiding the editor",
-        "pt": "Prévia da câmera fluida sem cobrir o editor",
-        "es": "Vista de cámara fluida sin cubrir el editor"
+        "en": "Social clips: MAW finds your best 15/30/60 s",
+        "pt": "Corte para redes: o melhor trecho em 15/30/60 s",
+        "es": "Clips para redes: tu mejor parte en 15/30/60 s"
       }
     },
     {
-      "id": "issue:84",
-      "status": "live",
-      "date": "2026-10-22",
+      "id": "issue:144",
+      "status": "reh",
+      "date": "2026-11-27",
       "text": {
-        "en": "Recording right on time: audio, MIDI & punch-in",
-        "pt": "Gravação no tempo exato: áudio, MIDI e punch-in",
-        "es": "Grabación sin desfase: audio, MIDI y punch-in"
+        "en": "PDFs with accents & names in any alphabet",
+        "pt": "PDFs com acentos e nomes em qualquer alfabeto",
+        "es": "PDFs con acentos y nombres en cualquier alfabeto"
       }
     },
     {
-      "id": "issue:85",
-      "status": "live",
-      "date": "2026-10-22",
+      "id": "commit:8afaac1be813da940c34bb02baa78e1d59cb5c72",
+      "status": "reh",
+      "date": "2026-11-26",
       "text": {
-        "en": "Lyric transcription with voice filter",
-        "pt": "Transcrição de letra com filtro de voz",
-        "es": "Transcripción de letra con filtro de voz"
+        "en": "Split MIDI clips by command, with exact preview",
+        "pt": "Corte de clipes MIDI por comando e prévia exata",
+        "es": "Corte de clips MIDI por comando y vista previa"
       }
     },
     {
-      "id": "issue:82",
-      "status": "live",
-      "date": "2026-10-22",
+      "id": "commit:8e84264a5dec72e3ce5495123ca0e983b9c4eaf4",
+      "status": "reh",
+      "date": "2026-11-26",
       "text": {
-        "en": "Recordings land on time: latency compensation",
-        "pt": "Gravações no tempo: compensação de latência",
-        "es": "Grabaciones a tiempo: compensación de latencia"
+        "en": "Credits & splits in your language",
+        "pt": "Créditos e divisões no seu idioma",
+        "es": "Créditos y repartos en tu idioma"
       }
     },
     {
-      "id": "issue:81",
-      "status": "live",
-      "date": "2026-10-22",
+      "id": "commit:f955d3fa2e134d91b32622167a12b5c4329b9e1e",
+      "status": "reh",
+      "date": "2026-11-26",
       "text": {
-        "en": "Faster camera, auto input & twin webcams",
-        "pt": "Câmera ágil, IN automático e webcams gêmeas",
-        "es": "Cámara ágil, IN automático y webcams gemelas"
+        "en": "Sample license editor in your language",
+        "pt": "Editor de licenças de samples no seu idioma",
+        "es": "Editor de licencias de samples en tu idioma"
       }
     },
     {
-      "id": "issue:83",
-      "status": "live",
-      "date": "2026-10-21",
+      "id": "commit:d1498071c4653486d50230949b7018f51097f8bf",
+      "status": "reh",
+      "date": "2026-11-26",
       "text": {
-        "en": "Crunch guitar amp for direct recording",
-        "pt": "Amplificador Crunch: guitarra direto na placa",
-        "es": "Amplificador Crunch para grabar guitarra directa"
+        "en": "Loudness metering for immersive 7.1.4 mixes",
+        "pt": "Medição de loudness em mixagens imersivas 7.1.4",
+        "es": "Medición de loudness en mezclas inmersivas 7.1.4"
       }
     },
     {
-      "id": "commit:19a431317e8e181fcd4246029a47c01acded229b",
-      "status": "live",
-      "date": "2026-10-19",
+      "id": "commit:4c378910e38664999ed82e40dc92725a23e79750",
+      "status": "reh",
+      "date": "2026-11-26",
       "text": {
-        "en": "Per-camera sync & auto input monitoring",
-        "pt": "Sincronia por câmera e monitoração automática",
-        "es": "Sincronía por cámara y monitoreo automático"
+        "en": "Task progress and cancelling in your language",
+        "pt": "Tarefas: progresso e cancelamento no seu idioma",
+        "es": "Progreso y cancelación de tareas en tu idioma"
       }
     },
     {
-      "id": "commit:6ce2a656639116e2dd160170ab6fc063beec077a",
-      "status": "live",
-      "date": "2026-10-19",
+      "id": "commit:59db30583436d5bc645d91cf45e698cf59fbd8a9",
+      "status": "reh",
+      "date": "2026-11-26",
       "text": {
-        "en": "Camera capture on Windows, macOS & Linux",
-        "pt": "Captura de câmera no Windows, macOS e Linux",
-        "es": "Captura de cámara en Windows, macOS y Linux"
+        "en": "AI advisor and providers in your language",
+        "pt": "Conselheiro e provedores de IA no seu idioma",
+        "es": "Consejero y proveedores de IA en tu idioma"
       }
     }
   ],
@@ -399,6 +404,71 @@
       "en": "Versioned projects that keep the master plugin",
       "pt": "Projetos versionados com o plugin do master",
       "es": "Proyectos versionados con el plugin del master"
+    },
+    "version:1.0.27": {
+      "en": "Version 1.0.27",
+      "pt": "Versão 1.0.27",
+      "es": "Versión 1.0.27"
+    },
+    "issue:149": {
+      "en": "Low-latency mode for recording",
+      "pt": "Modo de baixa latência para gravar",
+      "es": "Modo de baja latencia para grabar"
+    },
+    "issue:148": {
+      "en": "Comping: BPM, audio-to-MIDI & take lane menu",
+      "pt": "Comping: BPM, áudio para MIDI e menu da tomada",
+      "es": "Comping: BPM, audio a MIDI y menú de la toma"
+    },
+    "issue:147": {
+      "en": "Release sheet in each distributor's format",
+      "pt": "Ficha de lançamento para cada distribuidora",
+      "es": "Ficha de lanzamiento para cada distribuidora"
+    },
+    "issue:146": {
+      "en": "Royalty statements straight from Excel (.xlsx)",
+      "pt": "Extratos de royalties direto do Excel (.xlsx)",
+      "es": "Estados de regalías directo desde Excel (.xlsx)"
+    },
+    "issue:145": {
+      "en": "Social clips: MAW finds your best 15/30/60 s",
+      "pt": "Corte para redes: o melhor trecho em 15/30/60 s",
+      "es": "Clips para redes: tu mejor parte en 15/30/60 s"
+    },
+    "issue:144": {
+      "en": "PDFs with accents & names in any alphabet",
+      "pt": "PDFs com acentos e nomes em qualquer alfabeto",
+      "es": "PDFs con acentos y nombres en cualquier alfabeto"
+    },
+    "commit:8afaac1be813da940c34bb02baa78e1d59cb5c72": {
+      "en": "Split MIDI clips by command, with exact preview",
+      "pt": "Corte de clipes MIDI por comando e prévia exata",
+      "es": "Corte de clips MIDI por comando y vista previa"
+    },
+    "commit:8e84264a5dec72e3ce5495123ca0e983b9c4eaf4": {
+      "en": "Credits & splits in your language",
+      "pt": "Créditos e divisões no seu idioma",
+      "es": "Créditos y repartos en tu idioma"
+    },
+    "commit:f955d3fa2e134d91b32622167a12b5c4329b9e1e": {
+      "en": "Sample license editor in your language",
+      "pt": "Editor de licenças de samples no seu idioma",
+      "es": "Editor de licencias de samples en tu idioma"
+    },
+    "commit:d1498071c4653486d50230949b7018f51097f8bf": {
+      "en": "Loudness metering for immersive 7.1.4 mixes",
+      "pt": "Medição de loudness em mixagens imersivas 7.1.4",
+      "es": "Medición de loudness en mezclas inmersivas 7.1.4"
+    },
+    "commit:4c378910e38664999ed82e40dc92725a23e79750": {
+      "en": "Task progress and cancelling in your language",
+      "pt": "Tarefas: progresso e cancelamento no seu idioma",
+      "es": "Progreso y cancelación de tareas en tu idioma"
+    },
+    "commit:59db30583436d5bc645d91cf45e698cf59fbd8a9": {
+      "en": "AI advisor and providers in your language",
+      "pt": "Conselheiro e provedores de IA no seu idioma",
+      "es": "Consejero y proveedores de IA en tu idioma"
     }
   }
 }

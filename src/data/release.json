@@ -1,50 +1,55 @@
 {
-  "file": "MAW-Setup-1.0.13.exe",
-  "bytes": 507387726,
-  "sha256": "b7a67ffe27facabd7aa6b7830a3a80bb9a1fc18609e985a58ba12f6188b6e523",
-  "version": "1.0.13",
-  "builtAt": "2026-11-13T22:04:11.286Z",
-  "installedBytes": 2203682966,
-  "mawCommit": "1a9e6742fdc8f37c90a61a03bff47b1ce7082d69",
+  "file": "MAW-Setup-1.0.27.exe",
+  "bytes": 507758968,
+  "sha256": "6eb9871cab6eb6c3f23bcad36690a628914f7342afa0c2dc09179aca6384fcb2",
+  "version": "1.0.27",
+  "builtAt": "2026-11-17T18:55:05.123Z",
+  "installedBytes": 2204947094,
+  "mawCommit": "b75d49f1f5fa068b3f7372f289897c2014cad477",
   "ffmpeg": {
     "buildId": "maw-ffmpeg-7.1.1-x264-31e19f9-lame-3.100-r2",
     "source": {
       "file": "MAW-FFmpeg-7.1.1-source.zip",
-      "sha256": "bcf9471d32ca51118a37ff5348d8e472e1537208523227732b7bac45ae072457",
-      "url": "https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download/v1.0.13/MAW-FFmpeg-7.1.1-source.zip"
+      "sha256": "5c26a9a89d8096c0dfe99a476ef42ff22d915efc295975836211583e2b0986b9",
+      "url": "https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download/v1.0.27/MAW-FFmpeg-7.1.1-source.zip"
     },
     "bundle": {
       "file": "MAW-FFmpeg-7.1.1-win64.zip",
-      "sha256": "dad7a709b00adebfafc4bf6de5cc7675fab927ecee93978437d3d75156261731"
+      "sha256": "bda52f551280e8467c0ea1d0745d03699eda1659524816b3c307d54add149ccb"
     },
     "manifest": {
       "file": "MAW-FFmpeg-build-manifest.json",
-      "sha256": "5cb0af40f9d6c331948fdcd1c92aaed55f12a305424308681958a6a05bcc9738"
+      "sha256": "36d3e9a98701dbb70259f5179228d30b28a0343db070b600b6e8e2fe81ae85ac"
     }
   },
   "pyav": {
     "schema": 1,
-    "releaseVersion": "1.0.13",
+    "releaseVersion": "1.0.27",
     "buildId": "pyav-17.1.0-cp310-win_amd64-ffmpeg-8.1.1-2-r1",
     "source": {
-      "file": "MAW-1.0.13-pyav-corresponding-source.zip",
-      "sha256": "2fa275ce9d3d0ec9dff30b4e7ca387c157d94ea09b5032153d3fb471706ce4be",
-      "url": "https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download/v1.0.13/MAW-1.0.13-pyav-corresponding-source.zip"
+      "file": "MAW-1.0.27-pyav-corresponding-source.zip",
+      "sha256": "1460ae92a6c0fb1703b04e6435a66e8268d8a2d746d975f16bac3a0a495a9465",
+      "url": "https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download/v1.0.27/MAW-1.0.27-pyav-corresponding-source.zip"
     },
     "manifest": {
-      "file": "MAW-1.0.13-pyav-source-manifest.json",
-      "sha256": "ec32b20e9ad222bc4cca97966c9bf8f6a43e0057bf454a6ae033639c3f494eba",
-      "url": "https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download/v1.0.13/MAW-1.0.13-pyav-source-manifest.json"
+      "file": "MAW-1.0.27-pyav-source-manifest.json",
+      "sha256": "dd4e579cc2d58370228fdde6d87faaaaca08dda47de0beb6cf8e41cf275ee658",
+      "url": "https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download/v1.0.27/MAW-1.0.27-pyav-source-manifest.json"
     },
     "index": {
-      "file": "MAW-1.0.13-pyav-artifacts.json",
-      "sha256": "acb2dcf318d17997c08ac8d81e3b822fd7ecdd0ad4d69b8c97edc75d889b1780",
-      "url": "https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download/v1.0.13/MAW-1.0.13-pyav-artifacts.json"
+      "file": "MAW-1.0.27-pyav-artifacts.json",
+      "sha256": "38b0bbb3e82508e122ef1d003639b78704b2e13ccd3c37fd3fd2c1dcd608c9a5",
+      "url": "https://github.com/WaynerMoraes12/Site-oficial-MAW/releases/download/v1.0.27/MAW-1.0.27-pyav-artifacts.json"
     }
   },
   "source": {
-    "file": "MAW-1.0.13-source.zip",
-    "bytes": 158234080,
-    "sha256": "bb2b20aaca4e72bc12dbc4049bc4634162b71d3da1f0cd078e504e2830ebcf20"
+    "file": "MAW-1.0.27-source.zip",
+    "bytes": 158543012,
+    "sha256": "9fbe34fb94f7817f02bec0d4a11178b7837909b194de5c624ff90e0789cd286f"
+  },
+  "linux": {
+    "file": "MAW-1.0.27-linux-x86_64.tar.gz",
+    "bytes": 82006555,
+    "sha256": "6cac7054df10e0d574fa42fc138446a7646a64ed85df055cd5ec7b6ab9646614"
   }
 }
